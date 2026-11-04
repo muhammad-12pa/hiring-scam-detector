@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explainable Hiring Scam Detector</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="container nav-inner">
+      <span class="brand">🛡️ ScamShield</span>
+      <nav>
+        <a href="#detector">Detector</a>
+        <a href="#how">How it works</a>
+        <a href="#about">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h1>Is that job offer real?</h1>
+      <p>Paste a job posting. Our explainable AI tells you if it looks fraudulent <strong>and why</strong>.</p>
+      <a href="#detector" class="btn">Check a job posting</a>
+    </div>
+  </section>
+
+  <section id="detector" class="container section">
+    <h2>Scam Detector</h2>
+
+    <textarea id="jobText" rows="9" placeholder="Paste the job title, description, requirements, contact details..."></textarea>
+    <div class="actions">
+      <button id="analyzeBtn" class="btn">Analyze</button>
+      <button id="sampleBtn" class="btn btn-light">Try a sample scam</button>
+    </div>
+
+    <div id="result" class="result hidden">
+      <div id="verdict" class="verdict"></div>
+      <div class="meter"><div id="meterFill" class="meter-fill"></div></div>
+      <p id="probText"></p>
+      <h3>Why this verdict?</h3>
+      <ul id="reasons"></ul>
+    </div>
+    <p id="error" class="error"></p>
+  </section>
+
+  <section id="how" class="section alt">
+    <div class="container">
+      <h2>How it works</h2>
+      <div class="steps">
+        <div class="step"><span>1</span>Data collection<small>EMSCAD / Kaggle dataset</small></div>
+        <div class="step"><span>2</span>Preprocessing<small>Cleaning, tokenization</small></div>
+        <div class="step"><span>3</span>Feature extraction<small>TF-IDF / embeddings</small></div>
+        <div class="step"><span>4</span>Classification<small>LSTM / CNN</small></div>
+        <div class="step"><span>5</span>Explainability<small>SHAP / LIME</small></div>
+        <div class="step"><span>6</span>Verdict + reasons<small>Plain language</small></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="container section">
+    <h2>About the project</h2>
+    <p>Online recruitment platforms are increasingly targeted by fake job postings and phishing scams. Existing deep learning detectors work well but act as black boxes. This project adds an explainability layer so every prediction comes with a human-readable justification.</p>
+    <div class="team">
+      <div><strong>Team</strong>
+        <ul>
+          <li>Muhammad Abdul Jaleel (4PA24CS064)</li>
+          <li>Muhammed Adhil P (4PA24CS066)</li>
+          <li>Muhammed Nafih CP (4PA24CS068)</li>
+          <li>Nazal Noushad (4PA24CS086)</li>
+        </ul>
+      </div>
+      <div><strong>Guide</strong><p>Prof. Zuhara, Dept. of CSE</p>
+        <p>P.A. College of Engineering, 2026-27</p></div>
+    </div>
+  </section>
+
+  <footer>© 2026 Dept. of CSE, P.A. College of Engineering</footer>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
