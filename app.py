@@ -1,15 +1,15 @@
-import json, os, pickle, threading, time
+import json, os, pickle, re, threading, time
 from collections import OrderedDict
 
 import numpy as np
-import tensorflow as tf
+from ai_edge_litert.interpreter import Interpreter   # tiny TFLite runtime, no TensorFlow
 from flask import Flask, render_template, request, jsonify
 from lime.lime_text import LimeTextExplainer
 
 app = Flask(__name__)
 
 # Bump on every deploy; shown in the page footer and at /version so you can tell it's live.
-VERSION = "v1.2"
+VERSION = "v1.3"
 
 # ---------- Load everything saved by the notebook ----------
 with open("model/config.json") as f:
@@ -17,41 +17,50 @@ with open("model/config.json") as f:
 THRESHOLD = CONFIG["threshold"]
 BEST = CONFIG["best_model"].lower()
 
-keras_model = tf.keras.models.load_model("model/scam_model.keras")
 with open("model/tfidf.pkl", "rb") as f:
     tfidf = pickle.load(f)
 with open("model/logreg.pkl", "rb") as f:
     logreg = pickle.load(f)
 
-# ---------- Fast LSTM inference with TensorFlow Lite ----------
-# model/scam_core.tflite is the Embedding -> BiLSTM -> Dense part of scam_model.keras,
-# made by convert_tflite.py (rerun it after retraining). Same outputs, ~6x faster on CPU.
-# The text vectorizer still runs in TensorFlow. Falls back to Keras if the file is missing.
-TFLITE_PATH = "model/scam_core.tflite"
-vectorizer = keras_model.get_layer("vectorizer")
-vectorize = tf.function(lambda t: vectorizer(t))
-tflite_lock = threading.Lock()          # the interpreter is not thread-safe
-if os.path.exists(TFLITE_PATH):
-    interp = tf.lite.Interpreter(TFLITE_PATH, num_threads=1)
-    interp.allocate_tensors()
-    T_IN = interp.get_input_details()[0]
-    T_OUT = interp.get_output_details()[0]["index"]
-    T_BATCH = int(T_IN["shape"][0])
-else:
-    interp = None
+# ---------- LSTM inference without TensorFlow ----------
+# Importing TensorFlow alone needs ~600 MB of RAM, more than Render's free 512 MB, so the
+# server kept getting killed. Instead the LSTM runs from model/scam_core.tflite on the small
+# LiteRT runtime, and the TextVectorization step is re-implemented below using the exported
+# vocabulary (model/vocab.json). Both files come from convert_tflite.py, which checks they
+# match scam_model.keras exactly. Rerun it after retraining.
+with open("model/vocab.json", encoding="utf-8") as f:
+    _v = json.load(f)
+VOCAB_INDEX = {w: i for i, w in enumerate(_v["vocabulary"])}   # 0 = padding, 1 = [UNK]
+SEQ_LEN = _v["sequence_length"]
+_PUNCT = re.compile(r'[!"#$%&()\*\+,\-\./:;<=>?@\[\\\]^_`{|}~\']')   # Keras "strip_punctuation"
+_WS = re.compile(r"[ \t\n\r\x0b\x0c]+")
 
-print("Loaded models. Best model:", CONFIG["best_model"], "| threshold:", THRESHOLD,
-      "| engine:", "tflite" if interp else "keras", flush=True)
+
+def vectorize(texts):
+    """Same as Keras TextVectorization(lower_and_strip_punctuation, whitespace, int, 300)."""
+    out = np.zeros((len(texts), SEQ_LEN), np.int64)
+    for r, t in enumerate(texts):
+        ids = [VOCAB_INDEX.get(w, 1) for w in _WS.split(_PUNCT.sub("", t.lower())) if w][:SEQ_LEN]
+        out[r, :len(ids)] = ids
+    return out
+
+
+interp = Interpreter("model/scam_core.tflite", num_threads=1)
+interp.allocate_tensors()
+T_IN = interp.get_input_details()[0]
+T_OUT = interp.get_output_details()[0]["index"]
+T_BATCH = int(T_IN["shape"][0])
+tflite_lock = threading.Lock()          # the interpreter is not thread-safe
+
+print("Loaded models. Best model:", CONFIG["best_model"], "| threshold:", THRESHOLD, flush=True)
 
 
 # ---------- Prediction helpers ----------
 def keras_proba(texts):
     """Probability of 'fraudulent' for a list of texts (deep learning model)."""
-    if interp is None:
-        return np.array(keras_model.predict(tf.constant(texts), verbose=0)).reshape(-1)
-    ids = vectorize(tf.constant(texts)).numpy().astype(T_IN["dtype"])
+    ids = vectorize(texts).astype(T_IN["dtype"])
     n = len(ids)
-    ids = np.concatenate([ids, np.zeros(((-n) % T_BATCH, ids.shape[1]), ids.dtype)])
+    ids = np.concatenate([ids, np.zeros(((-n) % T_BATCH, SEQ_LEN), ids.dtype)])
     out = []
     with tflite_lock:
         for i in range(0, len(ids), T_BATCH):

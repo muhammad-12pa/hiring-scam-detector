@@ -3,5 +3,5 @@ gunicorn
 pandas
 numpy
 scikit-learn
-tensorflow-cpu
+ai-edge-litert
 lime

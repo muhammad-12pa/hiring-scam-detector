@@ -1,0 +1,2 @@
+# Only needed to run convert_tflite.py after retraining (not on the server)
+tensorflow-cpu
