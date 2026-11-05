@@ -8,6 +8,9 @@ from lime.lime_text import LimeTextExplainer
 
 app = Flask(__name__)
 
+# Bump on every deploy; shown in the page footer and at /version so you can tell it's live.
+VERSION = "v1.2"
+
 # ---------- Load everything saved by the notebook ----------
 with open("model/config.json") as f:
     CONFIG = json.load(f)
@@ -120,7 +123,12 @@ TOO_SHORT = {"error": "Please paste a longer job posting (at least 20 characters
 # ---------- Routes ----------
 @app.route("/")
 def home():
-    return render_template("index.html", demo_mode=False)
+    return render_template("index.html", demo_mode=False, version=VERSION)
+
+
+@app.route("/version")
+def version():
+    return jsonify({"version": VERSION})
 
 
 @app.route("/predict", methods=["POST"])

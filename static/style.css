@@ -47,3 +47,4 @@ textarea { width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius:
 .team { display: flex; gap: 40px; margin-top: 18px; flex-wrap: wrap; }
 .team ul { margin-left: 18px; }
 footer { background: #1e3a8a; color: #c7d2fe; text-align: center; padding: 18px; }
+footer .version { opacity: 0.8; font-size: 0.9em; white-space: nowrap; }
