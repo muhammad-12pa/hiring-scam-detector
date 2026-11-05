@@ -21,8 +21,15 @@ analyzeBtn.addEventListener("click", async () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text: jobText.value })
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Something went wrong");
+    const raw = await res.text();
+    let data = {};
+    try { data = raw ? JSON.parse(raw) : {}; } catch { /* non-JSON error page */ }
+    if (!res.ok) {
+      if (data.error) throw new Error(data.error);
+      if (res.status === 502 || res.status === 503 || res.status === 504)
+        throw new Error("The server is waking up or busy. Please wait a minute and try again.");
+      throw new Error(`Server error (${res.status}). Please try again.`);
+    }
     showResult(data);
     result.classList.remove("hidden");
   } catch (e) {
@@ -64,4 +71,4 @@ function showResult(data) {
     li.appendChild(right);
     list.appendChild(li);
   });
-}
+}
