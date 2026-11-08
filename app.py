@@ -12,7 +12,7 @@ from red_flags import find_red_flags, rule_for_word
 app = Flask(__name__)
 
 # Bump on every deploy; shown in the page footer and at /version so you can tell it's live.
-VERSION = "v1.4"
+VERSION = "v1.5"
 
 # ---------- Load everything saved by the notebook ----------
 with open("model/config.json") as f:

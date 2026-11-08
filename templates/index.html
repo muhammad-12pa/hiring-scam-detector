@@ -31,13 +31,29 @@
         <h1>Is that job offer real?</h1>
         <p class="lede">Paste a job posting. ScamShield checks it with a trained AI model and shows you exactly which parts look suspicious.</p>
 
-        <div class="input-card">
+        <div class="input-card" id="inputCard">
           <label for="jobText" class="sr-only">Job posting text</label>
           <textarea id="jobText" rows="8" maxlength="5000"
-            placeholder="Paste the job title, description, salary, requirements and contact details…"></textarea>
+            placeholder="Paste the job posting text, or drop a screenshot of it here…"></textarea>
+          <div class="drop-overlay" aria-hidden="true">Drop the screenshot to read its text</div>
+
+          <div id="ocrStatus" class="ocr-status hidden" role="status" aria-live="polite">
+            <img id="ocrThumb" class="ocr-thumb" alt="">
+            <div class="ocr-body">
+              <p id="ocrText" class="ocr-text"></p>
+              <div class="ocr-progress"><span id="ocrBar"></span></div>
+            </div>
+            <button id="ocrDismiss" class="ocr-dismiss hidden" type="button" aria-label="Hide this message">×</button>
+          </div>
+
           <div class="input-footer">
             <div class="actions">
               <button id="analyzeBtn" class="btn btn-primary" type="button">Check this posting</button>
+              <label class="btn btn-ghost btn-upload" for="imageInput">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="m21 16-5-5-9 9"/></svg>
+                Upload a screenshot
+              </label>
+              <input id="imageInput" class="sr-only" type="file" accept="image/png,image/jpeg,image/webp">
               <button id="sampleBtn" class="btn btn-ghost" type="button"><span class="long">Try a scam example</span><span class="short">Scam example</span></button>
               <button id="sampleLegitBtn" class="btn btn-ghost" type="button"><span class="long">Try a genuine example</span><span class="short">Genuine example</span></button>
             </div>
@@ -133,5 +149,6 @@
     </div>
   </footer>
   <script src="{{ url_for('static', filename='script.js') }}?v={{ version }}"></script>
+  <script src="{{ url_for('static', filename='ocr.js') }}?v={{ version }}"></script>
 </body>
 </html>

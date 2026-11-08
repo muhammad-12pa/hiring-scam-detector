@@ -94,6 +94,30 @@ textarea::placeholder { color: var(--ink-faint); }
 .btn-ghost:hover { color: var(--ink); border-color: var(--ink-faint); }
 .error { color: var(--scam-ink); font-weight: 600; margin-top: 12px; min-height: 1px; }
 
+/* ---------- Screenshot upload (OCR) ---------- */
+.input-card { position: relative; }
+.btn-upload { display: inline-flex; align-items: center; gap: 8px; }
+.btn-upload svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.btn-upload:has(+ input:focus-visible) { outline: 3px solid var(--teal); outline-offset: 2px; }
+.drop-overlay { position: absolute; inset: 0; z-index: 2; display: none; place-items: center; padding: 20px; text-align: center;
+                border: 2px dashed var(--teal); border-radius: 14px; font-family: var(--display); font-weight: 700; font-size: 1.2rem;
+                color: var(--teal-deep); background: color-mix(in srgb, var(--paper) 88%, var(--teal)); pointer-events: none; }
+.input-card.dragging .drop-overlay { display: grid; }
+
+.ocr-status { display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center;
+              padding: 12px 14px; border-top: 1px solid var(--line); background: color-mix(in srgb, var(--teal) 6%, var(--paper)); }
+.ocr-status.is-error { background: color-mix(in srgb, var(--scam) 10%, var(--paper)); }
+.ocr-thumb { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; border: 1px solid var(--line); background: var(--mist); }
+.ocr-thumb[src=""], .ocr-thumb:not([src]) { visibility: hidden; }
+.ocr-text { font-size: .95rem; font-weight: 600; }
+.ocr-status.is-error .ocr-text { color: var(--scam-ink); }
+.ocr-progress { height: 6px; margin-top: 8px; border-radius: 3px; background: var(--line); overflow: hidden; }
+.ocr-progress span { display: block; height: 100%; width: 0; background: var(--teal); border-radius: 3px; transition: width .25s ease; }
+.ocr-status.done .ocr-progress, .ocr-status.is-error .ocr-progress { display: none; }
+.ocr-dismiss { width: 32px; height: 32px; border: 0; border-radius: 8px; background: transparent; color: var(--ink-soft);
+               font-size: 1.4rem; line-height: 1; cursor: pointer; }
+.ocr-dismiss:hover { background: var(--mist); color: var(--ink); }
+
 /* ---------- Report ---------- */
 .report { margin-top: 36px; display: grid; gap: 18px; }
 .verdict-block { display: grid; grid-template-columns: 1fr minmax(260px, 380px); gap: 28px; align-items: center;
@@ -209,6 +233,8 @@ footer { background: var(--nav-bg); color: var(--nav-ink); padding: 18px 0; font
   .actions { width: 100%; }
   .actions .btn-primary { flex: 1 0 100%; }
   .actions .btn-ghost { flex: 1; padding: 9px 10px; font-size: .95rem; white-space: nowrap; }
+  .actions .btn-upload { flex: 1 0 100%; justify-content: center; }
+  .ocr-status { grid-template-columns: auto 1fr auto; gap: 10px; }
   .btn .long { display: none; }
   .btn .short { display: inline; }
   .verdict-block, .panel { padding: 18px; }
