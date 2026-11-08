@@ -1,19 +1,32 @@
-# Pings the Render site so the free instance doesn't spin down (it sleeps after
-# 15 min idle, which shows Render's ~1 min loading screen to the next visitor).
+# Keeps the Render free instance awake (it sleeps after 15 min idle, which shows
+# Render's ~1 min loading screen to the next visitor).
+#
+# GitHub delays scheduled runs a lot (in practice 35-60 min apart instead of every 10),
+# so a single ping per run isn't enough. Instead each run stays alive for ~2 hours and
+# pings every 5 minutes itself. A new scheduled run replaces the old one (concurrency),
+# so there's always exactly one pinger and no gaps as long as GitHub starts a run at
+# least once every 2 hours. Actions minutes are free for public repositories.
 name: Keep Render awake
 
 on:
   schedule:
-    - cron: "*/10 * * * *"   # every 10 minutes (GitHub may delay runs a few minutes)
-  workflow_dispatch:          # lets you run it manually from the Actions tab
+    - cron: "*/15 * * * *"
+  workflow_dispatch:          # lets you start it manually from the Actions tab
+
+concurrency:
+  group: keep-render-awake
+  cancel-in-progress: true    # newest run takes over from the previous one
 
 jobs:
   ping:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 125
     steps:
-      - name: Ping site
+      - name: Ping site every 5 minutes for ~2 hours
         run: |
-          curl -fsS -o /dev/null -w "HTTP %{http_code} in %{time_total}s\n" \
-            --retry 3 --retry-delay 20 --max-time 120 \
-            https://hiring-scam-detector.onrender.com/
+          for i in $(seq 1 24); do
+            curl -sS -o /dev/null -w "$(date -u +%H:%M) HTTP %{http_code} in %{time_total}s\n" \
+              --retry 3 --retry-delay 20 --max-time 120 \
+              https://hiring-scam-detector.onrender.com/version || true
+            sleep 300
+          done
