@@ -5,11 +5,14 @@ import numpy as np
 from ai_edge_litert.interpreter import Interpreter   # tiny TFLite runtime, no TensorFlow
 from flask import Flask, render_template, request, jsonify
 from lime.lime_text import LimeTextExplainer
+from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
+
+from red_flags import find_red_flags, rule_for_word
 
 app = Flask(__name__)
 
 # Bump on every deploy; shown in the page footer and at /version so you can tell it's live.
-VERSION = "v1.3"
+VERSION = "v1.4"
 
 # ---------- Load everything saved by the notebook ----------
 with open("model/config.json") as f:
@@ -81,14 +84,30 @@ predict_fn = keras_proba if USE_KERAS else logreg_proba
 # ---------- Explanations ----------
 lime_explainer = LimeTextExplainer(class_names=["Legitimate", "Fraudulent"], random_state=42)
 LIME_SAMPLES = int(os.environ.get("LIME_SAMPLES", "500"))   # affordable again with TFLite
+TOP_WORDS = 10
+STOPWORDS = set(ENGLISH_STOP_WORDS)      # "the", "your", "now"... carry no meaning for a reader
+
+
+def _top_words(pairs):
+    """Drop filler words and keep the strongest TOP_WORDS (word, weight) pairs."""
+    pairs = [(w, s) for w, s in pairs if w.lower() not in STOPWORDS and len(w) > 1]
+    pairs.sort(key=lambda x: abs(x[1]), reverse=True)
+    return [{"word": str(w), "weight": round(float(s), 3)} for w, s in pairs[:TOP_WORDS]]
+
 
 def explain_lime(text):
-    """LIME explanation for the deep learning model."""
+    """LIME explanation for the deep learning model, on the log-odds scale.
+
+    Explaining log-odds instead of raw probability keeps the weights readable when the
+    model is very confident (at 99.9% probability the raw weights shrink to ~0.01).
+    """
     def fn(texts):
-        p = keras_proba(list(texts))
-        return np.column_stack([1 - p, p])
-    exp = lime_explainer.explain_instance(text, fn, num_features=10, num_samples=LIME_SAMPLES)
-    return [{"word": w, "weight": round(float(s), 4), "reason": ""} for w, s in exp.as_list()]
+        p = np.clip(keras_proba(list(texts)), 1e-6, 1 - 1e-6)
+        z = np.log(p / (1 - p))
+        return np.column_stack([-z, z])
+    exp = lime_explainer.explain_instance(text, fn, num_features=TOP_WORDS * 2,
+                                          num_samples=LIME_SAMPLES)
+    return _top_words(exp.as_list())
 
 
 def explain_logreg(text):
@@ -96,9 +115,7 @@ def explain_logreg(text):
     vec = tfidf.transform([text]).tocoo()
     names = tfidf.get_feature_names_out()
     coefs = logreg.coef_[0]
-    items = [(names[j], float(v * coefs[j])) for j, v in zip(vec.col, vec.data)]
-    items.sort(key=lambda x: abs(x[1]), reverse=True)
-    return [{"word": w, "weight": round(c, 4), "reason": ""} for w, c in items[:10]]
+    return _top_words([(names[j], v * coefs[j]) for j, v in zip(vec.col, vec.data)])
 
 
 # ---------- Small in-memory cache (repeat texts, e.g. the sample, return instantly) ----------
@@ -126,7 +143,16 @@ def read_text():
     return (data.get("text") or "").strip()
 
 
-TOO_SHORT = {"error": "Please paste a longer job posting (at least 20 characters)."}
+MIN_CHARS, MAX_CHARS = 20, 5000
+
+
+def check_length(text):
+    """Error response for text that's too short or too long, else None."""
+    if len(text) < MIN_CHARS:
+        return jsonify({"error": f"Please paste a longer job posting (at least {MIN_CHARS} characters)."}), 400
+    if len(text) > MAX_CHARS:
+        return jsonify({"error": f"That's too long. Please paste at most {MAX_CHARS:,} characters."}), 400
+    return None
 
 
 # ---------- Routes ----------
@@ -142,16 +168,19 @@ def version():
 
 @app.route("/predict", methods=["POST"])
 def predict():
-    """Fast verdict only. The frontend then calls /explain for the word reasons."""
+    """Fast verdict + rule-based red flags. The frontend then calls /explain for the AI's words."""
     text = read_text()
-    if len(text) < 20:
-        return jsonify(TOO_SHORT), 400
+    bad = check_length(text)
+    if bad:
+        return bad
     t0 = time.time()
     prob = verdict_cache.get_or_compute(text, lambda: float(predict_fn([text])[0]))
     print(f"/predict {time.time() - t0:.2f}s", flush=True)
     return jsonify({
         "label": "Fraudulent" if prob >= THRESHOLD else "Legitimate",
         "probability": round(prob * 100, 1),
+        "threshold": round(THRESHOLD * 100, 1),
+        "red_flags": find_red_flags(text),
         "mode": "model",
     })
 
@@ -160,13 +189,18 @@ def predict():
 def explain():
     """Which words pushed the verdict towards scam / legit (LIME or LR weights)."""
     text = read_text()
-    if len(text) < 20:
-        return jsonify(TOO_SHORT), 400
+    bad = check_length(text)
+    if bad:
+        return bad
     t0 = time.time()
-    reasons = explain_cache.get_or_compute(
+    words = explain_cache.get_or_compute(
         text, lambda: explain_lime(text) if USE_KERAS else explain_logreg(text))
+    flags = find_red_flags(text)
+    # Attach a rule's plain-English reason only where the model agrees (word pushes to scam).
+    reasons = [{**w, "reason": rule_for_word(w["word"], flags) if w["weight"] > 0 else ""}
+               for w in words]
     print(f"/explain {time.time() - t0:.2f}s (lime_samples={LIME_SAMPLES})", flush=True)
-    return jsonify({"reasons": reasons})
+    return jsonify({"reasons": reasons, "method": "LIME" if USE_KERAS else "Logistic Regression"})
 
 
 @app.errorhandler(Exception)
