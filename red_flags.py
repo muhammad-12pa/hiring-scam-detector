@@ -3,6 +3,7 @@
 These run alongside the LSTM model. The model gives a learned probability; these rules
 give human-readable reasons that anyone can check. Add or tweak rules in RULES below.
 Each rule: id, title (short), detail (why it matters), and a regex (case-insensitive).
+"severe" rules (asking for money or ID/bank details) weigh more in the combined risk score.
 """
 import re
 
@@ -11,6 +12,7 @@ FREE_EMAIL = r"gmail|googlemail|yahoo|ymail|hotmail|outlook|live|msn|aol|icloud|
 RULES = [
     {
         "id": "fee",
+        "severe": True,
         "title": "Asks you to pay money",
         "detail": "Genuine employers never charge applicants a registration, training or joining fee.",
         "pattern": r"\b(registration|joining|processing|training|security|application|interview|visa)\s+(fee|fees|charge|charges|deposit|amount)\b"
@@ -19,6 +21,7 @@ RULES = [
     },
     {
         "id": "personal_data",
+        "severe": True,
         "title": "Asks for ID or bank details",
         "detail": "Requests for Aadhaar, PAN, passport, bank account or OTP before a verified offer are a classic identity-theft move.",
         "pattern": r"\b(aadhaa?r|pan\s*card|passport\s*(copy|number|details)|civil\s*id|ssn|social\s+security"
@@ -93,7 +96,7 @@ def find_red_flags(text):
                 hits.append(s)
         if hits:
             found.append({"id": rule["id"], "title": rule["title"], "detail": rule["detail"],
-                          "matches": hits[:3]})
+                          "severe": bool(rule.get("severe")), "matches": hits[:3]})
     return found
 
 

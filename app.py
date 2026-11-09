@@ -12,7 +12,7 @@ from red_flags import find_red_flags, rule_for_word
 app = Flask(__name__)
 
 # Bump on every deploy; shown in the page footer and at /version so you can tell it's live.
-VERSION = "v1.5"
+VERSION = "v1.6"
 
 # ---------- Load everything saved by the notebook ----------
 with open("model/config.json") as f:
@@ -95,6 +95,27 @@ def _top_words(pairs):
     return [{"word": str(w), "weight": round(float(s), 3)} for w, s in pairs[:TOP_WORDS]]
 
 
+# ---------- Combined risk: AI model + red-flag rules ----------
+# Each red flag adds to the model's log-odds: serious ones (asking for money or ID/bank
+# details) add SEVERE_WEIGHT, others RULE_WEIGHT, up to MAX_BOOST in total. Rules can only
+# raise the risk, never lower it. A serious flag also lifts the result to at least
+# SEVERE_FLOOR ("Be careful"), since no genuine employer asks for those up front.
+# Examples: AI 95% + fee + chat app -> 99%; AI 2% + asks for bank details -> 40%.
+RULE_WEIGHT = 0.75
+SEVERE_WEIGHT = 1.5
+MAX_BOOST = 4.0
+SEVERE_FLOOR = 0.40
+
+
+def combined_risk(ai_prob, flags):
+    p = min(max(ai_prob, 1e-6), 1 - 1e-6)
+    boost = min(MAX_BOOST, sum(SEVERE_WEIGHT if f.get("severe") else RULE_WEIGHT for f in flags))
+    risk = float(1 / (1 + np.exp(-(np.log(p / (1 - p)) + boost))))
+    if any(f.get("severe") for f in flags):
+        risk = max(risk, SEVERE_FLOOR)
+    return risk
+
+
 def explain_lime(text):
     """LIME explanation for the deep learning model, on the log-odds scale.
 
@@ -174,13 +195,16 @@ def predict():
     if bad:
         return bad
     t0 = time.time()
-    prob = verdict_cache.get_or_compute(text, lambda: float(predict_fn([text])[0]))
+    ai_prob = verdict_cache.get_or_compute(text, lambda: float(predict_fn([text])[0]))
+    flags = find_red_flags(text)
+    prob = combined_risk(ai_prob, flags)
     print(f"/predict {time.time() - t0:.2f}s", flush=True)
     return jsonify({
         "label": "Fraudulent" if prob >= THRESHOLD else "Legitimate",
-        "probability": round(prob * 100, 1),
+        "probability": min(round(prob * 100, 1), 99.9),  # combined risk (AI + red flags); never claim 100%
+        "ai_probability": round(ai_prob * 100, 1),  # the model alone
         "threshold": round(THRESHOLD * 100, 1),
-        "red_flags": find_red_flags(text),
+        "red_flags": flags,
         "mode": "model",
     })
 
@@ -193,14 +217,32 @@ def explain():
     if bad:
         return bad
     t0 = time.time()
-    words = explain_cache.get_or_compute(
-        text, lambda: explain_lime(text) if USE_KERAS else explain_logreg(text))
     flags = find_red_flags(text)
-    # Attach a rule's plain-English reason only where the model agrees (word pushes to scam).
-    reasons = [{**w, "reason": rule_for_word(w["word"], flags) if w["weight"] > 0 else ""}
-               for w in words]
+
+    def with_reasons(words):
+        # Attach a rule's plain-English reason only where the model agrees (word pushes to scam).
+        return [{**w, "reason": rule_for_word(w["word"], flags) if w["weight"] > 0 else ""}
+                for w in words]
+
+    main = {
+        "method": "LIME" if USE_KERAS else "Logistic Regression",
+        "model": "BiLSTM (deep learning)" if USE_KERAS else "Logistic Regression",
+        "probability": round(verdict_cache.get_or_compute(text, lambda: float(predict_fn([text])[0])) * 100, 1),
+        "reasons": with_reasons(explain_cache.get_or_compute(
+            text, lambda: explain_lime(text) if USE_KERAS else explain_logreg(text))),
+    }
+    # Second opinion for the "Compare explanations" view: the TF-IDF + Logistic Regression
+    # baseline, whose word weights are exact (coefficient x TF-IDF value), not sampled.
+    compare = None
+    if USE_KERAS:
+        compare = {
+            "method": "Exact weights",
+            "model": "Logistic Regression (baseline)",
+            "probability": round(float(logreg_proba([text])[0]) * 100, 1),
+            "reasons": with_reasons(explain_logreg(text)),
+        }
     print(f"/explain {time.time() - t0:.2f}s (lime_samples={LIME_SAMPLES})", flush=True)
-    return jsonify({"reasons": reasons, "method": "LIME" if USE_KERAS else "Logistic Regression"})
+    return jsonify({**main, "compare": compare})
 
 
 @app.errorhandler(Exception)

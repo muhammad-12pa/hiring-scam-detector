@@ -82,8 +82,11 @@ analyzeBtn.addEventListener("click", async () => {
     verdict = await postJSON("/predict", { text },
       () => { analyzeBtn.textContent = "Waking up server…"; });
     if (id !== runId) return;
+    current.text = text;
+    current.explain = null;
     showVerdict(verdict);
     showFlags(verdict.red_flags || []);
+    $("compareTabs").classList.add("hidden");
     renderMarkup(text, {}, verdict.red_flags || [], false);
     showWordsLoading();
     result.classList.remove("hidden");
@@ -99,16 +102,18 @@ analyzeBtn.addEventListener("click", async () => {
 
   // 2) The AI's word-level explanation: fills in when ready.
   try {
-    const { reasons, method } = await postJSON("/explain", { text });
+    const data = await postJSON("/explain", { text });
     if (id !== runId) return;
-    const weights = {};
-    (reasons || []).forEach(r => { weights[r.word] = r.weight; });
-    renderMarkup(text, weights, verdict.red_flags || [], true);
-    showWords(reasons || [], method);
+    current.explain = data;
+    current.view = "main";
+    showExplanation();
   } catch (e) {
     if (id === runId) $("reasons").textContent = "Couldn't load the AI explanation: " + e.message;
   }
 });
+
+// What's on screen now, for the compare toggle, PDF and share.
+const current = { text: "", verdict: null, explain: null, view: "main" };
 
 function riskLevel(p, threshold) {
   if (p >= threshold) return "high";
@@ -116,25 +121,42 @@ function riskLevel(p, threshold) {
   return "low";
 }
 
+const TITLES = { high: "Likely a scam", mid: "Be careful with this one", low: "Looks genuine" };
+
 function showVerdict(d) {
+  current.verdict = d;
   const level = riskLevel(d.probability, d.threshold ?? 61);
   const block = document.querySelector(".verdict-block");
   block.classList.remove("high", "mid", "low");
   block.classList.add(level);
-  const titles = { high: "Likely a scam", mid: "Be careful with this one", low: "Looks genuine" };
-  const subs = {
-    high: `The model rates this posting ${d.probability}% likely to be fraudulent.`,
-    mid: `The model rates it ${d.probability}% likely to be fraudulent: below its scam threshold, but not clearly safe.`,
-    low: `The model rates it only ${d.probability}% likely to be fraudulent.`
-  };
-  $("verdict").textContent = titles[level];
-  $("verdictSub").textContent = subs[level];
-  $("riskMarker").style.left = "0%";
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    $("riskMarker").style.left = Math.min(99.5, Math.max(0.5, d.probability)) + "%";
-  }));
-
+  const ai = d.ai_probability ?? d.probability;
   const n = (d.red_flags || []).length;
+  const raised = d.probability - ai >= 0.5;
+  let sub;
+  if (raised) {
+    sub = `The AI model rated it ${ai}%. ${n === 1 ? "The red flag" : `The ${n} red flags`} below raised the overall risk to ${d.probability}%.`;
+  } else if (level === "high") {
+    sub = `Overall risk ${d.probability}%. The AI model and the red-flag checks both point to fraud.`;
+    if (!n) sub = `The AI model rates this posting ${d.probability}% likely to be fraudulent.`;
+  } else if (level === "mid") {
+    sub = `Overall risk ${d.probability}%: below the scam threshold, but not clearly safe.`;
+  } else {
+    sub = `Overall risk only ${d.probability}%.`;
+  }
+  $("verdict").textContent = TITLES[level];
+  $("verdictSub").textContent = sub;
+
+  // Hollow marker = AI model alone, solid marker = overall risk with red flags.
+  const aiMarker = $("aiMarker");
+  aiMarker.classList.toggle("hidden", !raised);
+  [$("riskMarker"), aiMarker].forEach(m => m.style.left = "0%");
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    const pos = v => Math.min(99.5, Math.max(0.5, v)) + "%";
+    $("riskMarker").style.left = pos(d.probability);
+    aiMarker.style.left = pos(ai);
+  }));
+  $("riskKey").classList.toggle("hidden", !raised);
+
   const note = $("flagNote");
   if (level !== "high" && n >= 2) {
     note.textContent = `The AI isn't convinced it's a scam, but ${n} red flags were found. Verify the company before sharing any personal details or money.`;
@@ -198,7 +220,7 @@ function renderMarkup(text, weights, flags, withWeights) {
     const start = pos;
     pos += part.length;
     const isFlagged = flagged[start] === 1;
-    const w = withWeights ? weights[part] : undefined;
+    const w = withWeights ? (weights[part] ?? weights[part.toLowerCase()]) : undefined;
     let node;
     if (w !== undefined) {
       node = document.createElement("mark");
@@ -265,8 +287,101 @@ function showWords(reasons, method) {
   axis.className = "impact-axis";
   axis.innerHTML = "<span></span><div><span>Towards genuine</span><span>Towards scam</span></div>";
   box.appendChild(axis);
-  $("methodNote").textContent =
-    `Explained with ${method || "LIME"}. The model learned these patterns from its training data, so it can weigh a word differently from the red-flag rules. Both views are shown so you can judge for yourself.`;
 }
+
+// ---------- Explanation + "compare explanations" toggle ----------
+const METHOD_NOTES = {
+  "LIME": "Explained with LIME: the deep model scored hundreds of copies of the posting with words removed at random, and LIME measured which removals changed the score most.",
+  "Exact weights": "The baseline model is a simple Logistic Regression on word frequencies (TF-IDF), so each word's weight is exact: its learned coefficient times how often it appears. Some entries are two-word phrases."
+};
+
+function weightsFor(reasons) {
+  // Map words (and each word of two-word phrases) to weights for the marked-up posting.
+  const w = {};
+  reasons.forEach(r => { w[r.word] = r.weight; });
+  reasons.forEach(r => r.word.split(/\s+/).forEach(part => {
+    if (w[part.toLowerCase()] === undefined && w[part] === undefined) w[part.toLowerCase()] = r.weight;
+  }));
+  return w;
+}
+
+function showExplanation() {
+  const e = current.explain;
+  if (!e) return;
+  const view = current.view === "compare" && e.compare ? e.compare : e;
+  renderMarkup(current.text, weightsFor(view.reasons || []), current.verdict.red_flags || [], true);
+  showWords(view.reasons || [], view.method);
+  $("wordsTitle").textContent = current.view === "compare" ? "What the baseline model focused on" : "What the AI focused on";
+  $("modelLine").textContent = `${view.model}: rates this posting ${view.probability}% likely to be a scam.`;
+  $("methodNote").textContent = (METHOD_NOTES[view.method] || "") +
+    " The models learned these patterns from training data, so they can weigh a word differently from the red-flag rules.";
+
+  const tabs = $("compareTabs");
+  tabs.classList.toggle("hidden", !e.compare);
+  tabs.querySelectorAll("button").forEach(b => {
+    const on = b.dataset.view === current.view;
+    b.setAttribute("aria-selected", on);
+    b.tabIndex = on ? 0 : -1;
+  });
+
+  // Agreement: words both models push the same way
+  const agree = $("agreement");
+  if (e.compare) {
+    const sign = new Map();
+    e.compare.reasons.forEach(r => r.word.toLowerCase().split(/\s+/).forEach(p => sign.set(p, Math.sign(r.weight))));
+    const both = [...new Set(e.reasons
+      .filter(r => sign.get(r.word.toLowerCase()) === Math.sign(r.weight))
+      .map(r => r.word.toLowerCase()))];
+    agree.textContent = both.length
+      ? `Both models weigh these words the same way: ${both.join(", ")}.`
+      : "The two models focus on different words for this posting.";
+    agree.classList.remove("hidden");
+  } else {
+    agree.classList.add("hidden");
+  }
+}
+
+$("compareTabs").addEventListener("click", e => {
+  const b = e.target.closest("button[data-view]");
+  if (!b || b.dataset.view === current.view) return;
+  current.view = b.dataset.view;
+  showExplanation();
+});
+$("compareTabs").addEventListener("keydown", e => {
+  if (!["ArrowLeft", "ArrowRight"].includes(e.key)) return;
+  current.view = current.view === "main" ? "compare" : "main";
+  showExplanation();
+  $("compareTabs").querySelector(`[data-view="${current.view}"]`).focus();
+});
+
+// ---------- Save as PDF / share ----------
+$("pdfBtn").addEventListener("click", () => {
+  $("printDate").textContent = new Date().toLocaleString();
+  window.print();
+});
+
+$("shareBtn").addEventListener("click", async () => {
+  const d = current.verdict;
+  if (!d) return;
+  const level = riskLevel(d.probability, d.threshold ?? 61);
+  const flags = (d.red_flags || []).map(f => f.title);
+  // Summary only: the posting text itself is never put in the message or a link.
+  const text = `ScamShield check: ${TITLES[level]} (${d.probability}% risk).` +
+    (flags.length ? ` Red flags: ${flags.join("; ")}.` : " No common scam red flags found.") +
+    ` Check a job post yourself: ${location.origin}/`;
+  const btn = $("shareBtn");
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: "ScamShield result", text });
+      return;
+    }
+    await navigator.clipboard.writeText(text);
+    btn.textContent = "Copied to clipboard";
+  } catch (err) {
+    if (err && err.name === "AbortError") return;   // user closed the share sheet
+    btn.textContent = "Couldn't share";
+  }
+  setTimeout(() => { btn.textContent = "Share result"; }, 2500);
+});
 
 updateCount();

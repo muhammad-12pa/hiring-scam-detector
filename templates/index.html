@@ -63,6 +63,10 @@
         <p id="error" class="error" role="alert"></p>
 
         <div id="result" class="report hidden" aria-live="polite">
+          <div class="print-header" aria-hidden="true">
+            <strong>ScamShield report</strong>
+            <span>Checked <span id="printDate"></span> at hiring-scam-detector.onrender.com</span>
+          </div>
           <div class="verdict-block">
             <div>
               <h2 id="verdict" class="verdict"></h2>
@@ -71,12 +75,21 @@
             <div class="risk" aria-hidden="true">
               <div class="risk-scale">
                 <span class="seg low"></span><span class="seg mid"></span><span class="seg high"></span>
+                <span id="aiMarker" class="risk-marker ai hidden"></span>
                 <span id="riskMarker" class="risk-marker"></span>
               </div>
               <div class="risk-labels"><span>Low risk</span><span>Medium</span><span>High risk</span></div>
+              <div id="riskKey" class="risk-key hidden">
+                <span><i class="key ai"></i>AI model alone</span>
+                <span><i class="key"></i>With red flags</span>
+              </div>
             </div>
           </div>
           <p id="flagNote" class="flag-note hidden"></p>
+          <div class="report-actions">
+            <button id="pdfBtn" class="btn btn-ghost" type="button">Save as PDF</button>
+            <button id="shareBtn" class="btn btn-ghost" type="button">Share result</button>
+          </div>
 
           <div class="report-grid">
             <section class="panel paper-panel" aria-labelledby="markupTitle">
@@ -95,10 +108,18 @@
             </section>
           </div>
 
-          <section class="panel" aria-labelledby="wordsTitle">
-            <h3 id="wordsTitle">What the AI focused on</h3>
+          <section class="panel words-panel" aria-labelledby="wordsTitle">
+            <div class="words-head">
+              <h3 id="wordsTitle">What the AI focused on</h3>
+              <div id="compareTabs" class="seg-tabs hidden" role="tablist" aria-label="Compare explanations">
+                <button type="button" role="tab" data-view="main" aria-selected="true">Deep model (LIME)</button>
+                <button type="button" role="tab" data-view="compare" aria-selected="false" tabindex="-1">Baseline model</button>
+              </div>
+            </div>
+            <p id="modelLine" class="model-line"></p>
             <p class="panel-note">The words that changed the model's score the most. Bars to the right pushed it towards scam, bars to the left towards genuine.</p>
             <div id="reasons" class="impact"></div>
+            <p id="agreement" class="agreement hidden"></p>
             <p id="methodNote" class="method-note"></p>
           </section>
         </div>
@@ -112,8 +133,8 @@
           <li><strong>Training data</strong><span>Thousands of real and fake postings from the EMSCAD dataset (Kaggle).</span></li>
           <li><strong>Text to numbers</strong><span>Each posting is cleaned and turned into up to 300 word IDs from a 20,000-word vocabulary.</span></li>
           <li><strong>BiLSTM classifier</strong><span>A bidirectional LSTM reads the words in order, both ways, and scores how likely the posting is a scam.</span></li>
-          <li><strong>Explanation</strong><span>LIME removes words at random hundreds of times to see which ones move the score. Red-flag rules add plain-language checks.</span></li>
-          <li><strong>Verdict and reasons</strong><span>You see the risk level, the marked-up posting, and the red flags behind it.</span></li>
+          <li><strong>Explanation</strong><span>LIME removes words at random hundreds of times to see which ones move the score. A simpler baseline model gives a second, exact opinion.</span></li>
+          <li><strong>Verdict and reasons</strong><span>Red-flag rules add plain-language checks and can raise the risk. You see the overall risk, the marked-up posting and the reasons behind it.</span></li>
         </ol>
       </div>
     </section>

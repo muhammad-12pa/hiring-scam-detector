@@ -1,6 +1,0 @@
-{
-  "best_model": "lstm",
-  "threshold": 0.6100000000000001,
-  "max_tokens": 20000,
-  "seq_len": 300
-}
