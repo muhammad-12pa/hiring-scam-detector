@@ -129,13 +129,45 @@
     <section id="how" class="how">
       <div class="container">
         <h2>How it works</h2>
-        <ol class="timeline">
-          <li><strong>Training data</strong><span>Thousands of real and fake postings from the EMSCAD dataset (Kaggle).</span></li>
-          <li><strong>Text to numbers</strong><span>Each posting is cleaned and turned into up to 300 word IDs from a 20,000-word vocabulary.</span></li>
-          <li><strong>BiLSTM classifier</strong><span>A bidirectional LSTM reads the words in order, both ways, and scores how likely the posting is a scam.</span></li>
-          <li><strong>Explanation</strong><span>LIME removes words at random hundreds of times to see which ones move the score. A simpler baseline model gives a second, exact opinion.</span></li>
-          <li><strong>Verdict and reasons</strong><span>Red-flag rules add plain-language checks and can raise the risk. You see the overall risk, the marked-up posting and the reasons behind it.</span></li>
+        <ol class="flow">
+          <li>
+            <span class="flow-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4.5h6V3H9z"/><path d="M9 10h6M9 13.5h6M9 17h3.5"/></svg></span>
+            <strong>You paste the post</strong>
+            <span>Text, or a screenshot from WhatsApp or a job site.</span>
+          </li>
+          <li>
+            <span class="flow-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/><path d="M9 2.5v2.5M15 2.5v2.5M9 19v2.5M15 19v2.5M2.5 9H5M2.5 15H5M19 9h2.5M19 15h2.5"/><path d="M9.5 9.5h5v5h-5z"/></svg></span>
+            <strong>The AI reads it</strong>
+            <span>A model trained on thousands of real and fake job ads scores it.</span>
+          </li>
+          <li>
+            <span class="flow-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5.5 21V4"/><path d="M5.5 4.5h11l-2.5 4 2.5 4h-11"/></svg></span>
+            <strong>Red flags are checked</strong>
+            <span>Fees, ID or bank requests, WhatsApp-only contact and other tricks.</span>
+          </li>
+          <li>
+            <span class="flow-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m14.5 4.5 5 5-8 8H6.5v-5z"/><path d="M4 21h16"/></svg></span>
+            <strong>It shows you why</strong>
+            <span>The words that mattered are highlighted, and a second model double-checks.</span>
+          </li>
+          <li>
+            <span class="flow-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.5 4.5 5.4v5.9c0 4.6 3.2 8.1 7.5 9.2 4.3-1.1 7.5-4.6 7.5-9.2V5.4z"/><path d="m8.7 12 2.3 2.3 4.4-4.6"/></svg></span>
+            <strong>You decide</strong>
+            <span>See the risk level and what to watch out for, before you share anything.</span>
+          </li>
         </ol>
+
+        <details class="tech">
+          <summary>Technical details</summary>
+          <dl>
+            <dt>Training data</dt><dd>Real and fake job postings from the EMSCAD dataset (Kaggle).</dd>
+            <dt>Preprocessing</dt><dd>Lower-cased, punctuation removed, turned into up to 300 word IDs from a 20,000-word vocabulary.</dd>
+            <dt>Model</dt><dd>Bidirectional LSTM (served with TensorFlow Lite); scam threshold 0.61. Baseline: TF-IDF + Logistic Regression.</dd>
+            <dt>Explanation</dt><dd>LIME on the model's log-odds (500 samples); exact coefficient weights for the baseline.</dd>
+            <dt>Red flags</dt><dd>8 rules; each adds to the log-odds (+1.5 for money or ID requests, +0.75 for others, max +4).</dd>
+            <dt>Screenshots</dt><dd>Read in your browser with Tesseract.js OCR; the image is never uploaded.</dd>
+          </dl>
+        </details>
       </div>
     </section>
 

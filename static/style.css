@@ -214,15 +214,30 @@ textarea::placeholder { color: var(--ink-faint); }
 @keyframes shimmer { to { background-position: -200% 0; } }
 
 /* ---------- How it works ---------- */
-.how { background: var(--paper); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 64px 0; }
-.timeline { list-style: none; counter-reset: step; display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; }
-.timeline li { counter-increment: step; position: relative; padding: 46px 18px 0 0; }
-.timeline li::before { content: counter(step); position: absolute; top: 0; left: 0; z-index: 1; width: 32px; height: 32px; border-radius: 50%;
-                       display: grid; place-items: center; background: var(--teal); color: var(--on-teal); font-family: var(--display); font-weight: 800; }
-.timeline li::after { content: ""; position: absolute; top: 15px; left: 32px; right: 0; height: 2px; background: var(--line); }
-.timeline li:last-child::after { display: none; }
-.timeline strong { display: block; font-family: var(--display); font-size: 1.1rem; margin-bottom: 6px; }
-.timeline span { color: var(--ink-soft); font-size: .95rem; }
+.how { background: var(--paper); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 48px 0; }
+.how h2 { margin-bottom: 26px; }
+
+/* Flow: icons joined by an arrowed line, text centred under each */
+.flow { list-style: none; display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; }
+.flow li { position: relative; display: grid; align-content: start; justify-items: center; text-align: center; padding: 0 10px; }
+.flow li:not(:last-child)::after {           /* connector to the next step */
+  content: ""; position: absolute; top: 27px; left: calc(50% + 36px); right: calc(-50% + 36px); height: 2px;
+  background: repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 11px); }
+.flow li:not(:last-child)::before {          /* arrow head */
+  content: ""; position: absolute; top: 23px; right: calc(-50% + 34px); width: 8px; height: 8px;
+  border-top: 2px solid var(--ink-faint); border-right: 2px solid var(--ink-faint); transform: rotate(45deg); }
+.flow-icon { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; margin-bottom: 12px;
+             background: color-mix(in srgb, var(--teal) 12%, var(--paper)); color: var(--teal); }
+.flow li:last-child .flow-icon { background: var(--teal); color: var(--on-teal); }
+.flow-icon svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.flow strong { font-family: var(--display); font-size: 1.05rem; line-height: 1.25; margin-bottom: 4px; }
+.flow span:not(.flow-icon) { color: var(--ink-soft); font-size: .92rem; line-height: 1.45; max-width: 22ch; }
+
+.tech { margin-top: 30px; border-top: 1px dashed var(--line); padding-top: 14px; }
+.tech summary { cursor: pointer; font-weight: 700; color: var(--teal-deep); width: max-content; }
+.tech dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 20px; margin-top: 14px; font-size: .95rem; max-width: 860px; }
+.tech dt { font-weight: 700; }
+.tech dd { color: var(--ink-soft); }
 
 /* ---------- About ---------- */
 .about { padding: 64px 0; }
@@ -240,9 +255,17 @@ footer { background: var(--nav-bg); color: var(--nav-ink); padding: 18px 0; font
   .verdict-block { grid-template-columns: 1fr; gap: 18px; }
   .report-grid { grid-template-columns: 1fr; }
   .paper-panel { position: static; }
-  .timeline { grid-template-columns: 1fr; gap: 22px; }
-  .timeline li { padding: 4px 0 0 50px; }
-  .timeline li::after { top: 36px; bottom: -22px; left: 15px; right: auto; width: 2px; height: auto; }
+  /* Flow turns into a compact vertical list: icon left, text right */
+  .flow { grid-template-columns: 1fr; gap: 14px; }
+  .flow li { grid-template-columns: 44px 1fr; justify-items: start; text-align: left; column-gap: 14px; padding: 0; }
+  .flow-icon { grid-row: span 2; width: 44px; height: 44px; margin: 0; }
+  .flow-icon svg { width: 22px; height: 22px; }
+  .flow span:not(.flow-icon) { max-width: none; }
+  .flow li:not(:last-child)::after { top: 48px; bottom: -12px; left: 21px; right: auto; width: 2px; height: auto;
+    background: repeating-linear-gradient(180deg, var(--line) 0 5px, transparent 5px 9px); }
+  .flow li:not(:last-child)::before { display: none; }
+  .tech dl { grid-template-columns: 1fr; gap: 2px; }
+  .tech dd { margin-bottom: 8px; }
 }
 @media (max-width: 560px) {
   body { font-size: 1rem; }

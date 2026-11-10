@@ -7,11 +7,12 @@ const SAMPLE_SCAM = `URGENT HIRING! Work from home data entry job. No experience
 Pay a one-time registration fee of $50 to confirm your seat. Limited slots, apply now!
 Contact us on WhatsApp or email hr.globaljobs@gmail.com. Send your Aadhaar and bank account details for direct joining.`;
 
-const SAMPLE_GENUINE = `Software Engineer - Zain Kuwait
-We are looking for a backend engineer to join our digital products team in Shuwaikh.
-Requirements: BSc in Computer Science, 3 years of Python experience, familiarity with REST APIs and SQL.
-Responsibilities include building internal services and reviewing code with the team.
-Apply through the official careers portal. Shortlisted candidates will be invited to interviews at our office.`;
+const SAMPLE_GENUINE = `Software Developer (Freshers) - Technovate Solutions Pvt. Ltd., Infopark, Kochi
+We are hiring B.Tech / MCA graduates (2025 or 2026 batch) to join our product engineering team.
+Skills: Java or Python, SQL, basic understanding of web development.
+Selection process: online aptitude test, technical interview and HR interview at our Kochi office.
+CTC: 3.6 to 4.5 LPA with health insurance and paid leave.
+Apply through the Careers page on our website or on Naukri.com.`;
 
 function setText(value) {
   jobText.value = value;
