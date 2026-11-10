@@ -202,31 +202,6 @@
           </figure>
         </div>
 
-        {% if perf.original %}
-        <h3 class="perf-sub">Original vs retrained model</h3>
-        <p class="perf-note">The original model learned from EMSCAD alone, which has only {{ perf.dataset.india_fraud }} fake postings from India and none of today's common Indian tricks. The retrained model is augmented with {{ "{:,}".format(perf.deployed.augment_posts) }} India-specific examples (half scams, half genuine) covering those patterns. Both rows include the red-flag rules. Bars show the share of scams caught.</p>
-        <div class="cmp" role="table" aria-label="Scams caught by each model on each test set">
-          <div class="cmp-row cmp-headrow" role="row">
-            <span role="columnheader">Test set</span><span role="columnheader">Original model</span><span role="columnheader">Retrained model</span>
-          </div>
-          {% for key, title, note in [
-              ("emscad_test", "Real postings (EMSCAD)", "{:,} postings".format(d.n)),
-              ("india_synthetic_test", "Indian-style posts", "{} generated from held-out phrases".format(perf.deployed.results.india_synthetic_test.system.n)),
-              ("india_handwritten_test", "Hand-written Indian posts", "{} written separately".format(perf.deployed.results.india_handwritten_test.system.n))] %}
-          {% set o = perf.original.results[key].system %}{% set r = perf.deployed.results[key].system %}
-          <div class="cmp-row" role="row">
-            <span class="cmp-set" role="cell"><strong>{{ title }}</strong><small>{{ note }}</small></span>
-            {% for m in [o, r] %}
-            <span class="cmp-cell" role="cell">
-              <span class="cmp-bar"><span style="width: {{ (m.recall * 100) | round(1) }}%"></span></span>
-              <span class="cmp-val">{{ m.confusion.tp }}/{{ m.fraud }} caught, {{ m.confusion.fp }} false alarm{{ "" if m.confusion.fp == 1 else "s" }}{% if key == "emscad_test" and loop.first %}*{% endif %}</span>
-            </span>
-            {% endfor %}
-          </div>
-          {% endfor %}
-        </div>
-        {% set fair = perf.reproduction.results.emscad_test.bilstm %}<p class="perf-foot">* The original model had already seen most of these postings during training, so its real-data score is inflated. Retraining its exact setup without that overlap catches {{ fair.confusion.tp }}/{{ fair.fraud }} with {{ fair.confusion.fp }} false alarms, about the same as the retrained model. Indian test posts were prepared separately from the training examples. Training code: <code>training/train.py</code>.</p>
-        {% endif %}
       </div>
     </section>
     {% endif %}

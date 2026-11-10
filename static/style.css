@@ -260,19 +260,6 @@ textarea::placeholder { color: var(--ink-faint); }
 .cm-cell.good { background: color-mix(in srgb, var(--safe) 18%, var(--paper)); }
 .cm-cell.bad { background: color-mix(in srgb, var(--scam) 14%, var(--paper)); }
 
-.perf-sub { margin-top: 40px; margin-bottom: 6px; font-size: 1.3rem; }
-.perf-note { color: var(--ink-soft); max-width: 75ch; margin-bottom: 16px; font-size: .97rem; }
-.cmp { border: 1px solid var(--line); border-radius: 14px; background: var(--paper); overflow: hidden; }
-.cmp-row { display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 20px; align-items: center; padding: 14px 18px; }
-.cmp-row + .cmp-row { border-top: 1px solid var(--line); }
-.cmp-headrow { background: var(--mist); font-weight: 700; font-size: .9rem; color: var(--ink-soft); padding-top: 10px; padding-bottom: 10px; }
-.cmp-set small { display: block; color: var(--ink-faint); font-size: .85rem; }
-.cmp-bar { display: block; height: 10px; border-radius: 5px; background: var(--mist); overflow: hidden; }
-.cmp-bar span { display: block; height: 100%; border-radius: 5px; background: var(--teal); }
-.cmp-cell:nth-of-type(2) .cmp-bar span { background: var(--ink-faint); }   /* original model in grey */
-.cmp-val { display: block; font-size: .9rem; margin-top: 5px; font-variant-numeric: tabular-nums; }
-.perf-foot { color: var(--ink-faint); font-size: .85rem; margin-top: 12px; max-width: 85ch; }
-.perf-foot code { font-size: .85em; background: var(--mist); padding: 1px 5px; border-radius: 4px; }
 
 /* ---------- About ---------- */
 .about { padding: 64px 0; }
@@ -302,12 +289,6 @@ footer { background: var(--nav-bg); color: var(--nav-ink); padding: 18px 0; font
   .tech dl { grid-template-columns: 1fr; gap: 2px; }
   .tech dd { margin-bottom: 8px; }
   .perf-grid { grid-template-columns: 1fr; gap: 24px; }
-  .cmp-headrow { display: none; }
-  .cmp-row { grid-template-columns: 1fr 1fr; gap: 10px 16px; }
-  .cmp-set { grid-column: 1 / -1; }
-  .cmp-cell::before { display: block; font-size: .8rem; color: var(--ink-faint); margin-bottom: 4px; }
-  .cmp-cell:nth-of-type(2)::before { content: "Original"; }
-  .cmp-cell:nth-of-type(3)::before { content: "Retrained"; }
 }
 @media (max-width: 560px) {
   .perf-metrics { gap: 14px 16px; }
