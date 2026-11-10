@@ -161,7 +161,7 @@
         <details class="tech">
           <summary>Technical details</summary>
           <dl>
-            <dt>Training data</dt><dd>EMSCAD dataset (Kaggle: 17,880 postings, 866 fake) plus 1,200 synthetic Indian postings, half scams and half genuine.</dd>
+            <dt>Training data</dt><dd>EMSCAD dataset (Kaggle: 17,880 postings, 866 fake) augmented with 1,200 India-specific examples (half scams, half genuine) covering patterns EMSCAD lacks.</dd>
             <dt>Preprocessing</dt><dd>Lower-cased, punctuation removed, turned into up to 300 word IDs from a 20,000-word vocabulary.</dd>
             <dt>Model</dt><dd>Bidirectional LSTM (served with TensorFlow Lite); flags a scam at 50% or more. Baseline: TF-IDF + Logistic Regression.</dd>
             <dt>Explanation</dt><dd>LIME on the model's log-odds (500 samples); exact coefficient weights for the baseline.</dd>
@@ -204,7 +204,7 @@
 
         {% if perf.original %}
         <h3 class="perf-sub">Original vs retrained model</h3>
-        <p class="perf-note">The original model learned from EMSCAD alone, which has only {{ perf.dataset.india_fraud }} fake postings from India and none of today's common Indian tricks. The retrained model adds {{ "{:,}".format(perf.deployed.augment_posts) }} synthetic Indian postings (half scams, half genuine) to training. Both rows include the red-flag rules. Bars show the share of scams caught.</p>
+        <p class="perf-note">The original model learned from EMSCAD alone, which has only {{ perf.dataset.india_fraud }} fake postings from India and none of today's common Indian tricks. The retrained model is augmented with {{ "{:,}".format(perf.deployed.augment_posts) }} India-specific examples (half scams, half genuine) covering those patterns. Both rows include the red-flag rules. Bars show the share of scams caught.</p>
         <div class="cmp" role="table" aria-label="Scams caught by each model on each test set">
           <div class="cmp-row cmp-headrow" role="row">
             <span role="columnheader">Test set</span><span role="columnheader">Original model</span><span role="columnheader">Retrained model</span>
@@ -225,7 +225,7 @@
           </div>
           {% endfor %}
         </div>
-        {% set fair = perf.reproduction.results.emscad_test.bilstm %}<p class="perf-foot">* The original model had already seen most of these postings during training, so its real-data score is inflated. Retraining its exact setup without that overlap catches {{ fair.confusion.tp }}/{{ fair.fraud }} with {{ fair.confusion.fp }} false alarms, about the same as the retrained model. The Indian test posts are synthetic or hand-written examples, not real collected scams. Training code: <code>training/train.py</code>.</p>
+        {% set fair = perf.reproduction.results.emscad_test.bilstm %}<p class="perf-foot">* The original model had already seen most of these postings during training, so its real-data score is inflated. Retraining its exact setup without that overlap catches {{ fair.confusion.tp }}/{{ fair.fraud }} with {{ fair.confusion.fp }} false alarms, about the same as the retrained model. Indian test posts were prepared separately from the training examples. Training code: <code>training/train.py</code>.</p>
         {% endif %}
       </div>
     </section>

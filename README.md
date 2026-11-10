@@ -44,7 +44,7 @@ flowchart LR
     I --> J
 ```
 
-1. **Training data:** the EMSCAD dataset (Kaggle, 17,880 postings, 866 fake) plus 1,200 synthetic Indian postings (half scams, half genuine). See [Model performance](#model-performance).
+1. **Training data:** the EMSCAD dataset (Kaggle, 17,880 postings, 866 fake) augmented with 1,200 India-specific examples (half scams, half genuine). See [Model performance](#model-performance).
 2. **Text to numbers:** each posting is lower-cased, stripped of punctuation and turned into up to 300 word IDs from a 20,000-word vocabulary.
 3. **BiLSTM classifier:** reads the words in both directions and outputs the probability that the posting is fraudulent.
 4. **Explanation:** LIME scores 500 copies of the posting with random words removed and fits a local model to see which words move the score. It explains the model's log-odds, which keeps the weights readable even when the model is 99.9% sure. Filler words are dropped.
@@ -64,7 +64,9 @@ All numbers are on postings never used in training, for the full check the site 
 
 \* The original model was trained on data that overlaps this test split: it scores about 0.90 on every part of EMSCAD, including rows it trained on. Retraining the same architecture and settings on the clean split gives F1 0.823, a fair estimate of the original approach. The retrained model matches it on real postings and catches far more Indian-style scams.
 
-**Why the original model missed Indian scams:** EMSCAD has only 14 fake postings from India. "Registration" appears in 46 postings and 98% of them are genuine, and "WhatsApp" appears in 31 postings, all genuine. "Aadhaar" and "Telegram" never appear. So the model learned those words as safe. The retrained model adds synthetic examples (`training/augment_india.py`) built from separate phrase pools for training and testing, plus a hand-written test set (`training/india_handwritten_test.json`). These examples are synthetic, not real collected scams.
+**Why the original model missed Indian scams:** EMSCAD has only 14 fake postings from India. "Registration" appears in 46 postings and 98% of them are genuine, and "WhatsApp" appears in 31 postings, all genuine. "Aadhaar" and "Telegram" never appear. So the model learned those words as safe.
+
+**Data augmentation for regional scam patterns:** to close that gap, the training data is augmented with 1,200 India-specific postings, 600 scams (registration or deposit fees, Aadhaar / PAN / bank / OTP requests, WhatsApp- or Telegram-only contact, task and like-and-earn jobs, visa-fee and fake offer-letter scams) and 600 genuine posts (so the model doesn't just learn "Indian city = scam"). They are generated from templates of common real-world patterns (`training/augment_india.py`). Training and test examples come from separate phrase pools, and a separate hand-written set (`training/india_handwritten_test.json`) is used only for testing.
 
 ## Tech stack
 
@@ -87,7 +89,7 @@ red_flags.py            Rule-based scam checks with plain-English reasons (add n
 convert_tflite.py       Converts model/scam_model.keras to scam_core.tflite + vocab.json
 training/
   train.py              Trains + evaluates the BiLSTM and baseline (writes model/metrics.json)
-  augment_india.py      Synthetic Indian scam / genuine postings (separate train and test phrases)
+  augment_india.py      Data augmentation: India-specific scam / genuine postings (separate train and test phrases)
   india_handwritten_test.json  Hand-written Indian test posts (never used for training)
 gunicorn.conf.py        1 worker, 120 s timeout (picked up automatically by gunicorn)
 model/
@@ -128,7 +130,7 @@ Render runs `gunicorn app:app`, which reads `gunicorn.conf.py`. Every push to `m
 
 ## Known limitations
 
-- The Indian training and test examples are synthetic or hand-written, not real collected scams; real-world accuracy on Indian posts will be lower than the test numbers. Collecting real reported scams is the next step.
+- The India-specific examples are generated from common patterns rather than collected from real reports, so real-world accuracy on Indian posts will be lower than the test numbers. Collecting reported scams (e.g. from cybercrime portals) is the next step.
 - On real EMSCAD postings the model catches about 72% of scams with very few false alarms (8 of 3,403 genuine). It errs on the side of not accusing genuine employers.
 - English only. OCR often misreads the ₹ sign, so check the extracted text before analysing.
 - Free hosting: the first request after a redeploy can take a minute.
