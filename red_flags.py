@@ -5,6 +5,7 @@ give human-readable reasons that anyone can check. Add or tweak rules in RULES b
 Each rule: id, title (short), detail (why it matters), and a regex (case-insensitive).
 "severe" rules (asking for money or ID/bank details) weigh more in the combined risk score.
 """
+import math
 import re
 
 FREE_EMAIL = r"gmail|googlemail|yahoo|ymail|hotmail|outlook|live|msn|aol|icloud|rediffmail|protonmail|proton|gmx|zoho"
@@ -85,12 +86,29 @@ WORD_TO_RULE = {
 RULE_TITLES = {r["id"]: r["title"] for r in RULES}
 
 
+# A money / ID match is ignored when the same sentence says the employer will NOT ask for it,
+# e.g. "we never ask for money or bank details", "we do not charge any registration fee",
+# "never share your OTP". Kept narrow on purpose: "Don't worry, the registration fee is
+# refundable" or "no hidden charges, just a fee of 499" are still flagged.
+_NEGATION = re.compile(r"\b(never|not|n't|no\s+one\s+will|beware\s+of)\b[^.!?\n]{0,40}?"
+                       r"\b(ask|asks|asking|charge|charges|collect|collects|request|require|take|takes|share|pay|demand)\b"
+                       r"[^.!?\n]{0,40}$", re.IGNORECASE)
+
+
+def _negated(text, start):
+    before = text[max(0, start - 70):start]
+    before = re.split(r"[.!?\n]", before)[-1]          # same sentence only
+    return bool(_NEGATION.search(before))
+
+
 def find_red_flags(text):
     """Return the rules that match, each with the exact text snippets that triggered it."""
     found = []
     for rule, rx in _COMPILED:
         hits = []
         for m in rx.finditer(text):
+            if rule["id"] in ("fee", "personal_data") and _negated(text, m.start()):
+                continue
             s = m.group(0).strip()
             if s and s.lower() not in (h.lower() for h in hits):
                 hits.append(s)
@@ -106,3 +124,25 @@ def rule_for_word(word, flags_found):
     if rid and any(f["id"] == rid for f in flags_found):
         return RULE_TITLES[rid]
     return ""
+
+
+# ---------- Combined risk: AI model + red-flag rules ----------
+# Each red flag adds to the model's log-odds: serious ones (asking for money or ID/bank
+# details) add SEVERE_WEIGHT, others RULE_WEIGHT, up to MAX_BOOST in total. Rules can only
+# raise the risk, never lower it. A serious flag also lifts the result to at least
+# SEVERE_FLOOR ("Be careful"), since no genuine employer asks for those up front.
+# Examples: AI 95% + fee + chat app -> 99%; AI 2% + asks for bank details -> 40%.
+# Weights and the 50% cut-off were chosen on the validation set (training/train.py split).
+RULE_WEIGHT = 0.5
+SEVERE_WEIGHT = 1.5
+MAX_BOOST = 4.0
+SEVERE_FLOOR = 0.40
+
+
+def combined_risk(ai_prob, flags):
+    p = min(max(ai_prob, 1e-6), 1 - 1e-6)
+    boost = min(MAX_BOOST, sum(SEVERE_WEIGHT if f.get("severe") else RULE_WEIGHT for f in flags))
+    risk = float(1 / (1 + math.exp(-(math.log(p / (1 - p)) + boost))))
+    if any(f.get("severe") for f in flags):
+        risk = max(risk, SEVERE_FLOOR)
+    return risk

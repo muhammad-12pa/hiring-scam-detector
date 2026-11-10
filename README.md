@@ -44,13 +44,27 @@ flowchart LR
     I --> J
 ```
 
-1. **Training data:** real and fake job postings from the EMSCAD dataset (Kaggle).
+1. **Training data:** the EMSCAD dataset (Kaggle, 17,880 postings, 866 fake) plus 1,200 synthetic Indian postings (half scams, half genuine). See [Model performance](#model-performance).
 2. **Text to numbers:** each posting is lower-cased, stripped of punctuation and turned into up to 300 word IDs from a 20,000-word vocabulary.
-3. **BiLSTM classifier:** reads the words in both directions and outputs the probability that the posting is fraudulent (scam threshold 0.61).
+3. **BiLSTM classifier:** reads the words in both directions and outputs the probability that the posting is fraudulent.
 4. **Explanation:** LIME scores 500 copies of the posting with random words removed and fits a local model to see which words move the score. It explains the model's log-odds, which keeps the weights readable even when the model is 99.9% sure. Filler words are dropped.
-5. **Combined risk:** each red flag adds to the model's log-odds (+1.5 for asking for money or ID/bank details, +0.75 for the others, at most +4). A serious flag also lifts the result to at least 40% ("Be careful"). Rules can only raise the risk, never lower it.
+5. **Combined risk:** each red flag adds to the model's log-odds (+1.5 for asking for money or ID/bank details, +0.5 for the others, at most +4). A serious flag also lifts the result to at least 40% ("Be careful"). Rules can only raise the risk, never lower it, and they ignore reassurances like "we never ask for bank details". A posting is flagged as a scam at **50%** or more (chosen on the validation set).
 
 ![Combined risk: AI model alone vs with red flags](docs/screenshots/combined-risk.png)
+
+## Model performance
+
+All numbers are on postings never used in training, for the full check the site shows (AI model + red-flag rules). Produced by `training/train.py`; full results in `model/metrics.json`.
+
+| Test set | Original model | Retrained model (live) |
+|---|---|---|
+| Real postings, EMSCAD 20% test split (3,576, 173 fake) | F1 0.913* | F1 0.817: 125 of 173 scams caught, 8 false alarms |
+| Indian-style posts, generated from held-out phrases (300) | F1 0.320 | F1 0.997 |
+| Hand-written Indian posts (28) | F1 0.571 | F1 0.880 |
+
+\* The original model was trained on data that overlaps this test split: it scores about 0.90 on every part of EMSCAD, including rows it trained on. Retraining the same architecture and settings on the clean split gives F1 0.823, a fair estimate of the original approach. The retrained model matches it on real postings and catches far more Indian-style scams.
+
+**Why the original model missed Indian scams:** EMSCAD has only 14 fake postings from India. "Registration" appears in 46 postings and 98% of them are genuine, and "WhatsApp" appears in 31 postings, all genuine. "Aadhaar" and "Telegram" never appear. So the model learned those words as safe. The retrained model adds synthetic examples (`training/augment_india.py`) built from separate phrase pools for training and testing, plus a hand-written test set (`training/india_handwritten_test.json`). These examples are synthetic, not real collected scams.
 
 ## Tech stack
 
@@ -71,6 +85,10 @@ The server doesn't import TensorFlow at all: TensorFlow alone needs about 600 MB
 app.py                  Flask app: /predict (verdict + red flags), /explain (LIME + baseline), /version
 red_flags.py            Rule-based scam checks with plain-English reasons (add new rules here)
 convert_tflite.py       Converts model/scam_model.keras to scam_core.tflite + vocab.json
+training/
+  train.py              Trains + evaluates the BiLSTM and baseline (writes model/metrics.json)
+  augment_india.py      Synthetic Indian scam / genuine postings (separate train and test phrases)
+  india_handwritten_test.json  Hand-written Indian test posts (never used for training)
 gunicorn.conf.py        1 worker, 120 s timeout (picked up automatically by gunicorn)
 model/
   scam_model.keras      Trained BiLSTM (source for convert_tflite.py)
@@ -78,6 +96,7 @@ model/
   vocab.json            Vectorizer vocabulary used by the server
   tfidf.pkl, logreg.pkl Baseline model
   config.json           Best model + decision threshold
+  metrics.json          Test results shown in the "How accurate is it?" section
 templates/index.html    Page
 static/                 style.css, script.js (results), ocr.js (screenshot reading)
 .github/workflows/      keep-alive.yml (pings the site every 5 min so Render doesn't sleep)
@@ -91,14 +110,17 @@ pip install -r requirements.txt
 python app.py                                     # http://127.0.0.1:5000
 ```
 
-## After retraining the model
+## Retraining
 
-Save the new model as `model/scam_model.keras`, then regenerate the files the server uses before pushing:
+Download `fake_job_postings.csv` (EMSCAD) from Kaggle, then:
 
 ```bash
-pip install -r requirements-dev.txt   # includes TensorFlow
-python convert_tflite.py              # writes scam_core.tflite + vocab.json and checks they match
+pip install -r requirements-dev.txt                                   # includes TensorFlow
+python training/train.py --data fake_job_postings.csv --out model     # about 3 minutes on a laptop CPU
+python convert_tflite.py                                              # writes scam_core.tflite + vocab.json, checks they match
 ```
+
+`train.py` uses the original architecture and settings, a fixed 80/20 split, early stopping on validation, and picks the cut-off on validation. It prints and saves results for three test sets (`model/metrics.json`). Use `--no-augment` to train on EMSCAD only, or `--evaluate <folder>` to score an existing model. The scikit-learn version in `requirements.txt` must match the one used for training, because the baseline is saved with pickle.
 
 ## Deployment
 
@@ -106,7 +128,8 @@ Render runs `gunicorn app:app`, which reads `gunicorn.conf.py`. Every push to `m
 
 ## Known limitations
 
-- The BiLSTM learned from EMSCAD, which has few Indian-style scams. It treats "fee" and "registration" as slightly reassuring, and can over-react to words like "urgent". The red-flag rules and the baseline comparison make this visible, and retraining with more examples is planned.
+- The Indian training and test examples are synthetic or hand-written, not real collected scams; real-world accuracy on Indian posts will be lower than the test numbers. Collecting real reported scams is the next step.
+- On real EMSCAD postings the model catches about 72% of scams with very few false alarms (8 of 3,403 genuine). It errs on the side of not accusing genuine employers.
 - English only. OCR often misreads the ₹ sign, so check the extracted text before analysing.
 - Free hosting: the first request after a redeploy can take a minute.
 

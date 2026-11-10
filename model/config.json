@@ -1,6 +1,8 @@
 {
   "best_model": "lstm",
-  "threshold": 0.6100000000000001,
+  "threshold": 0.5,
   "max_tokens": 20000,
-  "seq_len": 300
+  "seq_len": 300,
+  "trained_on": "EMSCAD + 1200 synthetic Indian posts",
+  "ai_only_threshold": 0.42
 }

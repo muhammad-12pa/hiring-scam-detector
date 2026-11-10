@@ -1,0 +1,488 @@
+{
+  "dataset": {
+    "name": "EMSCAD (Kaggle fake_job_postings.csv)",
+    "total": 17880,
+    "fraud": 866,
+    "india_fraud": 14,
+    "split": "80% train (10% of it validation) / 20% test, stratified, seed 42"
+  },
+  "deployed": {
+    "label": "retrained",
+    "threshold": 0.5,
+    "results": {
+      "emscad_test": {
+        "bilstm": {
+          "n": 3576,
+          "fraud": 173,
+          "accuracy": 0.9843,
+          "precision": 0.9398,
+          "recall": 0.7225,
+          "f1": 0.817,
+          "roc_auc": 0.9879,
+          "confusion": {
+            "tn": 3395,
+            "fp": 8,
+            "fn": 48,
+            "tp": 125
+          },
+          "threshold": 0.5
+        },
+        "system": {
+          "n": 3576,
+          "fraud": 173,
+          "accuracy": 0.9843,
+          "precision": 0.9398,
+          "recall": 0.7225,
+          "f1": 0.817,
+          "roc_auc": 0.9864,
+          "confusion": {
+            "tn": 3395,
+            "fp": 8,
+            "fn": 48,
+            "tp": 125
+          },
+          "threshold": 0.5
+        },
+        "logreg": {
+          "n": 3576,
+          "fraud": 173,
+          "accuracy": 0.9813,
+          "precision": 0.776,
+          "recall": 0.8613,
+          "f1": 0.8164,
+          "roc_auc": 0.9881,
+          "confusion": {
+            "tn": 3360,
+            "fp": 43,
+            "fn": 24,
+            "tp": 149
+          },
+          "threshold": 0.5
+        }
+      },
+      "india_synthetic_test": {
+        "bilstm": {
+          "n": 300,
+          "fraud": 150,
+          "accuracy": 0.9967,
+          "precision": 1.0,
+          "recall": 0.9933,
+          "f1": 0.9967,
+          "roc_auc": 1.0,
+          "confusion": {
+            "tn": 150,
+            "fp": 0,
+            "fn": 1,
+            "tp": 149
+          },
+          "threshold": 0.5
+        },
+        "system": {
+          "n": 300,
+          "fraud": 150,
+          "accuracy": 0.9967,
+          "precision": 1.0,
+          "recall": 0.9933,
+          "f1": 0.9967,
+          "roc_auc": 1.0,
+          "confusion": {
+            "tn": 150,
+            "fp": 0,
+            "fn": 1,
+            "tp": 149
+          },
+          "threshold": 0.5
+        },
+        "logreg": {
+          "n": 300,
+          "fraud": 150,
+          "accuracy": 0.9833,
+          "precision": 0.9677,
+          "recall": 1.0,
+          "f1": 0.9836,
+          "roc_auc": 1.0,
+          "confusion": {
+            "tn": 145,
+            "fp": 5,
+            "fn": 0,
+            "tp": 150
+          },
+          "threshold": 0.5
+        }
+      },
+      "india_handwritten_test": {
+        "bilstm": {
+          "n": 28,
+          "fraud": 14,
+          "accuracy": 0.8929,
+          "precision": 1.0,
+          "recall": 0.7857,
+          "f1": 0.88,
+          "roc_auc": 0.9541,
+          "confusion": {
+            "tn": 14,
+            "fp": 0,
+            "fn": 3,
+            "tp": 11
+          },
+          "threshold": 0.5
+        },
+        "system": {
+          "n": 28,
+          "fraud": 14,
+          "accuracy": 0.8929,
+          "precision": 1.0,
+          "recall": 0.7857,
+          "f1": 0.88,
+          "roc_auc": 0.9643,
+          "confusion": {
+            "tn": 14,
+            "fp": 0,
+            "fn": 3,
+            "tp": 11
+          },
+          "threshold": 0.5
+        },
+        "logreg": {
+          "n": 28,
+          "fraud": 14,
+          "accuracy": 0.7143,
+          "precision": 0.6875,
+          "recall": 0.7857,
+          "f1": 0.7333,
+          "roc_auc": 0.8418,
+          "confusion": {
+            "tn": 9,
+            "fp": 5,
+            "fn": 3,
+            "tp": 11
+          },
+          "threshold": 0.5
+        }
+      }
+    },
+    "train_size": 13953,
+    "val_size": 1551,
+    "epochs_run": 3,
+    "augment_posts": 1200
+  },
+  "reproduction": {
+    "label": "reproduction",
+    "threshold": 0.34,
+    "results": {
+      "emscad_test": {
+        "bilstm": {
+          "n": 3576,
+          "fraud": 173,
+          "accuracy": 0.9843,
+          "precision": 0.9091,
+          "recall": 0.7514,
+          "f1": 0.8228,
+          "roc_auc": 0.9836,
+          "confusion": {
+            "tn": 3390,
+            "fp": 13,
+            "fn": 43,
+            "tp": 130
+          },
+          "threshold": 0.34
+        },
+        "system": {
+          "n": 3576,
+          "fraud": 173,
+          "accuracy": 0.9785,
+          "precision": 0.7892,
+          "recall": 0.7572,
+          "f1": 0.7729,
+          "roc_auc": 0.9816,
+          "confusion": {
+            "tn": 3368,
+            "fp": 35,
+            "fn": 42,
+            "tp": 131
+          },
+          "threshold": 0.34
+        },
+        "logreg": {
+          "n": 3576,
+          "fraud": 173,
+          "accuracy": 0.9779,
+          "precision": 0.7117,
+          "recall": 0.9133,
+          "f1": 0.8,
+          "roc_auc": 0.9881,
+          "confusion": {
+            "tn": 3339,
+            "fp": 64,
+            "fn": 15,
+            "tp": 158
+          },
+          "threshold": 0.5
+        }
+      },
+      "india_synthetic_test": {
+        "bilstm": {
+          "n": 300,
+          "fraud": 150,
+          "accuracy": 0.6033,
+          "precision": 1.0,
+          "recall": 0.2067,
+          "f1": 0.3425,
+          "roc_auc": 0.8764,
+          "confusion": {
+            "tn": 150,
+            "fp": 0,
+            "fn": 119,
+            "tp": 31
+          },
+          "threshold": 0.34
+        },
+        "system": {
+          "n": 300,
+          "fraud": 150,
+          "accuracy": 0.93,
+          "precision": 1.0,
+          "recall": 0.86,
+          "f1": 0.9247,
+          "roc_auc": 0.9881,
+          "confusion": {
+            "tn": 150,
+            "fp": 0,
+            "fn": 21,
+            "tp": 129
+          },
+          "threshold": 0.34
+        },
+        "logreg": {
+          "n": 300,
+          "fraud": 150,
+          "accuracy": 0.8133,
+          "precision": 0.8615,
+          "recall": 0.7467,
+          "f1": 0.8,
+          "roc_auc": 0.8867,
+          "confusion": {
+            "tn": 132,
+            "fp": 18,
+            "fn": 38,
+            "tp": 112
+          },
+          "threshold": 0.5
+        }
+      },
+      "india_handwritten_test": {
+        "bilstm": {
+          "n": 28,
+          "fraud": 14,
+          "accuracy": 0.6786,
+          "precision": 0.8571,
+          "recall": 0.4286,
+          "f1": 0.5714,
+          "roc_auc": 0.8367,
+          "confusion": {
+            "tn": 13,
+            "fp": 1,
+            "fn": 8,
+            "tp": 6
+          },
+          "threshold": 0.34
+        },
+        "system": {
+          "n": 28,
+          "fraud": 14,
+          "accuracy": 0.7857,
+          "precision": 0.9,
+          "recall": 0.6429,
+          "f1": 0.75,
+          "roc_auc": 0.8929,
+          "confusion": {
+            "tn": 13,
+            "fp": 1,
+            "fn": 5,
+            "tp": 9
+          },
+          "threshold": 0.34
+        },
+        "logreg": {
+          "n": 28,
+          "fraud": 14,
+          "accuracy": 0.5714,
+          "precision": 0.5625,
+          "recall": 0.6429,
+          "f1": 0.6,
+          "roc_auc": 0.648,
+          "confusion": {
+            "tn": 7,
+            "fp": 7,
+            "fn": 5,
+            "tp": 9
+          },
+          "threshold": 0.5
+        }
+      }
+    }
+  },
+  "original": {
+    "label": "original",
+    "threshold": 0.6100000000000001,
+    "results": {
+      "emscad_test": {
+        "bilstm": {
+          "n": 3576,
+          "fraud": 173,
+          "accuracy": 0.9916,
+          "precision": 0.9231,
+          "recall": 0.9017,
+          "f1": 0.9123,
+          "roc_auc": 0.9934,
+          "confusion": {
+            "tn": 3390,
+            "fp": 13,
+            "fn": 17,
+            "tp": 156
+          },
+          "threshold": 0.61
+        },
+        "system": {
+          "n": 3576,
+          "fraud": 173,
+          "accuracy": 0.9916,
+          "precision": 0.9181,
+          "recall": 0.9075,
+          "f1": 0.9128,
+          "roc_auc": 0.9931,
+          "confusion": {
+            "tn": 3389,
+            "fp": 14,
+            "fn": 16,
+            "tp": 157
+          },
+          "threshold": 0.61
+        },
+        "logreg": {
+          "n": 3576,
+          "fraud": 173,
+          "accuracy": 0.9824,
+          "precision": 0.757,
+          "recall": 0.9364,
+          "f1": 0.8372,
+          "roc_auc": 0.991,
+          "confusion": {
+            "tn": 3351,
+            "fp": 52,
+            "fn": 11,
+            "tp": 162
+          },
+          "threshold": 0.5
+        }
+      },
+      "india_synthetic_test": {
+        "bilstm": {
+          "n": 300,
+          "fraud": 150,
+          "accuracy": 0.5433,
+          "precision": 0.8824,
+          "recall": 0.1,
+          "f1": 0.1796,
+          "roc_auc": 0.6436,
+          "confusion": {
+            "tn": 148,
+            "fp": 2,
+            "fn": 135,
+            "tp": 15
+          },
+          "threshold": 0.61
+        },
+        "system": {
+          "n": 300,
+          "fraud": 150,
+          "accuracy": 0.59,
+          "precision": 0.9355,
+          "recall": 0.1933,
+          "f1": 0.3204,
+          "roc_auc": 0.92,
+          "confusion": {
+            "tn": 148,
+            "fp": 2,
+            "fn": 121,
+            "tp": 29
+          },
+          "threshold": 0.61
+        },
+        "logreg": {
+          "n": 300,
+          "fraud": 150,
+          "accuracy": 0.6567,
+          "precision": 0.8406,
+          "recall": 0.3867,
+          "f1": 0.5297,
+          "roc_auc": 0.8482,
+          "confusion": {
+            "tn": 139,
+            "fp": 11,
+            "fn": 92,
+            "tp": 58
+          },
+          "threshold": 0.5
+        }
+      },
+      "india_handwritten_test": {
+        "bilstm": {
+          "n": 28,
+          "fraud": 14,
+          "accuracy": 0.6429,
+          "precision": 0.8333,
+          "recall": 0.3571,
+          "f1": 0.5,
+          "roc_auc": 0.75,
+          "confusion": {
+            "tn": 13,
+            "fp": 1,
+            "fn": 9,
+            "tp": 5
+          },
+          "threshold": 0.61
+        },
+        "system": {
+          "n": 28,
+          "fraud": 14,
+          "accuracy": 0.6786,
+          "precision": 0.8571,
+          "recall": 0.4286,
+          "f1": 0.5714,
+          "roc_auc": 0.8673,
+          "confusion": {
+            "tn": 13,
+            "fp": 1,
+            "fn": 8,
+            "tp": 6
+          },
+          "threshold": 0.61
+        },
+        "logreg": {
+          "n": 28,
+          "fraud": 14,
+          "accuracy": 0.6429,
+          "precision": 0.75,
+          "recall": 0.4286,
+          "f1": 0.5455,
+          "roc_auc": 0.7449,
+          "confusion": {
+            "tn": 12,
+            "fp": 2,
+            "fn": 8,
+            "tp": 6
+          },
+          "threshold": 0.5
+        }
+      }
+    }
+  },
+  "notes": [
+    "Each result has three views: bilstm = AI model alone, system = AI + red-flag rules (what the site shows), logreg = baseline.",
+    "original = the team's first model (threshold 0.61); it was trained on data that overlaps this test set, so its EMSCAD score is optimistic.",
+    "reproduction = same architecture and settings retrained on EMSCAD only with the clean split (fair estimate for the original approach).",
+    "deployed = reproduction + 1,200 synthetic Indian posts (600 scam, 600 genuine); cut-off 0.50 chosen on validation for AI + red flags.",
+    "Indian test sets are synthetic (held-out phrases) or hand-written; they are not real collected scams."
+  ]
+}

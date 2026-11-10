@@ -7,12 +7,12 @@ from flask import Flask, render_template, request, jsonify
 from lime.lime_text import LimeTextExplainer
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 
-from red_flags import find_red_flags, rule_for_word
+from red_flags import combined_risk, find_red_flags, rule_for_word
 
 app = Flask(__name__)
 
 # Bump on every deploy; shown in the page footer and at /version so you can tell it's live.
-VERSION = "v1.7"
+VERSION = "v1.8"
 
 # ---------- Load everything saved by the notebook ----------
 with open("model/config.json") as f:
@@ -95,27 +95,6 @@ def _top_words(pairs):
     return [{"word": str(w), "weight": round(float(s), 3)} for w, s in pairs[:TOP_WORDS]]
 
 
-# ---------- Combined risk: AI model + red-flag rules ----------
-# Each red flag adds to the model's log-odds: serious ones (asking for money or ID/bank
-# details) add SEVERE_WEIGHT, others RULE_WEIGHT, up to MAX_BOOST in total. Rules can only
-# raise the risk, never lower it. A serious flag also lifts the result to at least
-# SEVERE_FLOOR ("Be careful"), since no genuine employer asks for those up front.
-# Examples: AI 95% + fee + chat app -> 99%; AI 2% + asks for bank details -> 40%.
-RULE_WEIGHT = 0.75
-SEVERE_WEIGHT = 1.5
-MAX_BOOST = 4.0
-SEVERE_FLOOR = 0.40
-
-
-def combined_risk(ai_prob, flags):
-    p = min(max(ai_prob, 1e-6), 1 - 1e-6)
-    boost = min(MAX_BOOST, sum(SEVERE_WEIGHT if f.get("severe") else RULE_WEIGHT for f in flags))
-    risk = float(1 / (1 + np.exp(-(np.log(p / (1 - p)) + boost))))
-    if any(f.get("severe") for f in flags):
-        risk = max(risk, SEVERE_FLOOR)
-    return risk
-
-
 def explain_lime(text):
     """LIME explanation for the deep learning model, on the log-odds scale.
 
@@ -177,9 +156,22 @@ def check_length(text):
 
 
 # ---------- Routes ----------
+# Test-set results written by training/train.py (shown in the "Model performance" section).
+try:
+    with open("model/metrics.json", encoding="utf-8") as f:
+        PERF = json.load(f)
+except (OSError, ValueError):
+    PERF = None
+
+
 @app.route("/")
 def home():
-    return render_template("index.html", demo_mode=False, version=VERSION)
+    return render_template("index.html", demo_mode=False, version=VERSION, perf=PERF)
+
+
+@app.route("/metrics")
+def model_metrics():
+    return jsonify(PERF or {})
 
 
 @app.route("/version")

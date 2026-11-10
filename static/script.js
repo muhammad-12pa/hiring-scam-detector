@@ -126,7 +126,7 @@ const TITLES = { high: "Likely a scam", mid: "Be careful with this one", low: "L
 
 function showVerdict(d) {
   current.verdict = d;
-  const level = riskLevel(d.probability, d.threshold ?? 61);
+  const level = riskLevel(d.probability, d.threshold ?? 50);
   const block = document.querySelector(".verdict-block");
   block.classList.remove("high", "mid", "low");
   block.classList.add(level);
@@ -364,7 +364,7 @@ $("pdfBtn").addEventListener("click", () => {
 $("shareBtn").addEventListener("click", async () => {
   const d = current.verdict;
   if (!d) return;
-  const level = riskLevel(d.probability, d.threshold ?? 61);
+  const level = riskLevel(d.probability, d.threshold ?? 50);
   const flags = (d.red_flags || []).map(f => f.title);
   // Summary only: the posting text itself is never put in the message or a link.
   const text = `ScamShield check: ${TITLES[level]} (${d.probability}% risk).` +

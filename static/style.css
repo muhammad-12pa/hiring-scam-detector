@@ -131,12 +131,12 @@ textarea::placeholder { color: var(--ink-faint); }
 .verdict-block.low .verdict { color: var(--safe-ink); }
 .verdict-sub { color: var(--ink-soft); margin-top: 6px; }
 
-.risk-scale { position: relative; display: grid; grid-template-columns: 30fr 31fr 39fr; gap: 3px; height: 12px; }
+.risk-scale { position: relative; display: grid; grid-template-columns: 30fr 20fr 50fr; gap: 3px; height: 12px; }
 .seg { border-radius: 3px; }
 .seg.low { background: var(--safe); } .seg.mid { background: var(--mid); } .seg.high { background: var(--scam); }
 .risk-marker { position: absolute; top: -7px; left: 0; width: 6px; height: 26px; margin-left: -3px; border-radius: 3px;
                background: var(--ink); box-shadow: 0 0 0 3px var(--paper); transition: left .7s cubic-bezier(.2, .8, .2, 1); }
-.risk-labels { display: grid; grid-template-columns: 30fr 31fr 39fr; margin-top: 10px; font-size: .85rem; color: var(--ink-faint); }
+.risk-labels { display: grid; grid-template-columns: 30fr 20fr 50fr; margin-top: 10px; font-size: .85rem; color: var(--ink-faint); }
 .risk-labels span:nth-child(2) { text-align: center; } .risk-labels span:last-child { text-align: right; }
 .flag-note { background: color-mix(in srgb, var(--flag) 16%, var(--paper)); border: 1px solid color-mix(in srgb, var(--flag) 50%, transparent);
              border-radius: 10px; padding: 12px 16px; font-weight: 600; }
@@ -239,6 +239,41 @@ textarea::placeholder { color: var(--ink-faint); }
 .tech dt { font-weight: 700; }
 .tech dd { color: var(--ink-soft); }
 
+/* ---------- Model performance ---------- */
+.perf { padding: 56px 0; }
+.perf h2 { margin-bottom: 8px; }
+.perf-lede { color: var(--ink-soft); max-width: 70ch; margin-bottom: 26px; }
+.perf-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px; align-items: start; }
+.perf-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 24px; }
+.perf-metrics div { border-top: 2px solid var(--ink); padding-top: 10px; }
+.perf-metrics dt { font-family: var(--display); font-weight: 800; font-size: 2rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.perf-metrics dd { color: var(--ink-soft); font-size: .93rem; margin-top: 4px; }
+.perf-metrics dd strong { color: var(--ink); }
+
+.cm { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+.cm figcaption { font-weight: 700; margin-bottom: 12px; }
+.cm-grid { display: grid; grid-template-columns: auto 1fr 1fr; gap: 6px; align-items: stretch; font-size: .9rem; }
+.cm-head { color: var(--ink-faint); text-align: center; padding-bottom: 2px; }
+.cm-side { color: var(--ink-faint); display: flex; align-items: center; padding-right: 6px; }
+.cm-cell { border-radius: 10px; padding: 12px 8px; text-align: center; color: var(--ink-soft); }
+.cm-cell b { display: block; font-family: var(--display); font-size: 1.5rem; color: var(--ink); font-variant-numeric: tabular-nums; }
+.cm-cell.good { background: color-mix(in srgb, var(--safe) 18%, var(--paper)); }
+.cm-cell.bad { background: color-mix(in srgb, var(--scam) 14%, var(--paper)); }
+
+.perf-sub { margin-top: 40px; margin-bottom: 6px; font-size: 1.3rem; }
+.perf-note { color: var(--ink-soft); max-width: 75ch; margin-bottom: 16px; font-size: .97rem; }
+.cmp { border: 1px solid var(--line); border-radius: 14px; background: var(--paper); overflow: hidden; }
+.cmp-row { display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 20px; align-items: center; padding: 14px 18px; }
+.cmp-row + .cmp-row { border-top: 1px solid var(--line); }
+.cmp-headrow { background: var(--mist); font-weight: 700; font-size: .9rem; color: var(--ink-soft); padding-top: 10px; padding-bottom: 10px; }
+.cmp-set small { display: block; color: var(--ink-faint); font-size: .85rem; }
+.cmp-bar { display: block; height: 10px; border-radius: 5px; background: var(--mist); overflow: hidden; }
+.cmp-bar span { display: block; height: 100%; border-radius: 5px; background: var(--teal); }
+.cmp-cell:nth-of-type(2) .cmp-bar span { background: var(--ink-faint); }   /* original model in grey */
+.cmp-val { display: block; font-size: .9rem; margin-top: 5px; font-variant-numeric: tabular-nums; }
+.perf-foot { color: var(--ink-faint); font-size: .85rem; margin-top: 12px; max-width: 85ch; }
+.perf-foot code { font-size: .85em; background: var(--mist); padding: 1px 5px; border-radius: 4px; }
+
 /* ---------- About ---------- */
 .about { padding: 64px 0; }
 .about > .container > p { max-width: 70ch; color: var(--ink-soft); }
@@ -266,6 +301,17 @@ footer { background: var(--nav-bg); color: var(--nav-ink); padding: 18px 0; font
   .flow li:not(:last-child)::before { display: none; }
   .tech dl { grid-template-columns: 1fr; gap: 2px; }
   .tech dd { margin-bottom: 8px; }
+  .perf-grid { grid-template-columns: 1fr; gap: 24px; }
+  .cmp-headrow { display: none; }
+  .cmp-row { grid-template-columns: 1fr 1fr; gap: 10px 16px; }
+  .cmp-set { grid-column: 1 / -1; }
+  .cmp-cell::before { display: block; font-size: .8rem; color: var(--ink-faint); margin-bottom: 4px; }
+  .cmp-cell:nth-of-type(2)::before { content: "Original"; }
+  .cmp-cell:nth-of-type(3)::before { content: "Retrained"; }
+}
+@media (max-width: 560px) {
+  .perf-metrics { gap: 14px 16px; }
+  .perf-metrics dt { font-size: 1.6rem; }
 }
 @media (max-width: 560px) {
   body { font-size: 1rem; }

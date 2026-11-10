@@ -2,6 +2,6 @@ flask
 gunicorn
 pandas
 numpy
-scikit-learn
+scikit-learn==1.9.1   # must match the version that saved model/*.pkl (training/train.py)
 ai-edge-litert
 lime
