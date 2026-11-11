@@ -158,7 +158,7 @@ function riskLevel(p, threshold) {
 
 const TITLES = { high: "Likely a scam", mid: "Be careful with this one", low: "Looks genuine" };
 const STAMPS = { high: "SCAM", mid: "CAREFUL", low: "GENUINE" };
-let stampObserver = null;
+let stampObserver = null, stampTimer = null;
 
 function showVerdict(d) {
   current.verdict = d;
@@ -186,17 +186,19 @@ function showVerdict(d) {
   const stamp = $("verdictStamp");
   stamp.textContent = STAMPS[level];
   stamp.className = "stamp " + { high: "scam", mid: "careful", low: "real" }[level];
-  if (level !== "low") stamp.classList.add("hidden");   // only genuine results get a stamp
   // Stamp only once the verdict is actually on screen, so the animation isn't missed while scrolling.
   stampObserver?.disconnect();
-  if (level === "low" && !matchMedia("(prefers-reduced-motion: reduce)").matches && "IntersectionObserver" in window) {
+  clearTimeout(stampTimer);
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches && "IntersectionObserver" in window) {
     stamp.classList.add("waiting");
     stampObserver?.disconnect();
-    stampObserver = new IntersectionObserver(entries => {
-      if (!entries.some(e => e.isIntersecting)) return;
-      stampObserver.disconnect();
-      setTimeout(() => { stamp.classList.remove("waiting"); void stamp.offsetWidth; stamp.classList.add("show"); }, 250);
-    }, { threshold: 1, rootMargin: "-60px 0px 0px 0px" });   // fully visible, below the sticky header
+    const play = () => {
+      stampObserver.disconnect(); clearTimeout(stampTimer);
+      setTimeout(() => { stamp.classList.remove("waiting"); void stamp.offsetWidth; stamp.classList.add("show"); }, 200);
+    };
+    // Mostly on screen is enough (a strict "fully visible" check could miss it under the sticky header).
+    stampObserver = new IntersectionObserver(entries => { if (entries.some(e => e.isIntersecting)) play(); }, { threshold: 0.6 });
+    stampTimer = setTimeout(play, 2500);   // never leave it invisible
     stampObserver.observe(stamp);
   }
   $("verdictSub").textContent = sub;
@@ -508,8 +510,8 @@ async function drawResultCard(d) {
   let y = 380;
   wrapLines(x, TITLES[level], 700).forEach(l => { x.fillText(l, 130, y); y += 92; });
 
-  // Stamp (genuine results only)
-  if (level === "low") {
+  // Stamp
+  {
   x.save(); x.translate(860, 300); x.rotate(-0.16);
   x.font = `800 46px ${DISPLAY}`; const sw = x.measureText(STAMPS[level]).width + 50;
   x.strokeStyle = col; x.lineWidth = 7; x.beginPath(); x.roundRect(-sw / 2, -42, sw, 84, 12); x.stroke();
