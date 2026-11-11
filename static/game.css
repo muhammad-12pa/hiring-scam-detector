@@ -1,0 +1,129 @@
+/* Spot the Scam (play page). Uses the colour tokens from style.css. */
+.game { padding: 36px 0 64px; min-height: calc(100vh - 140px); }
+.game .container { max-width: 760px; }
+.game-title { font-size: clamp(2.2rem, 6vw, 3.2rem); font-weight: 800; }
+.game-screen:focus { outline: none; }
+
+/* Mode cards */
+.modes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.mode-card { font: inherit; text-align: left; color: var(--ink); background: var(--paper); border: 1px solid var(--line);
+             border-radius: 16px; padding: 20px 22px; cursor: pointer; display: flex; flex-direction: column; gap: 4px;
+             box-shadow: var(--shadow); transition: transform .15s, border-color .15s; }
+.mode-card:hover { transform: translateY(-2px); border-color: var(--teal); }
+.mode-card:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+.mode-card:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+.mode-daily { border-top: 5px solid var(--teal); }
+.mode-daily.done { border-top-color: var(--safe); }
+.mode-kicker { font-size: .82rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--teal-deep); }
+.mode-name { font-family: var(--display); font-weight: 800; font-size: 1.35rem; line-height: 1.2; }
+.mode-desc { color: var(--ink-soft); font-size: .97rem; line-height: 1.45; }
+.mode-meta { margin-top: 8px; font-size: .9rem; font-weight: 600; color: var(--ink-soft); }
+.streak { display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 999px;
+          background: color-mix(in srgb, var(--flag) 18%, var(--paper)); color: var(--ink); }
+.streak::before { content: "🔥"; font-size: .9em; }
+
+/* Badges */
+.badges-wrap { margin-top: 40px; }
+.badges-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+.badges-head h2 { font-size: 1.5rem; }
+.badge-count { color: var(--ink-faint); font-size: .92rem; }
+.badge-grid { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.badge { display: grid; grid-template-columns: 38px 1fr; grid-template-rows: auto auto; column-gap: 10px; align-items: center;
+         background: var(--paper); border: 1px dashed var(--line); border-radius: 12px; padding: 10px 12px; color: var(--ink-faint); }
+.badge svg { grid-row: span 2; width: 38px; height: 38px; padding: 7px; border-radius: 50%; background: var(--mist);
+             fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.badge b { font-size: .92rem; line-height: 1.2; }
+.badge span { font-size: .78rem; line-height: 1.3; }
+.badge.earned { border-style: solid; color: var(--ink); }
+.badge.earned svg { color: var(--teal-deep); background: color-mix(in srgb, var(--teal) 16%, var(--paper)); }
+.badge.earned span { color: var(--ink-soft); }
+.game-note { margin-top: 14px; font-size: .88rem; color: var(--ink-faint); }
+
+/* Playing */
+.play-top { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+.progress-dots { list-style: none; display: flex; gap: 6px; flex: 1; justify-content: center; flex-wrap: wrap; }
+.progress-dots li { width: 12px; height: 12px; border-radius: 50%; background: var(--line); transition: background .2s, transform .2s; }
+.progress-dots li.current { background: var(--ink-faint); transform: scale(1.25); }
+.progress-dots li.right { background: var(--safe); }
+.progress-dots li.wrong { background: var(--scam); }
+.scoreline { display: flex; gap: 12px; font-size: .9rem; color: var(--ink-soft); white-space: nowrap; }
+.scoreline b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.q-label { font-size: .85rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+
+.post-card { position: relative; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 22px 24px;
+             box-shadow: var(--shadow); overflow: hidden; transition: border-color .2s; }
+.post-card.revealed { padding-top: 70px; }
+.post-card .stamp { top: 16px; left: 20px; right: auto; }
+.post-card.was-right { border-color: var(--safe); }
+.post-card.was-wrong { border-color: var(--scam); }
+.post-text { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.75; font-size: 1.04rem; }
+.flag-mark { color: inherit; background: color-mix(in srgb, var(--flag) 22%, transparent); border-radius: 3px;
+             text-decoration: underline wavy var(--flag); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+
+.answer-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+.answer-btn { font: inherit; font-family: var(--display); font-weight: 800; font-size: 1.25rem; padding: 16px; border-radius: 14px;
+              cursor: pointer; border: 2px solid; background: var(--paper); display: flex; align-items: center; justify-content: center; gap: 10px;
+              transition: transform .1s, background .15s; }
+.answer-btn small { font-family: var(--body); font-size: .72rem; font-weight: 700; border: 1px solid currentColor; border-radius: 5px;
+                    padding: 0 6px; opacity: .6; }
+.answer-btn.scam { color: var(--scam-ink); border-color: var(--scam); }
+.answer-btn.real { color: var(--safe-ink); border-color: var(--safe); }
+.answer-btn.scam:hover { background: color-mix(in srgb, var(--scam) 12%, var(--paper)); }
+.answer-btn.real:hover { background: color-mix(in srgb, var(--safe) 12%, var(--paper)); }
+.answer-btn:active { transform: scale(.98); }
+.answer-btn:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+
+.feedback { margin-top: 16px; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 20px 24px; }
+.feedback:focus { outline: none; }
+.fb-title { font-family: var(--display); font-weight: 800; font-size: 1.4rem; }
+.fb-title.good { color: var(--safe-ink); }
+.fb-title.bad { color: var(--scam-ink); }
+.fb-answer { font-weight: 600; margin-top: 4px; }
+.fb-reasons { list-style: none; display: grid; gap: 6px; margin: 10px 0 4px; }
+.fb-reasons li { position: relative; padding-left: 22px; color: var(--ink-soft); line-height: 1.45; }
+.fb-reasons li b { color: var(--ink); }
+.fb-reasons li::before { content: ""; position: absolute; left: 2px; top: .45em; width: 11px; height: 11px; border-radius: 50%; }
+.fb-reasons li.bad::before { background: var(--flag); }
+.fb-reasons li.good::before { background: var(--safe); }
+.fb-note { margin-top: 10px; padding: 10px 14px; border-radius: 10px; background: var(--mist); color: var(--ink); line-height: 1.45; }
+.fb-ai { margin-top: 10px; font-size: .92rem; color: var(--ink-faint); }
+.fb-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.badge-pop { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px 5px 6px; border-radius: 999px; font-weight: 700; font-size: .92rem;
+             background: color-mix(in srgb, var(--teal) 15%, var(--paper)); color: var(--teal-deep); animation: pop .4s cubic-bezier(.3, 1.6, .5, 1) both; }
+.badge-pop svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+@keyframes pop { from { transform: scale(.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.feedback .btn-primary { margin-top: 16px; }
+
+/* End of round */
+#gameEnd { text-align: center; }
+.end-score { font-family: var(--display); font-weight: 800; font-size: clamp(3.5rem, 12vw, 5.5rem); line-height: 1; margin-top: 6px;
+             font-variant-numeric: tabular-nums; }
+.end-title { font-size: 1.8rem; margin-top: 6px; color: var(--teal-deep); }
+.end-msg { color: var(--ink-soft); margin: 6px auto 0; max-width: 46ch; }
+.end-grid { font-size: 1.6rem; letter-spacing: .12em; margin-top: 14px; }
+.vs { display: inline-grid; grid-template-columns: 1fr 1fr; gap: 1px; margin-top: 20px; background: var(--line); border: 1px solid var(--line);
+      border-radius: 12px; overflow: hidden; min-width: min(360px, 100%); }
+.vs div { background: var(--paper); padding: 12px 18px; display: flex; flex-direction: column; }
+.vs span { font-size: .82rem; color: var(--ink-faint); font-weight: 600; }
+.vs b { font-family: var(--display); font-size: 1.6rem; font-variant-numeric: tabular-nums; }
+.vs-msg { margin-top: 8px; font-weight: 600; }
+.end-badges { margin: 24px auto 0; max-width: 560px; text-align: left; }
+.end-badges h3 { font-size: 1.1rem; margin-bottom: 10px; text-align: center; }
+.end-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 26px; }
+.end-cta { margin-top: 26px; color: var(--ink-soft); }
+.end-cta a { color: var(--teal-deep); font-weight: 700; }
+
+@media (max-width: 560px) {
+  .game { padding-top: 24px; }
+  .modes { grid-template-columns: 1fr; }
+  .post-card, .feedback { padding: 16px 16px; }
+  .post-text { font-size: 1rem; }
+  .answer-btn small { display: none; }
+  .scoreline { gap: 8px; font-size: .85rem; }
+  .badge-grid { grid-template-columns: 1fr 1fr; }
+  .end-actions .btn { flex: 1 0 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mode-card, .answer-btn, .progress-dots li { transition: none; }
+  .badge-pop { animation: none; }
+}

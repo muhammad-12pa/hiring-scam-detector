@@ -68,6 +68,9 @@ h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 12px; }
 .nav nav { display: flex; gap: 22px; }
 .nav nav a { color: var(--nav-ink); opacity: .75; text-decoration: none; white-space: nowrap; font-weight: 600; font-size: .98rem; }
 .nav nav a:hover { opacity: 1; }
+.nav nav a.nav-play { opacity: 1; color: var(--on-teal); background: var(--teal); padding: 5px 14px; border-radius: 999px; }
+.nav nav a.nav-play:hover { background: var(--teal-deep); }
+.nav nav a[aria-current="page"] { opacity: 1; }
 
 /* ---------- Detector (hero) ---------- */
 .detector { padding: 56px 0 64px; }
@@ -294,7 +297,7 @@ footer { background: var(--nav-bg); color: var(--nav-ink); padding: 18px 0; font
   .verdict-block { grid-template-columns: 1fr; gap: 18px; }
   .report-grid { grid-template-columns: 1fr; }
   .next-steps ul { grid-template-columns: 1fr; }
-  .paper-panel { position: static; }
+  .paper-panel { position: relative; top: 0; }
   /* Flow turns into a compact vertical list: icon left, text right */
   .flow { grid-template-columns: 1fr; gap: 14px; }
   .flow li { grid-template-columns: 44px 1fr; justify-items: start; text-align: left; column-gap: 14px; padding: 0; }
@@ -317,6 +320,7 @@ footer { background: var(--nav-bg); color: var(--nav-ink); padding: 18px 0; font
   .container { padding: 0 16px; }
   .nav nav { gap: 14px; }
   .nav nav a { font-size: .9rem; }
+  .nav nav a.nav-optional { display: none; }
   .detector { padding: 36px 0 48px; }
   .lede { font-size: 1.08rem; }
   textarea { min-height: 170px; padding: 16px; }
@@ -356,9 +360,32 @@ footer { background: var(--nav-bg); color: var(--nav-ink); padding: 18px 0; font
   .verdict-block, .paper-panel, .flags li, .impact-row { break-inside: avoid; }
   .report-grid { display: block; }
   .report-grid > .panel + .panel { margin-top: 12px; }
-  .paper-panel { position: static; }
+  .paper-panel { position: relative; top: 0; }
   .flags { grid-template-columns: 1fr 1fr; column-gap: 24px; }
   .words-panel { break-before: auto; }
   .hl { animation: none; }
   .risk-marker { transition: none; }
 }
+
+/* ---------- Rubber-stamp verdict (checker and Spot the Scam) ---------- */
+.stamp { position: absolute; top: 14px; right: 14px; z-index: 2; pointer-events: none; font-family: var(--display); font-weight: 800;
+         font-size: 1.35rem; letter-spacing: .12em; padding: 4px 14px; border: 3.5px solid currentColor; border-radius: 8px;
+         transform: rotate(-9deg); opacity: .88; background: color-mix(in srgb, var(--paper) 70%, transparent);
+         mask-image: radial-gradient(circle at 30% 40%, #000 60%, rgba(0,0,0,.75) 61%, #000 75%); }
+.stamp.scam { color: var(--scam-ink); }
+.stamp.careful { color: color-mix(in srgb, var(--flag) 70%, var(--ink)); }
+.stamp.real { color: var(--safe-ink); }
+.stamp.show { animation: stamp .45s cubic-bezier(.2, 1.4, .4, 1) both; }
+@keyframes stamp { 0% { transform: rotate(-9deg) scale(2.2); opacity: 0; } 60% { opacity: .95; } 100% { transform: rotate(-9deg) scale(1); opacity: .88; } }
+.paper-panel h3 { padding-right: 120px; min-height: 46px; }
+.paper-panel .stamp { top: 16px; right: 18px; font-size: 1.05rem; padding: 3px 11px; border-width: 3px; }
+@media (prefers-reduced-motion: reduce) { .stamp.show { animation: none; } }
+
+/* Small link to the game under a result */
+.game-link { display: flex; align-items: center; gap: 14px; background: var(--paper); border: 1px dashed var(--teal); border-radius: 14px;
+             padding: 14px 18px; color: var(--ink); text-decoration: none; }
+.game-link:hover { border-style: solid; }
+.game-link b { font-family: var(--display); }
+.game-link span { color: var(--ink-soft); font-size: .95rem; }
+.game-link .arrow { margin-left: auto; color: var(--teal-deep); font-weight: 700; white-space: nowrap; }
+@media print { .stamp { animation: none; } .game-link { display: none !important; } }

@@ -157,6 +157,7 @@ function riskLevel(p, threshold) {
 }
 
 const TITLES = { high: "Likely a scam", mid: "Be careful with this one", low: "Looks genuine" };
+const STAMPS = { high: "SCAM", mid: "CAREFUL", low: "GENUINE" };
 
 function showVerdict(d) {
   current.verdict = d;
@@ -179,6 +180,13 @@ function showVerdict(d) {
     sub = `Overall risk only ${d.probability}%.`;
   }
   $("verdict").textContent = TITLES[level];
+
+  // Rubber stamp on the marked-up posting.
+  const stamp = $("verdictStamp");
+  stamp.textContent = STAMPS[level];
+  stamp.className = "stamp " + { high: "scam", mid: "careful", low: "real" }[level];
+  void stamp.offsetWidth;   // restart the animation on every new check
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) stamp.classList.add("show");
   $("verdictSub").textContent = sub;
 
   // Hollow marker = AI model alone, solid marker = overall risk with red flags.
@@ -446,6 +454,114 @@ $("shareBtn").addEventListener("click", async () => {
     btn.textContent = "Couldn't share";
   }
   setTimeout(() => { btn.textContent = "Share result"; }, 2500);
+});
+
+// ---------- Share as image: a 1080x1350 card with the verdict only (never the posting text) ----------
+function wrapLines(ctx, text, maxW) {
+  const words = text.split(" "), lines = [];
+  let line = "";
+  for (const w of words) {
+    const t = line ? line + " " + w : w;
+    if (ctx.measureText(t).width > maxW && line) { lines.push(line); line = w; } else line = t;
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+async function drawResultCard(d) {
+  await document.fonts.ready;
+  const W = 1080, H = 1350, c = document.createElement("canvas");
+  c.width = W; c.height = H;
+  const x = c.getContext("2d");
+  const level = riskLevel(d.probability, d.threshold ?? 50);
+  const col = { high: "#E5483A", mid: "#D9952B", low: "#2FA56B" }[level];
+  const ink = "#16202A", soft = "#4A5865";
+  const DISPLAY = '"Bricolage Grotesque", "Segoe UI", sans-serif', BODY = '"Source Sans 3", "Segoe UI", sans-serif';
+
+  x.fillStyle = "#E9EEF2"; x.fillRect(0, 0, W, H);
+  x.fillStyle = "#16202A"; x.fillRect(0, 0, W, 130);
+  // Brand: shield + name
+  x.save(); x.translate(70, 33); x.scale(2.6, 2.6);
+  x.fillStyle = "#3CC2B9"; x.fill(new Path2D("M12 2.5 4 5.6v6.1c0 4.9 3.4 8.6 8 9.8 4.6-1.2 8-4.9 8-9.8V5.6L12 2.5Z"));
+  x.strokeStyle = "#16202A"; x.lineWidth = 2; x.lineCap = x.lineJoin = "round"; x.stroke(new Path2D("m8.4 12.2 2.5 2.5 4.8-5"));
+  x.restore();
+  x.fillStyle = "#E9EEF2"; x.font = `800 46px ${DISPLAY}`; x.textBaseline = "middle"; x.fillText("ScamShield", 150, 66);
+
+  // Card
+  x.fillStyle = "#FBFCFD"; x.beginPath(); x.roundRect(60, 190, W - 120, 1000, 36); x.fill();
+  x.fillStyle = col; x.beginPath(); x.roundRect(60, 190, 18, 1000, [36, 0, 0, 36]); x.fill();
+  x.textBaseline = "alphabetic";
+  x.fillStyle = soft; x.font = `700 30px ${BODY}`; x.fillText("JOB POST CHECK", 130, 280);
+  x.fillStyle = ink; x.font = `800 84px ${DISPLAY}`;
+  let y = 380;
+  wrapLines(x, TITLES[level], 700).forEach(l => { x.fillText(l, 130, y); y += 92; });
+
+  // Stamp
+  x.save(); x.translate(860, 300); x.rotate(-0.16);
+  x.font = `800 46px ${DISPLAY}`; const sw = x.measureText(STAMPS[level]).width + 50;
+  x.strokeStyle = col; x.lineWidth = 7; x.beginPath(); x.roundRect(-sw / 2, -42, sw, 84, 12); x.stroke();
+  x.fillStyle = col; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText(STAMPS[level], 0, 3);
+  x.restore();
+
+  // Risk number + bar
+  y += 30;
+  x.fillStyle = col; x.font = `800 150px ${DISPLAY}`; x.fillText(`${d.probability}%`, 130, y + 120);
+  x.fillStyle = soft; x.font = `600 34px ${BODY}`; x.fillText("overall scam risk", 130, y + 175);
+  y += 225;
+  const bx = 130, bw = W - 260;
+  [[0, .3, "#3FBF7F"], [.3, .5, "#F2C14E"], [.5, 1, "#FF6B5E"]].forEach(([a, b, cc]) => {
+    x.fillStyle = cc; x.beginPath(); x.roundRect(bx + a * bw + 3, y, (b - a) * bw - 6, 22, 8); x.fill();
+  });
+  const mx = bx + Math.min(.995, Math.max(.005, d.probability / 100)) * bw;
+  x.fillStyle = "#FBFCFD"; x.beginPath(); x.roundRect(mx - 11, y - 18, 22, 58, 8); x.fill();
+  x.fillStyle = ink; x.beginPath(); x.roundRect(mx - 6, y - 13, 12, 48, 6); x.fill();
+  y += 100;
+
+  // Warning signs (titles only)
+  const flags = (d.red_flags || []).map(f => f.title);
+  x.fillStyle = ink; x.font = `800 40px ${DISPLAY}`;
+  x.fillText(flags.length ? "Warning signs found" : "No common warning signs found", 130, y);
+  y += 60;
+  x.font = `400 34px ${BODY}`;
+  flags.slice(0, 4).forEach(t => {
+    x.fillStyle = "#E8A33D"; x.beginPath(); x.arc(145, y - 11, 11, 0, 7); x.fill();
+    x.fillStyle = soft;
+    wrapLines(x, t, bw - 50).slice(0, 2).forEach(l => { x.fillText(l, 175, y); y += 44; });
+    y += 8;
+  });
+  if (flags.length > 4) { x.fillStyle = soft; x.fillText(`and ${flags.length - 4} more`, 175, y); }
+
+  // Footer
+  x.textAlign = "center"; x.fillStyle = ink; x.font = `700 38px ${BODY}`;
+  x.fillText("Check a job post yourself", W / 2, 1262);
+  x.fillStyle = "#0B7A75"; x.font = `700 34px ${BODY}`;
+  x.fillText(location.host, W / 2, 1310);
+  return new Promise(r => c.toBlob(r, "image/png"));
+}
+
+$("imageBtn").addEventListener("click", async () => {
+  const d = current.verdict;
+  if (!d) return;
+  const btn = $("imageBtn");
+  btn.disabled = true;
+  try {
+    const blob = await drawResultCard(d);
+    const file = new File([blob], "scamshield-result.png", { type: "image/png" });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try { await navigator.share({ files: [file], title: "ScamShield result" }); }
+      catch (err) { if (!err || err.name !== "AbortError") throw err; }
+    } else {
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob); a.download = file.name;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+      btn.textContent = "Image saved";
+      setTimeout(() => { btn.textContent = "Share as image"; }, 2500);
+    }
+  } catch {
+    btn.textContent = "Couldn't make image";
+    setTimeout(() => { btn.textContent = "Share as image"; }, 2500);
+  } finally { btn.disabled = false; }
 });
 
 updateCount();

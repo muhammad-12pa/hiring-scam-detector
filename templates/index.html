@@ -35,8 +35,9 @@
       </a>
       <nav aria-label="Sections">
         <a href="#how">How it works</a>
-        {% if perf %}<a href="#performance">Accuracy</a>{% endif %}
-        <a href="#about">About</a>
+        {% if perf %}<a href="#performance" class="nav-optional">Accuracy</a>{% endif %}
+        <a href="#about" class="nav-optional">About</a>
+        <a href="/play" class="nav-play">Play</a>
       </nav>
     </div>
   </header>
@@ -119,10 +120,12 @@
           <div class="report-actions">
             <button id="pdfBtn" class="btn btn-ghost" type="button">Save as PDF</button>
             <button id="shareBtn" class="btn btn-ghost" type="button">Share result</button>
+            <button id="imageBtn" class="btn btn-ghost" type="button">Share as image</button>
           </div>
 
           <div class="report-grid">
             <section class="panel paper-panel" aria-labelledby="markupTitle">
+              <span id="verdictStamp" class="stamp hidden" aria-hidden="true"></span>
               <h3 id="markupTitle">The posting, marked up</h3>
               <div id="markup" class="paper"></div>
               <div class="legend">
@@ -152,6 +155,10 @@
             <p id="agreement" class="agreement hidden"></p>
             <p id="methodNote" class="method-note"></p>
           </section>
+          <a href="/play" class="game-link">
+            <div><b>Think you can spot scams yourself?</b><br><span>Try Spot the Scam: real-looking job posts, and you call scam or genuine. Can you beat the AI?</span></div>
+            <span class="arrow">Play →</span>
+          </a>
         </div>
       </div>
     </section>

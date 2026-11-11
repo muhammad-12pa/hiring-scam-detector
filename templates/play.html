@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spot the Scam | ScamShield</title>
+  <meta name="description" content="Real-looking job posts: is each one a scam or genuine? Learn the giveaways, earn badges, and try to beat ScamShield's AI.">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+  <meta name="theme-color" content="#16202A">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ScamShield">
+  <meta property="og:title" content="Spot the Scam: can you beat the AI?">
+  <meta property="og:description" content="Real-looking job posts. Scam or genuine? Learn the giveaways and try to beat ScamShield's AI.">
+  <meta property="og:url" content="{{ site_url }}/play">
+  <meta property="og:image" content="{{ site_url }}/static/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ version }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='game.css') }}?v={{ version }}">
+</head>
+<body class="play-page">
+
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="brand" aria-label="ScamShield home">
+        <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 4 5.6v6.1c0 4.9 3.4 8.6 8 9.8 4.6-1.2 8-4.9 8-9.8V5.6L12 2.5Z"/><path class="tick" d="m8.4 12.2 2.5 2.5 4.8-5"/></svg>
+        ScamShield
+      </a>
+      <nav aria-label="Pages">
+        <a href="/">Check a post</a>
+        <a href="/#how" class="nav-optional">How it works</a>
+        <a href="/play" class="nav-play" aria-current="page">Play</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="game" class="game">
+    <div class="container">
+
+      <!-- Home: pick a mode, see badges -->
+      <section id="gameHome" class="game-screen">
+        <h1 class="game-title">Spot the Scam</h1>
+        <p class="lede">Real-looking job posts. Is each one a scam, or genuine? After every post you’ll see the answer and the giveaway, and how ScamShield’s AI did on the same post.</p>
+
+        <div class="modes">
+          <button id="dailyBtn" class="mode-card mode-daily" type="button">
+            <span class="mode-kicker" id="dailyKicker">Daily challenge</span>
+            <span class="mode-name">Today’s 5 posts</span>
+            <span class="mode-desc" id="dailyDesc">New posts every day. Keep your streak going.</span>
+            <span class="mode-meta"><span id="streakBadge" class="streak">0-day streak</span></span>
+          </button>
+          <button id="practiceBtn" class="mode-card" type="button">
+            <span class="mode-kicker">Practice round</span>
+            <span class="mode-name">10 posts, getting harder</span>
+            <span class="mode-desc">Starts with obvious scams and ends with the tricky ones.</span>
+            <span class="mode-meta" id="bestScore">No best score yet</span>
+          </button>
+        </div>
+
+        <section class="badges-wrap" aria-labelledby="badgesTitle">
+          <div class="badges-head">
+            <h2 id="badgesTitle">Your badges</h2>
+            <p id="badgeCount" class="badge-count"></p>
+          </div>
+          <ul id="badgeGrid" class="badge-grid"></ul>
+          <p class="game-note">Your progress is saved only on this device. Nothing is sent anywhere.</p>
+        </section>
+      </section>
+
+      <!-- Playing -->
+      <section id="gamePlay" class="game-screen hidden" aria-live="polite">
+        <div class="play-top">
+          <button id="quitBtn" class="link-btn" type="button">Back</button>
+          <ol id="progress" class="progress-dots" aria-label="Progress"></ol>
+          <div class="scoreline"><span>You <b id="youScore">0</b></span><span>AI <b id="aiScore">0</b></span></div>
+        </div>
+
+        <div class="question">
+          <p id="qLabel" class="q-label"></p>
+          <article id="postCard" class="post-card">
+            <span id="postStamp" class="stamp hidden" aria-hidden="true"></span>
+            <div id="postText" class="post-text"></div>
+          </article>
+
+          <div id="answerRow" class="answer-row">
+            <button id="ansScam" class="answer-btn scam" type="button"><span>Scam</span><small>S</small></button>
+            <button id="ansReal" class="answer-btn real" type="button"><span>Genuine</span><small>G</small></button>
+          </div>
+
+          <div id="feedback" class="feedback hidden" tabindex="-1">
+            <p id="fbTitle" class="fb-title"></p>
+            <p id="fbAnswer" class="fb-answer"></p>
+            <ul id="fbReasons" class="fb-reasons"></ul>
+            <p id="fbNote" class="fb-note hidden"></p>
+            <p id="fbAi" class="fb-ai"></p>
+            <div id="fbBadges" class="fb-badges hidden"></div>
+            <button id="nextBtn" class="btn btn-primary" type="button">Next post</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Results -->
+      <section id="gameEnd" class="game-screen hidden">
+        <p id="endKicker" class="q-label"></p>
+        <p id="endScore" class="end-score"></p>
+        <h2 id="endTitle" class="end-title"></h2>
+        <p id="endMsg" class="end-msg"></p>
+        <p id="endGrid" class="end-grid" aria-label="Your answers"></p>
+        <div class="vs">
+          <div><span>You</span><b id="vsYou"></b></div>
+          <div><span>ScamShield AI</span><b id="vsAi"></b></div>
+        </div>
+        <p id="vsMsg" class="vs-msg"></p>
+        <div id="endBadges" class="end-badges hidden">
+          <h3>New badges</h3>
+          <ul id="endBadgeList" class="badge-grid small"></ul>
+        </div>
+        <div class="end-actions">
+          <button id="shareScore" class="btn btn-primary" type="button">Share my score</button>
+          <button id="againBtn" class="btn btn-ghost" type="button">Play a practice round</button>
+          <button id="homeBtn" class="btn btn-ghost" type="button">Back to badges</button>
+        </div>
+        <p class="end-cta">Got a real job offer to check? <a href="/">Use the ScamShield checker</a>.</p>
+      </section>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <span>© 2026 Dept. of CSE, P.A. College of Engineering</span>
+      <span class="version">{{ version }}</span>
+    </div>
+  </footer>
+  <script src="{{ url_for('static', filename='game.js') }}?v={{ version }}"></script>
+</body>
+</html>

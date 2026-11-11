@@ -1,0 +1,1331 @@
+{
+ "version": 1,
+ "posts": [
+  {
+   "text": "Hiring for Flipkart warehouse packing job, salary 22000 + PF. Interested candidates pay 1200 rupees uniform and ID card charge through Google Pay to our HR before joining. Contact Priya ma'am 9847XXXX21.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "fee",
+     "title": "Asks you to pay money",
+     "match": "pay 1200 rupees uniform and ID card charge"
+    }
+   ],
+   "note": "Real companies never ask you to pay for a uniform or ID card, and never collect money by Google Pay to an HR person.",
+   "ai": 40.0,
+   "difficulty": 2,
+   "id": "p001",
+   "source": "Hand-written"
+  },
+  {
+   "text": "Dear candidate, congratulations! You are shortlisted for the post of Assistant Manager at Tata Consultancy. Your offer letter is ready. Kindly transfer the refundable laptop security amount of Rs 6500 to the account given below within 24 hours to confirm.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "fee",
+     "title": "Asks you to pay money",
+     "match": "security amount"
+    }
+   ],
+   "note": "A surprise offer letter for a job you never interviewed for, plus a “refundable” payment: a classic fake offer-letter scam.",
+   "ai": 40.0,
+   "difficulty": 2,
+   "id": "p002",
+   "source": "Hand-written"
+  },
+  {
+   "text": "Part time job for everyone. Rate restaurants on Google Maps and earn 150 per review. Daily withdrawal. Join our Telegram channel and complete 3 free tasks first, then upgrade to VIP level for bigger commission.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "chat_app",
+     "title": "Contact through chat apps",
+     "match": "Telegram"
+    }
+   ],
+   "note": "Task scams pay for a few easy tasks first, then ask you to “upgrade” or deposit money to keep earning.",
+   "ai": 73.3,
+   "difficulty": 2,
+   "id": "p003",
+   "source": "Hand-written"
+  },
+  {
+   "text": "Work from home opportunity. Watch YouTube videos and like them. 50 rupees per like, up to 5000 per day. No investment for first task. Text 'START' on Whats App to begin.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "chat_app",
+     "title": "Contact through chat apps",
+     "match": "Whats App"
+    }
+   ],
+   "note": "Getting paid to like videos is a task scam: the money stops once you’re asked to invest.",
+   "ai": 99.0,
+   "difficulty": 2,
+   "id": "p004",
+   "source": "Hand-written"
+  },
+  {
+   "text": "Urgent vacancy in Qatar for helpers, drivers, cleaners. Free food and stay, salary 1800 riyal. Visa and medical charges 45,000 to be paid to our agent. Passport copy needed for processing. Interview on Whats App video call.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "personal_data",
+     "title": "Asks for ID or bank details",
+     "match": "Passport copy"
+    },
+    {
+     "id": "chat_app",
+     "title": "Contact through chat apps",
+     "match": "Whats App"
+    }
+   ],
+   "note": "Big visa and medical charges paid to an agent, with only a WhatsApp video interview: a typical overseas visa scam.",
+   "ai": 97.1,
+   "difficulty": 2,
+   "id": "p005",
+   "source": "Hand-written"
+  },
+  {
+   "text": "Indian Railways recruitment 2026 through our office. 100% placement guarantee for Group D posts without exam. Contact our coordinator, documents fee 3500 only.",
+   "label": 1,
+   "flags": [],
+   "note": "Government jobs are filled through official exams, never through a private office or “without exam” for a fee.",
+   "ai": 92.5,
+   "difficulty": 3,
+   "id": "p006",
+   "source": "Hand-written"
+  },
+  {
+   "text": "Earn by investing in our crypto trading tasks. Deposit USDT and get 30 percent returns every week. Work from mobile. Our team will guide you on Telegram.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "chat_app",
+     "title": "Contact through chat apps",
+     "match": "Telegram"
+    }
+   ],
+   "note": "Guaranteed weekly returns on a crypto deposit is an investment scam, not a job.",
+   "ai": 78.5,
+   "difficulty": 2,
+   "id": "p007",
+   "source": "Hand-written"
+  },
+  {
+   "text": "We need data entry staff urgently. You will receive PDF files and have to type them in Word. Payment 18000 per month. Sign the agreement and pay the 2499 processing charge to receive the first project.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "fee",
+     "title": "Asks you to pay money",
+     "match": "pay the 2499 processing charge"
+    }
+   ],
+   "note": "Data-entry “jobs” that charge a processing fee before the first project are a well-known scam.",
+   "ai": 97.6,
+   "difficulty": 2,
+   "id": "p008",
+   "source": "Hand-written"
+  },
+  {
+   "text": "Bank job openings for 12th pass and graduates. Back office and loan department. Salary 25 to 35k. Send your Aadhaar front and back, PAN card and your current account statement to our recruitment Whats App number for verification.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "personal_data",
+     "title": "Asks for ID or bank details",
+     "match": "Aadhaar"
+    },
+    {
+     "id": "chat_app",
+     "title": "Contact through chat apps",
+     "match": "Whats App"
+    }
+   ],
+   "note": "Asking for Aadhaar, PAN and your bank statement on WhatsApp before any interview is an identity-theft move.",
+   "ai": 98.8,
+   "difficulty": 2,
+   "id": "p009",
+   "source": "Hand-written"
+  },
+  {
+   "text": "Hi, I am from the HR team of a reputed MNC. We saw your profile on Naukri. This is a simple online job, you just need to share our product links. To receive salary we need your UPI id and the code you will get by SMS.",
+   "label": 1,
+   "flags": [],
+   "note": "Nobody needs your UPI ID and an SMS code to pay you. That code lets them take money from your account.",
+   "ai": 1.6,
+   "difficulty": 3,
+   "id": "p010",
+   "source": "Hand-written"
+  },
+  {
+   "text": "Airport ground staff jobs in Kochi, Bengaluru and Delhi. Freshers can apply. Salary 28,000. Selection without interview. Registration amount 1999 rupees, paid via the link we send.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "fee",
+     "title": "Asks you to pay money",
+     "match": "Registration amount"
+    },
+    {
+     "id": "no_interview",
+     "title": "Job without a proper interview",
+     "match": "without interview"
+    }
+   ],
+   "note": "Selection without an interview plus a registration amount paid by link: two classic warning signs.",
+   "ai": 99.7,
+   "difficulty": 2,
+   "id": "p011",
+   "source": "Hand-written"
+  },
+  {
+   "text": "Students and homemakers can earn 1000 to 3000 daily by forwarding messages. No skill needed. To activate your account first pay a small amount of 299 which will be refunded with your first payout.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "no_experience",
+     "title": "No skills or experience needed",
+     "match": "No skill needed"
+    }
+   ],
+   "note": "A small “activation” payment that will be “refunded” with your first payout never comes back.",
+   "ai": 91.2,
+   "difficulty": 2,
+   "id": "p012",
+   "source": "Hand-written"
+  },
+  {
+   "text": "Amazon is hiring work from home customer support agents. Monthly 32000. Interview not required. Message our hiring manager on Telegram with your full name, date of birth and bank name.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "chat_app",
+     "title": "Contact through chat apps",
+     "match": "Telegram"
+    }
+   ],
+   "note": "Big brands don’t hire through Telegram or ask for your date of birth and bank name in a chat.",
+   "ai": 86.8,
+   "difficulty": 2,
+   "id": "p013",
+   "source": "Hand-written"
+  },
+  {
+   "text": "Job offer: Content moderator, work from home, 20 hours per week. Selected candidates must purchase the company training kit worth Rs 4,750 before the onboarding call. Email jobs.contentdesk@gmail.com.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "free_email",
+     "title": "Uses a personal email address",
+     "match": "jobs.contentdesk@gmail.com"
+    }
+   ],
+   "note": "Having to buy a training kit before onboarding means you’re the customer, not the employee.",
+   "ai": 97.4,
+   "difficulty": 2,
+   "id": "p014",
+   "source": "Hand-written"
+  },
+  {
+   "text": "We are hiring Junior Web Developers at our Technopark, Thiruvananthapuram office. Requirements: knowledge of HTML, CSS, Java Script and one backend language. Freshers with good projects are encouraged to apply. Apply on our website; shortlisted candidates will get a coding test link by email.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 0.4,
+   "signs": [
+    "Applications go through an official channel",
+    "It describes a normal selection process"
+   ],
+   "difficulty": 2,
+   "id": "p015",
+   "source": "Hand-written"
+  },
+  {
+   "text": "Urgent hiring: Staff Nurses for our 200-bed multispeciality hospital in Kozhikode. Requirements: B. Sc or GNM, Kerala Nursing Council registration, 1 year experience. Salary as per norms, accommodation available. Walk-in interview on Saturday at the hospital HR department, 10 am.",
+   "label": 0,
+   "flags": [
+    {
+     "id": "urgency",
+     "title": "Pressure to act fast",
+     "match": "Urgent hiring"
+    }
+   ],
+   "note": "“Urgent” alone isn’t a red flag: it names the hospital, asks for real qualifications and holds a walk-in interview, with no fee.",
+   "ai": 21.8,
+   "signs": [
+    "It describes a normal selection process",
+    "It asks for real qualifications or experience",
+    "Pay and benefits are described normally"
+   ],
+   "difficulty": 3,
+   "id": "p016",
+   "source": "Hand-written"
+  },
+  {
+   "text": "Accounts Assistant needed for a CA firm in Pune. B. Com graduate with knowledge of Tally Prime and GST returns. 0 to 2 years experience. Salary 18,000 to 24,000. Send your CV to the email on our website. Interview at our office.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 2.3,
+   "signs": [
+    "Applications go through an official channel",
+    "It describes a normal selection process",
+    "It asks for real qualifications or experience"
+   ],
+   "difficulty": 1,
+   "id": "p017",
+   "source": "Hand-written"
+  },
+  {
+   "text": "Sales Officer, two-wheeler loans, for a leading NBFC in Coimbatore. Graduates with 1 year of field sales experience. Fixed salary plus incentives, PF, ESI and travel allowance. Apply through our careers page. For interview schedules, HR will contact you on Whats App.",
+   "label": 0,
+   "flags": [
+    {
+     "id": "chat_app",
+     "title": "Contact through chat apps",
+     "match": "Whats App"
+    }
+   ],
+   "note": "WhatsApp is only for interview schedules: you still apply through the careers page and need real experience.",
+   "ai": 0.4,
+   "signs": [
+    "Applications go through an official channel",
+    "It describes a normal selection process",
+    "It asks for real qualifications or experience"
+   ],
+   "difficulty": 3,
+   "id": "p018",
+   "source": "Hand-written"
+  },
+  {
+   "text": "Mathematics teacher for CBSE school in Mangaluru, classes 8 to 10. M. Sc with B. Ed required. Demo class and interview with the principal. Salary based on experience. Send resume to the school office email. We do not charge any fee from candidates.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 0.8,
+   "signs": [
+    "It describes a normal selection process",
+    "It says candidates are never charged"
+   ],
+   "difficulty": 2,
+   "id": "p019",
+   "source": "Hand-written"
+  },
+  {
+   "text": "Graduate Engineer Trainee (Mechanical) for our manufacturing plant in Hosur. B. E. Mechanical 2025/2026 pass-outs. One year training with stipend, then confirmation. Selection: written test, technical interview, medical check. Register on our careers portal to apply.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 1.7,
+   "signs": [
+    "Applications go through an official channel",
+    "It describes a normal selection process",
+    "It asks for real qualifications or experience",
+    "Pay and benefits are described normally"
+   ],
+   "difficulty": 1,
+   "id": "p020",
+   "source": "Hand-written"
+  },
+  {
+   "text": "Customer Care Executive for a telecom company's Hyderabad centre. English and Telugu required, Hindi is a plus. Rotational shifts, 6 days a week. Salary 2.4 LPA plus night shift allowance and cab facility. Apply on Naukri or Linked In.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 0.7,
+   "signs": [
+    "Applications go through an official channel",
+    "Pay and benefits are described normally"
+   ],
+   "difficulty": 2,
+   "id": "p021",
+   "source": "Hand-written"
+  },
+  {
+   "text": "We are looking for a Data Analyst with 2+ years of experience in SQL, Python and Power BI to join our analytics team in Bengaluru. Hybrid working, health insurance for family, 24 days paid leave. Apply via Linked In. Interviews are conducted over video call.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 0.4,
+   "signs": [
+    "It describes a normal selection process",
+    "It asks for real qualifications or experience",
+    "Pay and benefits are described normally"
+   ],
+   "difficulty": 1,
+   "id": "p022",
+   "source": "Hand-written"
+  },
+  {
+   "text": "HR Executive for a logistics company in Chennai. MBA HR with 2 years of experience in recruitment and payroll. Salary 30,000 to 38,000 per month. Interested candidates can email their resume. Shortlisted candidates will be called for a personal interview.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 1.6,
+   "signs": [
+    "It describes a normal selection process",
+    "It asks for real qualifications or experience",
+    "Pay and benefits are described normally"
+   ],
+   "difficulty": 1,
+   "id": "p023",
+   "source": "Hand-written"
+  },
+  {
+   "text": "Hiring Electricians and Plumbers for our facility management team in Gurugram. ITI certificate and 2 years of experience required. Salary 16,000 to 20,000 plus overtime, ESI and PF. Walk in with your documents to our office, Monday to Saturday.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 14.3,
+   "signs": [
+    "It asks for real qualifications or experience"
+   ],
+   "difficulty": 2,
+   "id": "p024",
+   "source": "Hand-written"
+  },
+  {
+   "text": "Internship: Digital Marketing intern (3 months) at a startup in Kochi. Learn SEO, social media and Google Ads. Stipend 8,000 per month, certificate on completion, chance of full-time offer. Apply with a short note about yourself through our internship form.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 0.1,
+   "signs": [
+    "Pay and benefits are described normally"
+   ],
+   "difficulty": 2,
+   "id": "p025",
+   "source": "Hand-written"
+  },
+  {
+   "text": "Pharmacist required for a retail pharmacy chain in Kolkata. D. Pharm or B. Pharm with a valid State Pharmacy Council registration. Salary 20,000 to 26,000. Day shift. Visit any of our branches with your resume or apply on our website.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 0.6,
+   "signs": [
+    "Applications go through an official channel",
+    "It asks for real qualifications or experience"
+   ],
+   "difficulty": 2,
+   "id": "p026",
+   "source": "Hand-written"
+  },
+  {
+   "text": "Senior Java Developer, 5 to 8 years, product company in Noida. Strong Spring Boot, microservices, Kafka and AWS. CTC up to 28 LPA. Three interview rounds. Please apply through our careers site; our recruiters will never ask you for payment.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 1.3,
+   "signs": [
+    "Applications go through an official channel",
+    "It describes a normal selection process",
+    "It says candidates are never charged",
+    "Pay and benefits are described normally"
+   ],
+   "difficulty": 1,
+   "id": "p027",
+   "source": "Hand-written"
+  },
+  {
+   "text": "Office Administrator for an architecture firm in Ahmedabad. Manage office supplies, vendor payments, travel bookings and front desk. Graduate with 2 years of experience and good English and Gujarati. Salary 22,000 per month. Email your CV to apply.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 1.5,
+   "signs": [
+    "It asks for real qualifications or experience",
+    "Pay and benefits are described normally"
+   ],
+   "difficulty": 2,
+   "id": "p028",
+   "source": "Hand-written"
+  },
+  {
+   "text": "Instagram Follow Task - Work From Home Top multinational company, 100% genuine work. Daily payout of Rs 2000 guaranteed. 10th pass or 12th pass can apply. Join our Telegram group for daily tasks: t.me/taskzone21. Immediate joining, selection on the spot. Medical and documentation charges Rs 3500 payable in advance. Daily payment to bank or UPI.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "chat_app",
+     "title": "Contact through chat apps",
+     "match": "Telegram"
+    },
+    {
+     "id": "easy_money",
+     "title": "Promises easy or unrealistic pay",
+     "match": "Daily payout"
+    },
+    {
+     "id": "urgency",
+     "title": "Pressure to act fast",
+     "match": "Immediate joining"
+    }
+   ],
+   "note": "",
+   "ai": 99.8,
+   "difficulty": 1,
+   "id": "p029",
+   "source": "India-style"
+  },
+  {
+   "text": "Amazon Product Review Job - Work From Home Trusted online work provider since 2015. Send your bank account number, IFSC code and the OTP you receive to complete registration. Only basic mobile knowledge needed. Daily payout of Rs 1500 guaranteed. Message us on Telegram @jobshub20 to start. Work from home, flexible timing.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "personal_data",
+     "title": "Asks for ID or bank details",
+     "match": "bank account"
+    },
+    {
+     "id": "chat_app",
+     "title": "Contact through chat apps",
+     "match": "Telegram"
+    },
+    {
+     "id": "easy_money",
+     "title": "Promises easy or unrealistic pay",
+     "match": "Daily payout"
+    }
+   ],
+   "note": "",
+   "ai": 99.8,
+   "difficulty": 1,
+   "id": "p030",
+   "source": "India-style"
+  },
+  {
+   "text": "Mobile Based Part Time Job - All India Authorised placement partner for airlines and railways. Immediate joining, selection on the spot. Any graduate or non graduate can do this work. Contact HR on Whats App 7201982574. Send your bank account number, IFSC code and the OTP you receive to complete registration. Salary Rs 25,000 plus daily incentives. Daily payment to bank or UPI.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "personal_data",
+     "title": "Asks for ID or bank details",
+     "match": "bank account"
+    },
+    {
+     "id": "chat_app",
+     "title": "Contact through chat apps",
+     "match": "Whats App"
+    },
+    {
+     "id": "easy_money",
+     "title": "Promises easy or unrealistic pay",
+     "match": "Daily payment"
+    },
+    {
+     "id": "urgency",
+     "title": "Pressure to act fast",
+     "match": "Immediate joining"
+    }
+   ],
+   "note": "",
+   "ai": 99.9,
+   "difficulty": 1,
+   "id": "p031",
+   "source": "India-style"
+  },
+  {
+   "text": "Gulf Job - Driver / Helper - Work From Home Leading e-commerce partner company. Join our Telegram group for daily tasks: t.me/work_desk72. 10th pass or 12th pass can apply. Medical and documentation charges Rs 2000 payable in advance. Weekly income of Rs 15000 without any target. Work from home, flexible timing.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "chat_app",
+     "title": "Contact through chat apps",
+     "match": "Telegram"
+    },
+    {
+     "id": "easy_money",
+     "title": "Promises easy or unrealistic pay",
+     "match": "Weekly income"
+    }
+   ],
+   "note": "",
+   "ai": 99.3,
+   "difficulty": 2,
+   "id": "p032",
+   "source": "India-style"
+  },
+  {
+   "text": "Gulf Job - Driver / Helper - All India Top multinational company, 100% genuine work. Contact HR on Whats App 6384730093. Join within 24 hours or the offer will be cancelled. Share your net banking details for direct salary credit. A refundable security deposit of Rs 8500 is required before joining. Simple copy paste work, no target. Earn 500 rupees daily, payment every evening.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "fee",
+     "title": "Asks you to pay money",
+     "match": "security deposit"
+    },
+    {
+     "id": "chat_app",
+     "title": "Contact through chat apps",
+     "match": "Whats App"
+    },
+    {
+     "id": "no_experience",
+     "title": "No skills or experience needed",
+     "match": "Simple copy paste work"
+    }
+   ],
+   "note": "",
+   "ai": 99.7,
+   "difficulty": 1,
+   "id": "p033",
+   "source": "India-style"
+  },
+  {
+   "text": "Instagram Follow Task - All India Top multinational company, 100% genuine work. Send your Aadhaar card, PAN card and bank account details for verification. Contact our manager on Telegram @careerhub84. Hurry, last few positions remaining. Salary Rs 25,000 plus daily incentives. Only basic mobile knowledge needed. Work from home, flexible timing.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "personal_data",
+     "title": "Asks for ID or bank details",
+     "match": "Aadhaar"
+    },
+    {
+     "id": "chat_app",
+     "title": "Contact through chat apps",
+     "match": "Telegram"
+    },
+    {
+     "id": "urgency",
+     "title": "Pressure to act fast",
+     "match": "Hurry"
+    }
+   ],
+   "note": "",
+   "ai": 99.9,
+   "difficulty": 1,
+   "id": "p034",
+   "source": "India-style"
+  },
+  {
+   "text": "Telegram Task Job Top multinational company, 100% genuine work. Earn 2000 rupees daily, payment every evening. Pay Rs 499 for the ID card and joining kit. No selling, no calling, only online work. Message us on Telegram @indiazone10 to start. Send the 6 digit OTP for account activation. Hurry, last few positions remaining. Daily payment to bank or UPI.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "personal_data",
+     "title": "Asks for ID or bank details",
+     "match": "OTP"
+    },
+    {
+     "id": "chat_app",
+     "title": "Contact through chat apps",
+     "match": "Telegram"
+    },
+    {
+     "id": "easy_money",
+     "title": "Promises easy or unrealistic pay",
+     "match": "Daily payment"
+    },
+    {
+     "id": "urgency",
+     "title": "Pressure to act fast",
+     "match": "Hurry"
+    }
+   ],
+   "note": "",
+   "ai": 99.9,
+   "difficulty": 1,
+   "id": "p035",
+   "source": "India-style"
+  },
+  {
+   "text": "Instagram Follow Task - Mangaluru Reputed international company hiring across India. Daily payout of Rs 500 guaranteed. Send your bank account number, IFSC code and the OTP you receive to complete registration. Message us on Telegram @earnhub48 to start. Any graduate or non graduate can do this work. Only 20 slots left, hurry up!",
+   "label": 1,
+   "flags": [
+    {
+     "id": "personal_data",
+     "title": "Asks for ID or bank details",
+     "match": "bank account"
+    },
+    {
+     "id": "chat_app",
+     "title": "Contact through chat apps",
+     "match": "Telegram"
+    },
+    {
+     "id": "easy_money",
+     "title": "Promises easy or unrealistic pay",
+     "match": "Daily payout"
+    },
+    {
+     "id": "urgency",
+     "title": "Pressure to act fast",
+     "match": "hurry"
+    }
+   ],
+   "note": "",
+   "ai": 99.9,
+   "difficulty": 1,
+   "id": "p036",
+   "source": "India-style"
+  },
+  {
+   "text": "Gulf Job - Driver / Helper - Hyderabad Trusted online work provider since 2015. Simple work, earn upto Rs 800 per day. Offer valid only today. Whats App your name and city to 8333609676. Simple copy paste work, no target. Payment proof will be shared.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "chat_app",
+     "title": "Contact through chat apps",
+     "match": "Whats App"
+    },
+    {
+     "id": "easy_money",
+     "title": "Promises easy or unrealistic pay",
+     "match": "earn upto Rs 800 per day"
+    },
+    {
+     "id": "urgency",
+     "title": "Pressure to act fast",
+     "match": "only today"
+    },
+    {
+     "id": "no_experience",
+     "title": "No skills or experience needed",
+     "match": "Simple copy paste work"
+    }
+   ],
+   "note": "",
+   "ai": 99.6,
+   "difficulty": 1,
+   "id": "p037",
+   "source": "India-style"
+  },
+  {
+   "text": "Telegram Task Job - Mumbai Immediate joining, selection on the spot. Whats App your name and city to 6997275674. Visa processing fee Rs 5000 to be paid within 2 days. Simple work, earn upto Rs 500 per day. Work only 1 to 2 hours daily from home. Send your Aadhaar card, PAN card and bank account details for verification.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "fee",
+     "title": "Asks you to pay money",
+     "match": "processing fee"
+    },
+    {
+     "id": "personal_data",
+     "title": "Asks for ID or bank details",
+     "match": "Aadhaar"
+    },
+    {
+     "id": "chat_app",
+     "title": "Contact through chat apps",
+     "match": "Telegram"
+    },
+    {
+     "id": "easy_money",
+     "title": "Promises easy or unrealistic pay",
+     "match": "earn upto Rs 500 per day"
+    },
+    {
+     "id": "urgency",
+     "title": "Pressure to act fast",
+     "match": "Immediate joining"
+    }
+   ],
+   "note": "",
+   "ai": 99.5,
+   "difficulty": 1,
+   "id": "p038",
+   "source": "India-style"
+  },
+  {
+   "text": "Telegram Task Job Leading e-commerce partner company. Offer letter will be sent after you pay the processing fee of Rs 5000. Immediate joining, selection on the spot. Work only 1 to 2 hours daily from home. Join our Telegram group for daily tasks: t.me/hrhub43. Send Aadhaar, PAN and a cancelled cheque to confirm your job. Simple work, earn upto Rs 1500 per day.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "fee",
+     "title": "Asks you to pay money",
+     "match": "pay the processing fee"
+    },
+    {
+     "id": "personal_data",
+     "title": "Asks for ID or bank details",
+     "match": "Aadhaar"
+    },
+    {
+     "id": "chat_app",
+     "title": "Contact through chat apps",
+     "match": "Telegram"
+    },
+    {
+     "id": "easy_money",
+     "title": "Promises easy or unrealistic pay",
+     "match": "earn upto Rs 1500 per day"
+    },
+    {
+     "id": "urgency",
+     "title": "Pressure to act fast",
+     "match": "Immediate joining"
+    }
+   ],
+   "note": "",
+   "ai": 99.9,
+   "difficulty": 1,
+   "id": "p039",
+   "source": "India-style"
+  },
+  {
+   "text": "Telegram Task Job Medical and documentation charges Rs 5000 payable in advance. 10th pass or 12th pass can apply. Send your bank account number, IFSC code and the OTP you receive to complete registration. Fixed salary 40,000 per month, no target, no pressure. Join our Telegram group for daily tasks: t.me/earnzone8. Daily payment to bank or UPI.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "personal_data",
+     "title": "Asks for ID or bank details",
+     "match": "bank account"
+    },
+    {
+     "id": "chat_app",
+     "title": "Contact through chat apps",
+     "match": "Telegram"
+    },
+    {
+     "id": "easy_money",
+     "title": "Promises easy or unrealistic pay",
+     "match": "Daily payment"
+    }
+   ],
+   "note": "",
+   "ai": 99.5,
+   "difficulty": 1,
+   "id": "p040",
+   "source": "India-style"
+  },
+  {
+   "text": "Graphic Designer - Prism Infotech Pvt. Ltd., Bengaluru We are a growing retail company headquartered in Bengaluru. Responsibilities: Maintain records in Tally and Excel. Handle GST filing and bank reconciliation. Requirements: Any graduate with good communication skills. MBA in HR or a related field preferred. The selection includes a written test and a face-to-face interview. Fixed salary plus performance incentives, PF and gratuity. Apply through the Careers page on our website.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 0.2,
+   "signs": [
+    "Applications go through an official channel",
+    "It describes a normal selection process",
+    "It asks for real qualifications or experience"
+   ],
+   "difficulty": 1,
+   "id": "p041",
+   "source": "India-style"
+  },
+  {
+   "text": "Data Analyst - Pinnacle Systems Pvt. Ltd., Thiruvananthapuram Pinnacle Systems Pvt. Ltd. is an ISO 9001 certified manufacturing firm with 250 employees in Thiruvananthapuram and Bhubaneswar. Responsibilities: Build REST APIs and integrate them with the frontend. Write unit tests and take part in code reviews. Requirements: Freshers from the 2025 or 2026 batch are welcome. Knowledge of Java or Python and SQL. Selection process: online aptitude test, technical interview and HR interview. Salary 25,000 to 30,000 per month based on experience, PF and ESI. Apply on Naukri.com or through our careers portal. We do not charge any fee at any stage of recruitment.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 0.1,
+   "signs": [
+    "Applications go through an official channel",
+    "It describes a normal selection process",
+    "It says candidates are never charged",
+    "Pay and benefits are described normally"
+   ],
+   "difficulty": 1,
+   "id": "p042",
+   "source": "India-style"
+  },
+  {
+   "text": "Junior Accountant - Unnati Tech Pvt. Ltd., Mysuru Unnati Tech Pvt. Ltd. is an ISO 9001 certified accounting firm with 60 employees in Mysuru and Bengaluru. Responsibilities: Maintain records in Tally and Excel. Manage employee onboarding and attendance records. Requirements: MBA in HR or a related field preferred. Good working knowledge of MS Excel and Tally. Shortlisted candidates will be called for an interview at our Mysuru office. Salary 25,000 to 40,000 per month based on experience, PF and ESI. Apply on Naukri.com or through our careers portal. Beware of fake job offers. We never ask for money or bank details.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 0.1,
+   "signs": [
+    "Applications go through an official channel",
+    "It describes a normal selection process",
+    "It says candidates are never charged",
+    "It asks for real qualifications or experience"
+   ],
+   "difficulty": 1,
+   "id": "p043",
+   "source": "India-style"
+  },
+  {
+   "text": "Frontend Developer (React) - Orbit Digital Pvt. Ltd., Bengaluru Orbit Digital Pvt. Ltd. is an ISO 9001 certified construction firm with 500 employees in Bengaluru and Gurugram. Responsibilities: Write unit tests and take part in code reviews. Build REST APIs and integrate them with the frontend. Requirements: Freshers from the 2025 or 2026 batch are welcome. Knowledge of Java or Python and SQL. The selection includes a written test and a face-to-face interview. CTC 3.5 to 6 LPA, health insurance and paid leave. Email your CV to jobs@orbitdigital.in with the job title in the subject. We do not charge any fee at any stage of recruitment.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 0.0,
+   "signs": [
+    "It describes a normal selection process",
+    "It uses a company email address",
+    "It says candidates are never charged",
+    "Pay and benefits are described normally"
+   ],
+   "difficulty": 1,
+   "id": "p044",
+   "source": "India-style"
+  },
+  {
+   "text": "Mathematics Teacher - Pragati Software Pvt. Ltd., Mangaluru Pragati Software Pvt. Ltd. operates 9 branches across South India. Responsibilities: Visit client sites in and around Mangaluru. Supervise contractors and ensure safety standards. Requirements: Fluency in English and Kannada. Willingness to travel within the state. The selection includes a written test and a face-to-face interview. CTC 5 to 6 LPA, health insurance and paid leave. Apply through our official website. Interview updates will also be sent on Whats App.",
+   "label": 0,
+   "flags": [
+    {
+     "id": "chat_app",
+     "title": "Contact through chat apps",
+     "match": "Whats App"
+    }
+   ],
+   "note": "It mentions WhatsApp only for interview updates; applications still go through official channels.",
+   "ai": 0.1,
+   "signs": [
+    "Applications go through an official channel",
+    "It describes a normal selection process",
+    "It asks for real qualifications or experience",
+    "Pay and benefits are described normally"
+   ],
+   "difficulty": 3,
+   "id": "p045",
+   "source": "India-style"
+  },
+  {
+   "text": "Data Analyst - Nila Software Pvt. Ltd., Kochi Nila Software Pvt. Ltd. is an ISO 9001 certified healthcare firm with 250 employees in Kochi and Visakhapatnam. Responsibilities: Fix bugs reported by customers and the QA team. Write unit tests and take part in code reviews. Requirements: B. Tech / B. E. in Computer Science or a related field. Freshers from the 2025 or 2026 batch are welcome. The selection includes a written test and a face-to-face interview. CTC 3.5 to 7 LPA, health insurance and paid leave. Apply on Naukri.com or through our careers portal.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 0.1,
+   "signs": [
+    "Applications go through an official channel",
+    "It describes a normal selection process",
+    "It asks for real qualifications or experience",
+    "Pay and benefits are described normally"
+   ],
+   "difficulty": 1,
+   "id": "p046",
+   "source": "India-style"
+  },
+  {
+   "text": "Business Development Associate - Matrix Retail Pvt. Ltd., Bhubaneswar Matrix Retail Pvt. Ltd. is an ISO 9001 certified retail firm with 60 employees in Bhubaneswar and Kochi. Responsibilities: Meet monthly sales targets agreed with your manager. Visit client sites in and around Bhubaneswar. Requirements: Willingness to travel within the state. 3 to 5 years of experience in sales or service. Selection process: online aptitude test, technical interview and HR interview. Salary 25,000 to 35,000 per month based on experience, PF and ESI. Apply through our official website. Interview updates will also be sent on Whats App.",
+   "label": 0,
+   "flags": [
+    {
+     "id": "chat_app",
+     "title": "Contact through chat apps",
+     "match": "Whats App"
+    }
+   ],
+   "note": "It mentions WhatsApp only for interview updates; applications still go through official channels.",
+   "ai": 0.1,
+   "signs": [
+    "Applications go through an official channel",
+    "It describes a normal selection process",
+    "It asks for real qualifications or experience",
+    "Pay and benefits are described normally"
+   ],
+   "difficulty": 3,
+   "id": "p047",
+   "source": "India-style"
+  },
+  {
+   "text": "Software Developer (Freshers) - Sahyadri Logistics Pvt. Ltd., Pune We are a growing IT services company headquartered in Pune. Responsibilities: Fix bugs reported by customers and the QA team. Build REST APIs and integrate them with the frontend. Requirements: B. Tech / B. E. in Computer Science or a related field. Freshers from the 2025 or 2026 batch are welcome. Selection process: online aptitude test, technical interview and HR interview. CTC 4 to 6 LPA, health insurance and paid leave. Apply through the Careers page on our website. We do not charge any fee at any stage of recruitment.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 0.1,
+   "signs": [
+    "Applications go through an official channel",
+    "It describes a normal selection process",
+    "It says candidates are never charged",
+    "It asks for real qualifications or experience"
+   ],
+   "difficulty": 1,
+   "id": "p048",
+   "source": "India-style"
+  },
+  {
+   "text": "Accounts Executive - Ganga Ventures Pvt. Ltd., Noida Ganga Ventures Pvt. Ltd. operates 5 branches across South India. Responsibilities: Manage employee onboarding and attendance records. Handle GST filing and bank reconciliation. Requirements: Good working knowledge of MS Excel and Tally. Any graduate with good communication skills. Shortlisted candidates will be called for an interview at our Noida office. CTC 5 to 8 LPA, health insurance and paid leave. Apply on Naukri.com or through our careers portal.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 0.1,
+   "signs": [
+    "Applications go through an official channel",
+    "It describes a normal selection process",
+    "It asks for real qualifications or experience",
+    "Pay and benefits are described normally"
+   ],
+   "difficulty": 1,
+   "id": "p049",
+   "source": "India-style"
+  },
+  {
+   "text": "Accounts Executive - Pinnacle Infotech Pvt. Ltd., Surat Pinnacle Infotech Pvt. Ltd. operates 18 branches across South India. Responsibilities: Visit client sites in and around Surat. Meet monthly sales targets agreed with your manager. Requirements: Fluency in English and Hindi. 1 to 4 years of experience in sales or service. Selection process: online aptitude test, technical interview and HR interview. Fixed salary plus performance incentives, PF and gratuity. Apply on Naukri.com or through our careers portal. Beware of fake job offers. We never ask for money or bank details.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 0.1,
+   "signs": [
+    "Applications go through an official channel",
+    "It describes a normal selection process",
+    "It says candidates are never charged",
+    "It asks for real qualifications or experience"
+   ],
+   "difficulty": 1,
+   "id": "p050",
+   "source": "India-style"
+  },
+  {
+   "text": "Weekend Cash Jobs Part time & Full time.\nWeekend Cash Jobs Part time & Full time. No Experience Required And Never Any Fees. Work Anytime 1 To 2 Hrs Daily In Free Time. Earn Easily $400 To $500 Extra Per Day. Totally Free To Join & Suitable For All. Take Action & Get Started Here:-[link]",
+   "label": 1,
+   "flags": [
+    {
+     "id": "no_experience",
+     "title": "No skills or experience needed",
+     "match": "No Experience Required"
+    }
+   ],
+   "note": "",
+   "ai": 97.8,
+   "difficulty": 2,
+   "id": "p051",
+   "source": "EMSCAD"
+  },
+  {
+   "text": "Home Based Payroll Data Entry Clerk Position - Earn $100-$200 Daily\nWe are a full-service marketing and staffing firm, serving companies ranging from Fortune 100 to new start-up organizations. We work with job seekers in an equally broad range, from light industrial temporary workers to executive level candidates. Are you looking for a Work from Home Opportunity where you can earn up to $2500 and more per week? Our Online Service Representative position would be perfect for you!- Set your own hours - Make money every time you decide to work - Work remotely from home - Get paid…",
+   "label": 1,
+   "flags": [
+    {
+     "id": "easy_money",
+     "title": "Promises easy or unrealistic pay",
+     "match": "earn up to"
+    }
+   ],
+   "note": "",
+   "ai": 99.4,
+   "difficulty": 2,
+   "id": "p052",
+   "source": "EMSCAD"
+  },
+  {
+   "text": "CASH Paying Vacancies (Apply Today)\nCASH Paying Vacancies (Apply Today)Work as many or little hrs as u like, No cost. You can earn $300 to $400 extra a day. No experience required for this job. Join Today And Start Earning. Suitable For Everyone. Apply Today, Visit Here:-[link]-rg.info",
+   "label": 1,
+   "flags": [
+    {
+     "id": "urgency",
+     "title": "Pressure to act fast",
+     "match": "Apply Today"
+    },
+    {
+     "id": "no_experience",
+     "title": "No skills or experience needed",
+     "match": "No experience required"
+    }
+   ],
+   "note": "",
+   "ai": 99.6,
+   "difficulty": 2,
+   "id": "p053",
+   "source": "EMSCAD"
+  },
+  {
+   "text": "Casual job/Immediate start\nLooking for work? We are looking for a self motivate and energetic person to join our team. The role is based in Sydney. - Weekly earnings - $400 - $450 - No experience necessary - Training provided - GREAT TEAM CULTURE AND IMMEDIATE START!!! MUST BE 18+ TO APPLYPART TIME POSITION, MUST BE AVAILABLE MON-FRI You will be expected to have excellent communication skills and a hunger for success. Applicants must be permanent Australian residents – ideally seeking a permanent opportunity.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "no_experience",
+     "title": "No skills or experience needed",
+     "match": "No experience necessary"
+    }
+   ],
+   "note": "",
+   "ai": 14.7,
+   "difficulty": 2,
+   "id": "p054",
+   "source": "EMSCAD"
+  },
+  {
+   "text": "Vacancies @ Hyatt Hotel - Apply now before deadline!\nJob Vacancies @ Hyatt Hotels London - Apply before deadline!!!! Hyatt Hotels London - The Churchill30 Portman Square London, England (United Kingdom)Tel:[phone]Why Work with Hyatt ? Watch these Videos![link]?v=nMGF7MnoZBs[link]?v=ZiXH4VGimbk[link]?v=XxjYEDvufaQWelcome to the Hyatt Hotels London and to the perfect place where you can say: 'Yes!' to a new career! The success of our company depends on its people. At Hyatt Hotels, we are committed to developing each employee to his or her full potential.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "urgency",
+     "title": "Pressure to act fast",
+     "match": "Apply now"
+    }
+   ],
+   "note": "",
+   "ai": 98.8,
+   "difficulty": 2,
+   "id": "p055",
+   "source": "EMSCAD"
+  },
+  {
+   "text": "Marketing/sales Coordinator\nDESCRIPTIONWho doesn’t want a competitive compensation package AND the opportunity to work with a company that has reported 30% growth consecutively over the last few years and make up to $500 to $1000. (NO PHONE CALLS PLEASE ALL APPOINTMENTS SET BY APPOINTMENT ONLY) We are excited to be leading the initiative for our high end clients, a growing company in Chicago. The Marketing and sales coordinator is expected to build up a pipeline of leads for the sales team.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "easy_money",
+     "title": "Promises easy or unrealistic pay",
+     "match": "make up to"
+    }
+   ],
+   "note": "",
+   "ai": 81.5,
+   "difficulty": 2,
+   "id": "p056",
+   "source": "EMSCAD"
+  },
+  {
+   "text": "Urgent Requirement : Senior Exchange & Active Directory Systems Administrator for Qatar.\nGreetings from VAM SYSTEMS….. VAM SYSTEMS is a Business Consulting, IT Solutions and Services company with operations in UAE, Qatar, Bahrain, USA, Australia, Singapore & India. We offers a comprehensive list of services in the field of IT infrastructure management, Cloud services, IT Consulting Services, Banking, Management Resources, Information Technology Development, Telecom, Aviation, Retail Management & eGovernment offerings.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "urgency",
+     "title": "Pressure to act fast",
+     "match": "Urgent Requirement"
+    }
+   ],
+   "note": "",
+   "ai": 85.7,
+   "difficulty": 2,
+   "id": "p057",
+   "source": "EMSCAD"
+  },
+  {
+   "text": "Hospital Clerical/Reception: $22 - $24/hr\nJuly Employment Hospital Clerical/Reception: $22 - $24/hrIf you are unemployed or tired of mundane and low paying jobsthen this great career is for you. Maximum benefits. Great Pay. Union Membership after 90 days on the job. 7 hrs HC Job Orientation is required/mandatory before you could get employed. No experience required just a high school and typing. Employment process and placement is for your regional area hospitals. Work Full time M-F: 9-5 (Part time evenings and/or weekends).",
+   "label": 1,
+   "flags": [
+    {
+     "id": "no_experience",
+     "title": "No skills or experience needed",
+     "match": "No experience required"
+    }
+   ],
+   "note": "",
+   "ai": 4.7,
+   "difficulty": 2,
+   "id": "p058",
+   "source": "EMSCAD"
+  },
+  {
+   "text": "Receptionist Office Asst.\nUAH is a full service multi-divisional private investment company. We provide personalized real estate development, management and investment services to private equity funds, residential and commercial clients, with 41…\nCompany Description Urban Asset Holdings (UAH) is a full service multi-divisional private investment company. We provide personalized real estate development, management and investment services to private equity funds, residential and commercial clients, with 41 locally managed offices across the U. S. We are an equal opportunity employer (EOO). Work Shift: 8:30am - 5pm (Mon-Fri) Weekends off. Job Location: Jacksonville, FL (Management Office)*** APPLY NOW - THIS POSITION MUST BE FILLED ***",
+   "label": 1,
+   "flags": [
+    {
+     "id": "urgency",
+     "title": "Pressure to act fast",
+     "match": "APPLY NOW"
+    }
+   ],
+   "note": "",
+   "ai": 36.7,
+   "difficulty": 2,
+   "id": "p059",
+   "source": "EMSCAD"
+  },
+  {
+   "text": "Part Time Job Work From Home, Daily Pay.\nPart Time Job Work From Home, Daily Pay. Work Minimum 1-2 Hours Per Day Anytime. Won't Required Experience For This Job. You Can Earn $350 to $450 Everyday. Suitable For Both Male And Female. Totally Free To Join, Visit Here:-[link]",
+   "label": 1,
+   "flags": [
+    {
+     "id": "easy_money",
+     "title": "Promises easy or unrealistic pay",
+     "match": "Earn $350 to $450 Everyday"
+    }
+   ],
+   "note": "",
+   "ai": 99.6,
+   "difficulty": 2,
+   "id": "p060",
+   "source": "EMSCAD"
+  },
+  {
+   "text": "work from home\nMCA Associates receive $80.00 (EIGHTY DOLLARS) and up for each membership submitted; MCA associates also receive residual monthly income from the members and associates they personally sign up. Sign up just two individuals per day—as either members or associates—and generate a $1,120.00 per week income. Receive a weekly paper check (delivered by UPS) or have your check direct deposited into your own bank account.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "personal_data",
+     "title": "Asks for ID or bank details",
+     "match": "bank account"
+    }
+   ],
+   "note": "",
+   "ai": 99.3,
+   "difficulty": 2,
+   "id": "p061",
+   "source": "EMSCAD"
+  },
+  {
+   "text": "Home Based Typist (Full/Part Time)\nAre you looking for a job that allows you to work flexibly at your own time and comfortably own home? Are you looking for a job that allows you to earn USD$1000-2000 per week? Our company is seeking candidates around the world to process typing job. Only 2 hours needed to spend per day at your home. Requirements are as follow:Computer with Internet access, minimal typing skills, knowledge to send email. We are offering only 3 positions at the moment.",
+   "label": 1,
+   "flags": [
+    {
+     "id": "easy_money",
+     "title": "Promises easy or unrealistic pay",
+     "match": "earn USD$1000-2000 per week"
+    }
+   ],
+   "note": "",
+   "ai": 32.4,
+   "difficulty": 2,
+   "id": "p062",
+   "source": "EMSCAD"
+  },
+  {
+   "text": "Insurance Administrator\nTidewater Finance Co. was established in 1992 for the initial purpose of purchasing, and servicing retail installment contracts.\nTo apply please visit our website [link] and click Careers to complete our on-line application. Tidewater Finance Company has a full-time Insurance Administrator position available in their Recovery Department. Our company continues to offer exciting career opportunities in a team-oriented environment, where every employee is trained to succeed. This position affords an opportunity to learn, contribute and develop within our organization.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 0.1,
+   "signs": [
+    "Applications go through an official channel",
+    "Pay and benefits are described normally"
+   ],
+   "difficulty": 2,
+   "id": "p063",
+   "source": "EMSCAD"
+  },
+  {
+   "text": "Out Bound Appointment Setters -\nPositive upbeat atmosphere Ongoing mentor ship by one of the Nation's leading Realtor'sExcellent Technology for lead management5 to 7 pre approved pre qualified leads average weekly\nWe are setting up interviews ASAP looking to fill 6 positions For people who are ready to start mid next week! This is not a call center position. It is located in our corporate headquarters in S. W. Portland and on tri met lines. This position requires:* A strong desire to excel and succeed* Previous outbound telephone experience* Good phone skills and communication skills* Be a Professional What does this position offer? WE are just a couple blocks from TRI MET Transit center!* Strong advancement opportunities*…",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 1.1,
+   "signs": [
+    "It describes a normal selection process",
+    "It asks for real qualifications or experience"
+   ],
+   "difficulty": 2,
+   "id": "p064",
+   "source": "EMSCAD"
+  },
+  {
+   "text": "Ruby on Rails / Backend Engineer\nJoist is a platform for trades contractors that allows them to estimate, invoice, accept payments, & much more!\n***VISIT OUR CAREERS PAGE HERE TO LEARN MORE ABOUT WORKING WITH THE JOIST TEAM***If working with:1) one of the fastest growing startups2) an awesome engineering team, and 3) solving a big problem in a massive marketsounds like something you want be a part of with a competitive salary and meaningful equity, get in touch with us. Joist’s mission is to SUPPORT TRADES CONTRACTORS IN RUNNING THE BEST BUSINESSES POSSIBLE by bringing coordination, professionalism, and transparency to the contractor ecosystem.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 0.1,
+   "signs": [
+    "Applications go through an official channel",
+    "It asks for real qualifications or experience",
+    "Pay and benefits are described normally"
+   ],
+   "difficulty": 1,
+   "id": "p065",
+   "source": "EMSCAD"
+  },
+  {
+   "text": "QA Engineer\nX1 Group helps startups and tech companies push their businesses forward by setting up long-term dedicated development teams working exclusively on their projects.\nWe're extending development team of the digital lending project, which provides easy, fast access to online loans to consumers worldwide through its web and mobile services. Now we have a team of 25+ developers and QAs and searching for more high-skilled Automation QA Engineers and Manual QA Engineers. We'll be happy to give you much more details during interview.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 0.1,
+   "signs": [
+    "It describes a normal selection process",
+    "It asks for real qualifications or experience"
+   ],
+   "difficulty": 2,
+   "id": "p066",
+   "source": "EMSCAD"
+  },
+  {
+   "text": "Senior Benefits Analyst\nOur passion for improving quality of life through geography is at the heart of everything we do. Esri’s geographic information system (GIS) technology inspires and enables governments, universities and businesses…\nBe part of a team involved in reshaping the way benefits are delivered to Esri employees. We are seeking an experienced benefits professional to play an important role in key projects and day-to-day operations of group benefit programs. You’ll provide customer support on complex employee issues to ensure excellent customer service and will also have the opportunity to apply your knowledge and skills in benefit plan design and operation, project management, vendor management, and data and process analysis.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 0.1,
+   "signs": [
+    "It asks for real qualifications or experience",
+    "Pay and benefits are described normally"
+   ],
+   "difficulty": 2,
+   "id": "p067",
+   "source": "EMSCAD"
+  },
+  {
+   "text": "Title Insurance & Settlement Sales: Midwestern Account Executive\n[link]\nVery well established National Settlement Services firm is looking to hire an experienced Sales Rep to handle their Midwest Expansion. Successful candidates will have current & past experience identifying and calling on B2B prospects at the VP level and building strong relationships that lead to new and recurring business. Must be skilled and comfortable calling on prospective clients, setting up and leading sales meetings, making presentations, and closing new business.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 0.4,
+   "signs": [
+    "It asks for real qualifications or experience",
+    "Pay and benefits are described normally"
+   ],
+   "difficulty": 2,
+   "id": "p068",
+   "source": "EMSCAD"
+  },
+  {
+   "text": "Technician Level III, Broadcast Operations Division\nApplied Memetics LLC is a professional services company dedicated to integrating and delivering best practice communication and information solutions in pre-conflict, conflict, or post-conflict areas.\nTech Level III shall properly complete all daily tasks. These daily tasks include but are not limited to: completing set-up tasks prior to live studio production; executing commands; preparing and building switcher elements in a timely fashion; quickly troubleshooting and resolving user level problems; keeping up with the pace of a live news program. For full-time personnel, more than two mistakes per week will not be acceptable; for part-time personnel, more than two mistakes per month will not be acceptable.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 0.1,
+   "signs": [
+    "It asks for real qualifications or experience",
+    "Pay and benefits are described normally"
+   ],
+   "difficulty": 2,
+   "id": "p069",
+   "source": "EMSCAD"
+  },
+  {
+   "text": "Title Insurance Ops: Sr Title Officer/Counsel\n[link]\nA well established Title Insurance Agency based in Long Island NY (Woodbury Area), has a need for an experienced Sr Title Officer (or Counsel). Both residential and commercial experience w/ JD preferred (but not necessary). Must be able operate at a very high level and interface w/ high end clientele. If you have at significant experience within the Title Industry in this sort of role, we'd like to hear from you. Pay is flexible & commensurate w/ experience. Drop us a line if interested!",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 3.1,
+   "signs": [
+    "It asks for real qualifications or experience",
+    "Pay and benefits are described normally"
+   ],
+   "difficulty": 2,
+   "id": "p070",
+   "source": "EMSCAD"
+  },
+  {
+   "text": "Senior Backend Developer\nDICE gets fans the best tickets at face value with No Booking Fees. We're based in Shoreditch, London and 100% mobile so we're driven to transform ticketing globally.\nWe only want the best developers. If you have brilliant ideas and want to be challenged then we want to hear from you. Yes, the office environment is inspiring. Yes, we have all those things that make you love the place. But more importantly there’s no bullshit and you get to work on something that impacts millions of people. And something you’ll be proud of.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 0.1,
+   "signs": [
+    "It says candidates are never charged",
+    "It asks for real qualifications or experience"
+   ],
+   "difficulty": 2,
+   "id": "p071",
+   "source": "EMSCAD"
+  },
+  {
+   "text": "Oilfield Work - Frac Tank Cleaner/ Laborer - Start Next Week!\nValor Services provides Workforce Solutions that meet the needs of companies across the Private Sector, with a special focus on the Oil & Gas Industry.\nFantastic entry-level role with great, family-oriented oilfied services company. Plenty of opportunity for O/T and must be comfortable with a 24/7/365 operation. This is a Frac Tank cleaner type of role. A lot of hard work and very messy! There is a possibility to convert to full-time (which offers benefits) and growth within the company.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 0.4,
+   "signs": [
+    "It asks for real qualifications or experience",
+    "Pay and benefits are described normally"
+   ],
+   "difficulty": 2,
+   "id": "p072",
+   "source": "EMSCAD"
+  },
+  {
+   "text": "Public Relations Supervisor\nNFP is a leader in the delivery of benefits solutions for companies of all sizes and in the delivery of life insurance and wealth management solutions for high net worth individuals.\nNFP HR Services (part of National Financial Partners) is leading a search effort on behalf of our client company and is recruiting for a Public Relations Supervisor to join our client’s team of professionals. This position will be based in the client's office in Totowa, NJ.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 0.1,
+   "signs": [
+    "It asks for real qualifications or experience",
+    "Pay and benefits are described normally"
+   ],
+   "difficulty": 2,
+   "id": "p073",
+   "source": "EMSCAD"
+  },
+  {
+   "text": "Sales Representative\nJoist is a platform for trades contractors that allows them to estimate, invoice, accept payments, & much more!\n***VISIT OUR CAREERS PAGE HERE: [link] TO LEARN MORE ABOUT WORKING WITH THE JOIST TEAM***If working with:1) one of the fastest growing startups2) an incredible team3) solving a big problem in a massive marketsounds like something you want be a part of with competitive compensation get in touch with us. Joist’s mission is to SUPPORT TRADES CONTRACTORS IN RUNNING THE BEST BUSINESSES POSSIBLE by bringing coordination, professionalism, and transparency to the contractor ecosystem.",
+   "label": 0,
+   "flags": [],
+   "note": "",
+   "ai": 0.3,
+   "signs": [
+    "Applications go through an official channel",
+    "It asks for real qualifications or experience"
+   ],
+   "difficulty": 2,
+   "id": "p074",
+   "source": "EMSCAD"
+  }
+ ]
+}
