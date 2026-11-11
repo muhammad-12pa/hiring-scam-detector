@@ -377,8 +377,9 @@ footer { background: var(--nav-bg); color: var(--nav-ink); padding: 18px 0; font
 .stamp.real { color: var(--safe-ink); }
 .stamp.show { animation: stamp .45s cubic-bezier(.2, 1.4, .4, 1) both; }
 @keyframes stamp { 0% { transform: rotate(-9deg) scale(2.2); opacity: 0; } 60% { opacity: .95; } 100% { transform: rotate(-9deg) scale(1); opacity: .88; } }
-.paper-panel h3 { padding-right: 120px; min-height: 46px; }
-.paper-panel .stamp { top: 16px; right: 18px; font-size: 1.05rem; padding: 3px 11px; border-width: 3px; }
+.verdict-head { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 22px; }
+.verdict-head .stamp { position: static; flex: none; font-size: 1.15rem; padding: 3px 12px; border-width: 3px; }
+.verdict-head .stamp.waiting { visibility: hidden; }
 @media (prefers-reduced-motion: reduce) { .stamp.show { animation: none; } }
 
 /* Small link to the game under a result */

@@ -90,7 +90,10 @@
           </div>
           <div class="verdict-block">
             <div>
-              <h2 id="verdict" class="verdict"></h2>
+              <div class="verdict-head">
+                <h2 id="verdict" class="verdict"></h2>
+                <span id="verdictStamp" class="stamp hidden" aria-hidden="true"></span>
+              </div>
               <p id="verdictSub" class="verdict-sub"></p>
               <p id="verdictSummary" class="verdict-summary hidden"></p>
             </div>
@@ -125,7 +128,6 @@
 
           <div class="report-grid">
             <section class="panel paper-panel" aria-labelledby="markupTitle">
-              <span id="verdictStamp" class="stamp hidden" aria-hidden="true"></span>
               <h3 id="markupTitle">The posting, marked up</h3>
               <div id="markup" class="paper"></div>
               <div class="legend">

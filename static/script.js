@@ -158,6 +158,7 @@ function riskLevel(p, threshold) {
 
 const TITLES = { high: "Likely a scam", mid: "Be careful with this one", low: "Looks genuine" };
 const STAMPS = { high: "SCAM", mid: "CAREFUL", low: "GENUINE" };
+let stampObserver = null;
 
 function showVerdict(d) {
   current.verdict = d;
@@ -185,8 +186,17 @@ function showVerdict(d) {
   const stamp = $("verdictStamp");
   stamp.textContent = STAMPS[level];
   stamp.className = "stamp " + { high: "scam", mid: "careful", low: "real" }[level];
-  void stamp.offsetWidth;   // restart the animation on every new check
-  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) stamp.classList.add("show");
+  // Stamp only once the verdict is actually on screen, so the animation isn't missed while scrolling.
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches && "IntersectionObserver" in window) {
+    stamp.classList.add("waiting");
+    stampObserver?.disconnect();
+    stampObserver = new IntersectionObserver(entries => {
+      if (!entries.some(e => e.isIntersecting)) return;
+      stampObserver.disconnect();
+      setTimeout(() => { stamp.classList.remove("waiting"); void stamp.offsetWidth; stamp.classList.add("show"); }, 250);
+    }, { threshold: 1, rootMargin: "-60px 0px 0px 0px" });   // fully visible, below the sticky header
+    stampObserver.observe(stamp);
+  }
   $("verdictSub").textContent = sub;
 
   // Hollow marker = AI model alone, solid marker = overall risk with red flags.

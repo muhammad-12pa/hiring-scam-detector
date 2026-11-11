@@ -12,7 +12,7 @@ from red_flags import combined_risk, find_red_flags, rule_for_word
 app = Flask(__name__)
 
 # Bump on every deploy; shown in the page footer and at /version so you can tell it's live.
-VERSION = "v2.2"
+VERSION = "v2.3"
 
 # Public address, used for link previews (og:image needs an absolute URL).
 SITE_URL = os.environ.get("SITE_URL", "https://hiring-scam-detector.onrender.com").rstrip("/")
