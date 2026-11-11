@@ -12,7 +12,10 @@ from red_flags import combined_risk, find_red_flags, rule_for_word
 app = Flask(__name__)
 
 # Bump on every deploy; shown in the page footer and at /version so you can tell it's live.
-VERSION = "v2.0"
+VERSION = "v2.1"
+
+# Public address, used for link previews (og:image needs an absolute URL).
+SITE_URL = os.environ.get("SITE_URL", "https://hiring-scam-detector.onrender.com").rstrip("/")
 
 # ---------- Load everything saved by the notebook ----------
 with open("model/config.json") as f:
@@ -166,7 +169,7 @@ except (OSError, ValueError):
 
 @app.route("/")
 def home():
-    return render_template("index.html", demo_mode=False, version=VERSION, perf=PERF)
+    return render_template("index.html", demo_mode=False, version=VERSION, perf=PERF, site_url=SITE_URL)
 
 
 @app.route("/metrics")

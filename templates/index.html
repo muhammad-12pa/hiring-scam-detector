@@ -4,7 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ScamShield: Explainable Hiring Scam Detector</title>
-  <meta name="description" content="Paste a job posting and see whether it looks like a scam, and why.">
+  <meta name="description" content="Paste a job post or upload a screenshot. ScamShield checks it with AI and shows exactly which parts look suspicious.">
+  <link rel="canonical" href="{{ site_url }}/">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+  <meta name="theme-color" content="#16202A">
+  <!-- Link previews (WhatsApp, Telegram, LinkedIn, X) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ScamShield">
+  <meta property="og:title" content="ScamShield: Is that job offer real?">
+  <meta property="og:description" content="Paste a job post or upload a screenshot. ScamShield checks it with AI and shows exactly which parts look suspicious.">
+  <meta property="og:url" content="{{ site_url }}/">
+  <meta property="og:image" content="{{ site_url }}/static/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="ScamShield: check a job offer for scam warning signs">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
@@ -58,7 +73,11 @@
               <button id="sampleBtn" class="btn btn-ghost" type="button"><span class="long">Try a scam example</span><span class="short">Scam example</span></button>
               <button id="sampleLegitBtn" class="btn btn-ghost" type="button"><span class="long">Try a genuine example</span><span class="short">Genuine example</span></button>
             </div>
-            <span id="charCount" class="char-count" aria-live="polite">0 / 5,000</span>
+            <div class="input-meta">
+              <span id="undoNote" class="undo-note hidden" role="status">Example loaded. <button id="undoBtn" class="link-btn" type="button">Undo</button></span>
+              <button id="clearBtn" class="link-btn hidden" type="button">Clear</button>
+              <span id="charCount" class="char-count" aria-live="polite">0 / 5,000</span>
+            </div>
           </div>
         </div>
         <p id="error" class="error" role="alert"></p>
@@ -72,6 +91,7 @@
             <div>
               <h2 id="verdict" class="verdict"></h2>
               <p id="verdictSub" class="verdict-sub"></p>
+              <p id="verdictSummary" class="verdict-summary hidden"></p>
             </div>
             <div class="risk" aria-hidden="true">
               <div class="risk-scale">
@@ -87,6 +107,15 @@
             </div>
           </div>
           <p id="flagNote" class="flag-note hidden"></p>
+          <section id="nextSteps" class="next-steps hidden" aria-labelledby="nextTitle">
+            <h3 id="nextTitle">What to do next</h3>
+            <ul>
+              <li><strong>Don’t pay anything.</strong> No registration fee, deposit or “refundable” amount. Real employers don’t charge you to get a job.</li>
+              <li><strong>Don’t share documents or codes.</strong> Keep your Aadhaar, PAN, bank details, UPI PIN and OTPs to yourself.</li>
+              <li><strong>Check the company yourself.</strong> Find its official website or LinkedIn page and contact it from there, not through the number or email in the post.</li>
+              <li><strong>Already paid or shared details?</strong> Call <a href="tel:1930">1930</a> (National Cyber Crime Helpline) straight away and report it at <a href="https://cybercrime.gov.in" target="_blank" rel="noopener">cybercrime.gov.in</a>.</li>
+            </ul>
+          </section>
           <div class="report-actions">
             <button id="pdfBtn" class="btn btn-ghost" type="button">Save as PDF</button>
             <button id="shareBtn" class="btn btn-ghost" type="button">Share result</button>

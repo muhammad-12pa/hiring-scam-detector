@@ -14,21 +14,55 @@ Selection process: online aptitude test, technical interview and HR interview at
 CTC: 3.6 to 4.5 LPA with health insurance and paid leave.
 Apply through the Careers page on our website or on Naukri.com.`;
 
+// Example buttons keep what the user had typed, so it can be brought back with Undo.
+let undoText = null, undoTimer = null;
+function hideUndo() {
+  undoText = null;
+  clearTimeout(undoTimer);
+  $("undoNote").classList.add("hidden");
+}
 function setText(value) {
+  const before = jobText.value;
+  const isOwnText = before.trim() && before !== SAMPLE_SCAM && before !== SAMPLE_GENUINE;
   jobText.value = value;
   updateCount();
   jobText.focus();
+  hideUndo();
+  if (isOwnText && before !== value) {
+    undoText = before;
+    $("undoNote").firstChild.textContent = "Example loaded. ";
+    $("undoNote").classList.remove("hidden");
+    undoTimer = setTimeout(hideUndo, 15000);
+  }
 }
 $("sampleBtn").addEventListener("click", () => setText(SAMPLE_SCAM));
 $("sampleLegitBtn").addEventListener("click", () => setText(SAMPLE_GENUINE));
+$("undoBtn").addEventListener("click", () => {
+  const t = undoText;
+  hideUndo();
+  if (t !== null) { jobText.value = t; updateCount(); jobText.focus(); }
+});
+$("clearBtn").addEventListener("click", () => {
+  if (jobText.value.trim() && jobText.value !== SAMPLE_SCAM && jobText.value !== SAMPLE_GENUINE) {
+    undoText = jobText.value;
+    $("undoNote").firstChild.textContent = "Text cleared. ";
+    $("undoNote").classList.remove("hidden");
+    clearTimeout(undoTimer);
+    undoTimer = setTimeout(hideUndo, 15000);
+  }
+  jobText.value = "";
+  updateCount();
+  jobText.focus();
+});
 
 function updateCount() {
   const n = jobText.value.length;
   const el = $("charCount");
   el.textContent = `${n.toLocaleString()} / ${MAX_CHARS.toLocaleString()}`;
   el.classList.toggle("near", n > MAX_CHARS * 0.9);
+  $("clearBtn").classList.toggle("hidden", n === 0);
 }
-jobText.addEventListener("input", updateCount);
+jobText.addEventListener("input", () => { updateCount(); hideUndo(); });
 jobText.addEventListener("keydown", e => {
   if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) analyzeBtn.click();
 });
@@ -157,6 +191,24 @@ function showVerdict(d) {
     aiMarker.style.left = pos(ai);
   }));
   $("riskKey").classList.toggle("hidden", !raised);
+
+  // One-line summary of the warning signs, so nobody has to scroll for the gist.
+  const summary = $("verdictSummary");
+  const titles = (d.red_flags || []).map(f => f.title.charAt(0).toLowerCase() + f.title.slice(1));
+  if (titles.length) {
+    const shown = titles.slice(0, 3).join(", ");
+    summary.textContent = `Main warning signs: ${shown}${titles.length > 3 ? ` and ${titles.length - 3} more` : ""}.`;
+    summary.classList.remove("hidden");
+  } else if (level === "low") {
+    summary.textContent = "No common scam warning signs found.";
+    summary.classList.remove("hidden");
+  } else {
+    summary.classList.add("hidden");   // filled in from the AI's words once /explain answers
+  }
+
+  // Practical next steps whenever the posting isn't clearly genuine.
+  $("nextSteps").classList.toggle("hidden", level === "low");
+  $("nextTitle").textContent = level === "high" ? "What to do next" : "Before you go any further";
 
   const note = $("flagNote");
   if (level !== "high" && n >= 2) {
@@ -311,6 +363,17 @@ function showExplanation() {
   if (!e) return;
   const view = current.view === "compare" && e.compare ? e.compare : e;
   renderMarkup(current.text, weightsFor(view.reasons || []), current.verdict.red_flags || [], true);
+
+  // No red flags but still risky: summarise with the deep model's strongest scam words.
+  const summary = $("verdictSummary");
+  const d = current.verdict;
+  if (!(d.red_flags || []).length && riskLevel(d.probability, d.threshold ?? 50) !== "low") {
+    const words = (e.reasons || []).filter(r => r.weight > 0).slice(0, 3).map(r => `“${r.word}”`);
+    if (words.length) {
+      summary.textContent = `No rule-based red flags, but the AI reacted most to ${words.join(", ")}.`;
+      summary.classList.remove("hidden");
+    }
+  }
   showWords(view.reasons || [], view.method);
   $("wordsTitle").textContent = current.view === "compare" ? "What the baseline model focused on" : "What the AI focused on";
   $("modelLine").textContent = `${view.model}: rates this posting ${view.probability}% likely to be a scam.`;
