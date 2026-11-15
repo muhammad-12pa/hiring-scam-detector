@@ -29,6 +29,8 @@ Final-year mini project, Dept. of CSE, P.A. College of Engineering (2026-27).
 </tr>
 </table>
 
+![Spot the Scam game: a post revealed with its giveaways and new badges](docs/screenshots/game.png)
+
 ## How it works
 
 ```mermaid
