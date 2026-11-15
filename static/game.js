@@ -307,7 +307,7 @@
   }
 
   function renderHome() {
-    if (window.Owl) $("homeOwl").innerHTML = Owl.svg("idle", "ScamShield owl");
+    if (window.Owl) $("homeOwl").innerHTML = Owl.svg("idle", "Detective Hoodini, the ScamShield owl");
     const grid = $("badgeGrid");
     grid.innerHTML = "";
     BADGES.forEach(b => grid.appendChild(badgeTile(b, !!state.badges[b.id])));

@@ -17,7 +17,7 @@ Final-year mini project, Dept. of CSE, P.A. College of Engineering (2026-27).
 - **Read from a screenshot.** OCR runs in the visitor's browser (Tesseract.js), so the image never leaves their device.
 - **Save as PDF / share** a summary of the result, or share it as an image. The posting text is never put into a link.
 - **Install as an app.** The site is installable (Android, desktop Chrome/Edge). Once installed, a suspicious WhatsApp or Telegram message or screenshot can be sent straight to ScamShield from the phone's Share menu.
-- **The ScamShield owl.** A detective-owl mascot gives scam-spotting tips, reacts to each verdict, and hosts a one-question *Scam or genuine?* round on the home page.
+- **Detective Hoodini, the ScamShield owl.** A detective-owl mascot gives scam-spotting tips, reacts to each verdict, and hosts a one-question *Scam or genuine?* round on the home page.
 - **Spot the Scam game** (`/play`). Practice rounds, a daily challenge with a streak, badges and a *You vs the AI* score. Progress is kept only in the player's browser; there is no database.
 
 ![Example report for a scam posting](docs/screenshots/report.png)

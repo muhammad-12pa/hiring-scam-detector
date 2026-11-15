@@ -1,4 +1,4 @@
-// The ScamShield owl: one drawing with a few moods, shared by the checker and the game.
+// Detective Hoodini, the ScamShield owl: one drawing with a few moods, shared by the checker and the game.
 // Owl.svg(mood) returns inline SVG markup. Moods: idle, think, alarm, careful, happy, oops.
 (() => {
   const INK = "#16202A", AMBER = "#E8A33D";

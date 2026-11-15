@@ -17,14 +17,16 @@
     clearTimeout(bubbleTimer);
     bubbleTimer = setTimeout(() => bubble.classList.add("hidden"), ms);
   }
+  let introduced = false;
   heroOwl.addEventListener("click", () => {
-    lastTip = Owl.randomTip(lastTip);
+    lastTip = introduced ? Owl.randomTip(lastTip) : "Hoo! I’m Detective Hoodini. No scam escapes me. Tap again for tips.";
+    introduced = true;
     setOwl($("heroOwlArt"), "happy");
     say(lastTip);
     heroOwl.classList.remove("hop"); void heroOwl.offsetWidth; heroOwl.classList.add("hop");
     setTimeout(() => setOwl($("heroOwlArt"), "idle"), 1400);
   });
-  if (innerWidth > 720) setTimeout(() => { if (bubble.classList.contains("hidden")) say("Hoo! Paste a job post and I’ll check it. Tap me for tips.", 5500); }, 1200);
+  if (innerWidth > 720) setTimeout(() => { if (bubble.classList.contains("hidden")) say("Hoo! I’m Detective Hoodini. Paste a job post and I’ll check it. Tap me for tips.", 6000); }, 1200);
 
   // ---------- While checking ----------
   let factTimer;
