@@ -23,8 +23,9 @@
   color-scheme: light;
 }
 
+/* Dark theme: follows the device unless the person picks one with the switch (data-theme on <html>). */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --ink: #E6ECF1;
     --ink-soft: #AEBAC5;
     --ink-faint: #85929E;
@@ -44,6 +45,26 @@
     --shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 10px 28px -14px rgba(0, 0, 0, .7);
     color-scheme: dark;
   }
+}
+:root[data-theme="dark"] {
+  --ink: #E6ECF1;
+  --ink-soft: #AEBAC5;
+  --ink-faint: #85929E;
+  --mist: #10171E;
+  --paper: #18222C;
+  --line: #2B3844;
+  --teal: #3CC2B9;
+  --teal-deep: #6FD8D0;
+  --on-teal: #062A28;
+  --scam: #FF7A6E;
+  --scam-ink: #FFB4AB;
+  --safe: #4CCB8A;
+  --safe-ink: #93E3B7;
+  --flag: #F0B65A;
+  --nav-bg: #0A1015;
+  --nav-ink: #E6ECF1;
+  --shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 10px 28px -14px rgba(0, 0, 0, .7);
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -506,3 +527,24 @@ footer { background: var(--nav-bg); color: var(--nav-ink); padding: 18px 0; font
 .install-pill svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .install-help { flex: 1 1 260px; font-size: .9rem; color: var(--ink-soft); line-height: 1.4; }
 @media print { .install-row { display: none !important; } }
+
+/* Light / dark switch */
+.nav-inner nav { margin-left: auto; }
+.theme-toggle { display: inline-grid; place-items: center; width: 38px; height: 38px; flex: none; border-radius: 50%; cursor: pointer;
+                background: transparent; border: 1px solid color-mix(in srgb, var(--nav-ink) 25%, transparent); color: var(--nav-ink); }
+.theme-toggle:hover { background: color-mix(in srgb, var(--nav-ink) 12%, transparent); }
+.theme-toggle:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+.theme-toggle svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.theme-toggle .icon-sun { display: none; }
+:root[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+:root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-toggle .icon-sun { display: block; }
+  :root:not([data-theme="light"]) .theme-toggle .icon-moon { display: none; }
+}
+@media (max-width: 420px) { .theme-toggle { width: 34px; height: 34px; } }
+@media print { .theme-toggle { display: none !important; } }
+@media (max-width: 420px) {
+  .nav nav a:not(.nav-play) { display: none; }
+  .nav-inner { gap: 10px; }
+}
