@@ -184,6 +184,7 @@
       ? pickOne(isScam ? ["Correct!", "Nice catch!", "Spot on."] : ["Correct, it’s genuine.", "Right, this one’s real.", "Good call."])
       : (p.difficulty === 3 ? "Tricky one. This fools a lot of people." : pickOne(["Not quite.", "This one got you.", "Close, but no."]));
     $("fbTitle").className = "fb-title " + (right ? "good" : "bad");
+    if (window.Owl) $("fbOwl").innerHTML = Owl.svg(right ? "happy" : "oops");
     $("fbAnswer").textContent = isScam ? "It’s a scam. The giveaways:" : "It’s genuine. What gives it away:";
     const ul = $("fbReasons");
     ul.innerHTML = "";
@@ -256,6 +257,7 @@
   function renderEnd(mode, answers, ai, earned) {
     const you = answers.filter(Boolean).length, aiN = ai.filter(Boolean).length, n = answers.length;
     const [title, msg] = titleFor(you / n);
+    if (window.Owl) $("endOwl").innerHTML = Owl.svg(you / n >= 0.8 ? "happy" : you / n >= 0.6 ? "think" : "oops");
     $("endKicker").textContent = mode === "daily" ? `Daily challenge #${state.daily ? state.daily.num : dayNumber()}` : "Practice round";
     $("endScore").textContent = `${you}/${n}`;
     $("endTitle").textContent = title;
@@ -305,6 +307,7 @@
   }
 
   function renderHome() {
+    if (window.Owl) $("homeOwl").innerHTML = Owl.svg("idle", "ScamShield owl");
     const grid = $("badgeGrid");
     grid.innerHTML = "";
     BADGES.forEach(b => grid.appendChild(badgeTile(b, !!state.badges[b.id])));

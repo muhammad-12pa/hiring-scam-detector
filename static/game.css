@@ -57,21 +57,8 @@
 .post-card.was-right { border-color: var(--safe); }
 .post-card.was-wrong { border-color: var(--scam); }
 .post-text { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.75; font-size: 1.04rem; }
-.flag-mark { color: inherit; background: color-mix(in srgb, var(--flag) 22%, transparent); border-radius: 3px;
-             text-decoration: underline wavy var(--flag); text-decoration-thickness: 2px; text-underline-offset: 4px; }
 
 .answer-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
-.answer-btn { font: inherit; font-family: var(--display); font-weight: 800; font-size: 1.25rem; padding: 16px; border-radius: 14px;
-              cursor: pointer; border: 2px solid; background: var(--paper); display: flex; align-items: center; justify-content: center; gap: 10px;
-              transition: transform .1s, background .15s; }
-.answer-btn small { font-family: var(--body); font-size: .72rem; font-weight: 700; border: 1px solid currentColor; border-radius: 5px;
-                    padding: 0 6px; opacity: .6; }
-.answer-btn.scam { color: var(--scam-ink); border-color: var(--scam); }
-.answer-btn.real { color: var(--safe-ink); border-color: var(--safe); }
-.answer-btn.scam:hover { background: color-mix(in srgb, var(--scam) 12%, var(--paper)); }
-.answer-btn.real:hover { background: color-mix(in srgb, var(--safe) 12%, var(--paper)); }
-.answer-btn:active { transform: scale(.98); }
-.answer-btn:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
 
 .feedback { margin-top: 16px; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 20px 24px; }
 .feedback:focus { outline: none; }
@@ -127,3 +114,11 @@
   .mode-card, .answer-btn, .progress-dots li { transition: none; }
   .badge-pop { animation: none; }
 }
+
+/* The owl */
+.game-hero { display: flex; align-items: center; gap: 14px; }
+.game-hero .owl-art { width: 84px; height: 84px; flex: none; }
+.fb-head { display: flex; align-items: center; gap: 12px; }
+.fb-head .owl-art { width: 58px; height: 58px; flex: none; }
+.end-owl { width: 120px; height: 120px; margin: 0 auto 4px; display: block; }
+@media (max-width: 560px) { .game-hero .owl-art { width: 64px; height: 64px; } .end-owl { width: 96px; height: 96px; } }

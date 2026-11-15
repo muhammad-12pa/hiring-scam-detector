@@ -110,13 +110,17 @@ analyzeBtn.addEventListener("click", async () => {
   }
   analyzeBtn.disabled = true;
   analyzeBtn.textContent = "Checking…";
+  window.Fun?.thinking(true);
+  const owlMoment = sleep(700);   // let the owl have a quick look, even when the server is instant
 
   let verdict;
   try {
     // 1) Verdict + red flags: fast, shown immediately.
     verdict = await postJSON("/predict", { text },
       () => { analyzeBtn.textContent = "Waking up server…"; });
+    await owlMoment;
     if (id !== runId) return;
+    window.Fun?.thinking(false);
     current.text = text;
     current.explain = null;
     showVerdict(verdict);
@@ -128,6 +132,7 @@ analyzeBtn.addEventListener("click", async () => {
     result.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
   } catch (e) {
     if (id !== runId) return;
+    window.Fun?.thinking(false);
     $("error").textContent = e.message;
     result.classList.add("hidden");
     return;
@@ -202,6 +207,7 @@ function showVerdict(d) {
     stampObserver.observe(stamp);
   }
   $("verdictSub").textContent = sub;
+  window.Fun?.react(level, d);
 
   // Hollow marker = AI model alone, solid marker = overall risk with red flags.
   const aiMarker = $("aiMarker");

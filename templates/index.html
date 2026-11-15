@@ -9,6 +9,7 @@
   <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
   <link rel="apple-touch-icon" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
   <meta name="theme-color" content="#16202A">
+  <link rel="manifest" href="/manifest.webmanifest">
   <!-- Link previews (WhatsApp, Telegram, LinkedIn, X) -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="ScamShield">
@@ -45,13 +46,28 @@
   <main>
     <section id="detector" class="detector">
       <div class="container">
-        <h1>Is that job offer real?</h1>
-        <p class="lede">Paste a job posting. ScamShield checks it with a trained AI model and shows you exactly which parts look suspicious.</p>
+        <div class="hero-row">
+          <div class="hero-text">
+            <h1>Is that job offer real?</h1>
+            <p class="lede">Paste a job posting. ScamShield checks it with a trained AI model and shows you exactly which parts look suspicious.</p>
+          </div>
+          <button id="heroOwl" class="hero-owl" type="button" aria-label="Tap the owl for a scam-spotting tip">
+            <span id="heroOwlArt" class="owl-art"></span>
+            <span id="heroBubble" class="owl-bubble hidden" role="status" aria-live="polite"></span>
+          </button>
+        </div>
+
+        <div id="installCard" class="install-card hidden">
+          <span class="install-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M12 7v7m-3-3 3 3 3-3"/></svg></span>
+          <p><b>Get the ScamShield app.</b> Then check a suspicious WhatsApp or Telegram message straight from its Share menu.</p>
+          <button id="installBtn" class="btn btn-primary" type="button">Install</button>
+          <button id="installClose" class="link-btn" type="button" aria-label="Not now">Not now</button>
+        </div>
 
         <div class="input-card" id="inputCard">
           <label for="jobText" class="sr-only">Job posting text</label>
-          <textarea id="jobText" rows="8" maxlength="5000"
-            placeholder="Paste the job posting text, or drop a screenshot of it here…"></textarea>
+          <textarea id="jobText" rows="8" maxlength="5000"{% if shared_text %} data-autocheck="1"{% endif %}
+            placeholder="Paste the job posting text, or drop a screenshot of it here…">{{ shared_text or '' }}</textarea>
           <div class="drop-overlay" aria-hidden="true">Drop the screenshot to read its text</div>
 
           <div id="ocrStatus" class="ocr-status hidden" role="status" aria-live="polite">
@@ -81,7 +97,15 @@
             </div>
           </div>
         </div>
-        <p id="error" class="error" role="alert"></p>
+        <p id="error" class="error" role="alert">{% if shared_image and not shared_text %}To check a shared screenshot, upload it here with “Upload a screenshot”.{% endif %}</p>
+
+        <div id="thinking" class="thinking hidden" role="status" aria-live="polite">
+          <span id="thinkOwl" class="owl-art"></span>
+          <div>
+            <p class="thinking-title">Checking the posting…</p>
+            <p class="thinking-fact"><b>Did you know?</b> <span id="thinkFact"></span></p>
+          </div>
+        </div>
 
         <div id="result" class="report hidden" aria-live="polite">
           <div class="print-header" aria-hidden="true">
@@ -96,6 +120,10 @@
               </div>
               <p id="verdictSub" class="verdict-sub"></p>
               <p id="verdictSummary" class="verdict-summary hidden"></p>
+              <div class="owl-say">
+                <span id="verdictOwl" class="owl-art"></span>
+                <p id="owlLine" class="owl-line"></p>
+              </div>
             </div>
             <div class="risk" aria-hidden="true">
               <div class="risk-scale">
@@ -165,6 +193,35 @@
       </div>
     </section>
 
+    <section id="quiz" class="quiz" aria-labelledby="quizTitle">
+      <div class="container">
+        <div class="quiz-card">
+          <div class="quiz-head">
+            <span id="quizOwl" class="owl-art"></span>
+            <div>
+              <p class="quiz-kicker">Quick round</p>
+              <h2 id="quizTitle">Scam or genuine?</h2>
+              <p class="quiz-sub">One real-looking post. Make your call, then see what gave it away.</p>
+            </div>
+          </div>
+          <div id="quizPost" class="quiz-post paper"></div>
+          <div id="quizAnswers" class="quiz-answers">
+            <button id="quizScam" class="answer-btn scam" type="button">Scam</button>
+            <button id="quizReal" class="answer-btn real" type="button">Genuine</button>
+          </div>
+          <div id="quizReveal" class="quiz-reveal hidden" tabindex="-1">
+            <p id="quizVerdict" class="quiz-verdict"></p>
+            <ul id="quizWhy" class="quiz-why"></ul>
+          </div>
+          <div class="quiz-foot">
+            <span id="quizStreak" class="quiz-streak"></span>
+            <button id="quizNext" class="btn btn-ghost" type="button">Another one</button>
+            <a href="/play" class="btn btn-primary">Play Spot the Scam</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="how" class="how">
       <div class="container">
         <h2>How it works</h2>
@@ -182,7 +239,7 @@
           <li>
             <span class="flow-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5.5 21V4"/><path d="M5.5 4.5h11l-2.5 4 2.5 4h-11"/></svg></span>
             <strong>Red flags are checked</strong>
-            <span>Fees, ID or bank requests, WhatsApp-only contact and other tricks.</span>
+            <span>Fees, ID or bank requests, fake company websites, WhatsApp-only contact and other tricks.</span>
           </li>
           <li>
             <span class="flow-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m14.5 4.5 5 5-8 8H6.5v-5z"/><path d="M4 21h16"/></svg></span>
@@ -203,7 +260,7 @@
             <dt>Preprocessing</dt><dd>Lower-cased, punctuation removed, turned into up to 300 word IDs from a 20,000-word vocabulary.</dd>
             <dt>Model</dt><dd>Bidirectional LSTM (served with TensorFlow Lite); flags a scam at 50% or more. Baseline: TF-IDF + Logistic Regression.</dd>
             <dt>Explanation</dt><dd>LIME on the model's log-odds (500 samples); exact coefficient weights for the baseline.</dd>
-            <dt>Red flags</dt><dd>8 rules; each adds to the log-odds (+1.5 for money or ID requests, +0.5 for others, max +4).</dd>
+            <dt>Red flags</dt><dd>9 checks; each adds to the log-odds (+1.5 for money or ID requests and fake company websites, +0.5 for others, max +4).</dd>
             <dt>Screenshots</dt><dd>Read in your browser with Tesseract.js OCR; the image is never uploaded.</dd>
           </dl>
         </details>
@@ -274,7 +331,10 @@
       <span class="version">{{ version }}</span>
     </div>
   </footer>
+  <script src="{{ url_for('static', filename='owl.js') }}?v={{ version }}"></script>
   <script src="{{ url_for('static', filename='script.js') }}?v={{ version }}"></script>
+  <script src="{{ url_for('static', filename='fun.js') }}?v={{ version }}"></script>
+  <script src="{{ url_for('static', filename='app.js') }}?v={{ version }}"></script>
   <script src="{{ url_for('static', filename='ocr.js') }}?v={{ version }}"></script>
 </body>
 </html>

@@ -8,6 +8,7 @@
   <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
   <link rel="apple-touch-icon" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
   <meta name="theme-color" content="#16202A">
+  <link rel="manifest" href="/manifest.webmanifest">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="ScamShield">
   <meta property="og:title" content="Spot the Scam: can you beat the AI?">
@@ -44,7 +45,10 @@
 
       <!-- Home: pick a mode, see badges -->
       <section id="gameHome" class="game-screen">
-        <h1 class="game-title">Spot the Scam</h1>
+        <div class="game-hero">
+          <span id="homeOwl" class="owl-art"></span>
+          <h1 class="game-title">Spot the Scam</h1>
+        </div>
         <p class="lede">Real-looking job posts. Is each one a scam, or genuine? After every post you’ll see the answer and the giveaway, and how ScamShield’s AI did on the same post.</p>
 
         <div class="modes">
@@ -93,7 +97,7 @@
           </div>
 
           <div id="feedback" class="feedback hidden" tabindex="-1">
-            <p id="fbTitle" class="fb-title"></p>
+            <div class="fb-head"><span id="fbOwl" class="owl-art"></span><p id="fbTitle" class="fb-title"></p></div>
             <p id="fbAnswer" class="fb-answer"></p>
             <ul id="fbReasons" class="fb-reasons"></ul>
             <p id="fbNote" class="fb-note hidden"></p>
@@ -106,6 +110,7 @@
 
       <!-- Results -->
       <section id="gameEnd" class="game-screen hidden">
+        <span id="endOwl" class="owl-art end-owl"></span>
         <p id="endKicker" class="q-label"></p>
         <p id="endScore" class="end-score"></p>
         <h2 id="endTitle" class="end-title"></h2>
@@ -137,6 +142,8 @@
       <span class="version">{{ version }}</span>
     </div>
   </footer>
+  <script src="{{ url_for('static', filename='owl.js') }}?v={{ version }}"></script>
   <script src="{{ url_for('static', filename='game.js') }}?v={{ version }}"></script>
+  <script src="{{ url_for('static', filename='app.js') }}?v={{ version }}"></script>
 </body>
 </html>

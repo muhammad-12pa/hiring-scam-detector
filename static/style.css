@@ -388,3 +388,118 @@ footer { background: var(--nav-bg); color: var(--nav-ink); padding: 18px 0; font
 .game-link span { color: var(--ink-soft); font-size: .95rem; }
 .game-link .arrow { margin-left: auto; color: var(--teal-deep); font-weight: 700; white-space: nowrap; }
 @media print { .stamp { animation: none; } .game-link { display: none !important; } }
+
+/* ---------- Shared with the game: answer buttons and flagged phrases ---------- */
+.flag-mark { color: inherit; background: color-mix(in srgb, var(--flag) 22%, transparent); border-radius: 3px;
+             text-decoration: underline wavy var(--flag); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.answer-btn { font: inherit; font-family: var(--display); font-weight: 800; font-size: 1.25rem; padding: 16px; border-radius: 14px;
+              cursor: pointer; border: 2px solid; background: var(--paper); display: flex; align-items: center; justify-content: center; gap: 10px;
+              transition: transform .1s, background .15s; }
+.answer-btn small { font-family: var(--body); font-size: .72rem; font-weight: 700; border: 1px solid currentColor; border-radius: 5px;
+                    padding: 0 6px; opacity: .6; }
+.answer-btn.scam { color: var(--scam-ink); border-color: var(--scam); }
+.answer-btn.real { color: var(--safe-ink); border-color: var(--safe); }
+.answer-btn.scam:hover { background: color-mix(in srgb, var(--scam) 12%, var(--paper)); }
+.answer-btn.real:hover { background: color-mix(in srgb, var(--safe) 12%, var(--paper)); }
+.answer-btn:active { transform: scale(.98); }
+.answer-btn:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+
+/* ---------- The owl ---------- */
+.owl-art { display: inline-block; line-height: 0; }
+.owl-art svg { width: 100%; height: 100%; overflow: visible; }
+.owl-svg { animation: owl-bob 3.2s ease-in-out infinite; transform-origin: 50% 100%; }
+@keyframes owl-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+.owl-think .owl-lens { animation: owl-scan 1.8s ease-in-out infinite; }
+.owl-think .owl-pupils { animation: owl-look 1.8s ease-in-out infinite; }
+@keyframes owl-scan { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-30px, 4px); } }
+@keyframes owl-look { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-6px, 2px); } }
+.owl-alarm { animation: owl-shake .5s ease-in-out 2; }
+@keyframes owl-shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-3px) rotate(-2deg); } 75% { transform: translateX(3px) rotate(2deg); } }
+.owl-happy { animation: owl-jump .6s cubic-bezier(.3, 1.6, .5, 1) 1, owl-bob 3.2s ease-in-out .6s infinite; }
+@keyframes owl-jump { 0% { transform: translateY(0) scale(1); } 40% { transform: translateY(-10px) scale(1.04); } 100% { transform: translateY(0) scale(1); } }
+
+/* Hero */
+.hero-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+.hero-text { min-width: 0; }
+.hero-owl { position: relative; flex: none; width: 150px; height: 150px; margin-top: 6px; padding: 0; border: 0; background: none; cursor: pointer;
+            border-radius: 50%; }
+.hero-owl .owl-art { width: 150px; height: 150px; }
+.hero-owl:focus-visible { outline: 3px solid var(--teal); outline-offset: 4px; }
+.hero-owl.hop .owl-art { animation: owl-jump .6s cubic-bezier(.3, 1.6, .5, 1); }
+.owl-bubble { position: absolute; right: 0; top: 100%; margin-top: 10px; width: max-content; max-width: 280px; text-align: left;
+              background: var(--paper); color: var(--ink); border: 1px solid var(--line); border-radius: 14px; padding: 10px 14px;
+              font-size: .95rem; line-height: 1.4; font-weight: 600; box-shadow: var(--shadow); animation: pop .35s cubic-bezier(.3, 1.6, .5, 1) both; z-index: 3; }
+.owl-bubble::after { content: ""; position: absolute; right: 64px; top: -7px; width: 12px; height: 12px; background: var(--paper);
+                     border-right: 1px solid var(--line); border-top: 1px solid var(--line); transform: rotate(-45deg); }
+@keyframes pop { from { transform: scale(.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* While checking */
+.thinking { display: flex; align-items: center; gap: 16px; margin: 18px 0 0; padding: 14px 18px; background: var(--paper); border: 1px solid var(--line);
+            border-radius: 16px; box-shadow: var(--shadow); }
+.thinking .owl-art { width: 78px; height: 78px; flex: none; }
+.thinking-title { font-family: var(--display); font-weight: 800; font-size: 1.15rem; }
+.thinking-fact { color: var(--ink-soft); margin-top: 2px; line-height: 1.45; }
+.thinking-fact b { color: var(--teal-deep); }
+
+/* Reaction next to the verdict */
+.owl-say { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+.owl-say .owl-art { width: 60px; height: 60px; flex: none; }
+.owl-line { position: relative; background: var(--mist); border-radius: 14px; padding: 9px 14px; font-weight: 600; line-height: 1.4; }
+.owl-line::before { content: ""; position: absolute; left: -6px; top: 50%; margin-top: -6px; width: 12px; height: 12px; background: var(--mist); transform: rotate(45deg); }
+.owl-say.pop .owl-line { animation: pop .35s cubic-bezier(.3, 1.6, .5, 1) .15s both; }
+
+/* Quick round */
+.quiz { padding: 8px 0 56px; }
+.quiz-card { background: var(--paper); border: 1px solid var(--line); border-radius: 20px; padding: 26px 28px; box-shadow: var(--shadow); }
+.quiz-head { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.quiz-head .owl-art { width: 84px; height: 84px; flex: none; }
+.quiz-kicker { font-size: .82rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--teal-deep); }
+.quiz-head h2 { font-size: 1.7rem; }
+.quiz-sub { color: var(--ink-soft); }
+.quiz-post { min-height: 90px; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.7; border: 1px solid var(--line); border-radius: 12px;
+             padding: 16px 18px; transition: border-color .2s; }
+.quiz-post.was-right { border-color: var(--safe); }
+.quiz-post.was-wrong { border-color: var(--scam); }
+.quiz-answers { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+.quiz-reveal { margin-top: 14px; }
+.quiz-reveal:focus { outline: none; }
+.quiz-verdict { font-family: var(--display); font-weight: 800; font-size: 1.3rem; }
+.quiz-verdict.good { color: var(--safe-ink); }
+.quiz-verdict.bad { color: var(--scam-ink); }
+.quiz-why { list-style: none; display: grid; gap: 6px; margin-top: 8px; }
+.quiz-why li { position: relative; padding-left: 22px; color: var(--ink-soft); line-height: 1.45; }
+.quiz-why li b { color: var(--ink); }
+.quiz-why li::before { content: ""; position: absolute; left: 2px; top: .45em; width: 11px; height: 11px; border-radius: 50%; }
+.quiz-why li.bad::before { background: var(--flag); }
+.quiz-why li.good::before { background: var(--safe); }
+.quiz-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 18px; }
+.quiz-streak { margin-right: auto; font-weight: 700; color: var(--ink-soft); }
+.quiz-streak:empty { display: none; }
+.quiz-foot a.btn { text-decoration: none; }
+
+@media (min-width: 721px) {
+  .owl-bubble { right: 100%; top: 62px; margin: 0 6px 0 0; max-width: 205px; font-size: .9rem; }
+  .owl-bubble::after { right: -7px; top: 18px; transform: rotate(45deg); }
+}
+@media (max-width: 720px) {
+  .hero-owl, .hero-owl .owl-art { width: 92px; height: 92px; }
+  .owl-bubble { max-width: min(280px, calc(100vw - 48px)); }
+  .owl-bubble::after { right: 38px; }
+  .quiz-card { padding: 20px 18px; }
+  .quiz-head .owl-art { width: 64px; height: 64px; }
+  .quiz-foot .btn { flex: 1 1 auto; }
+}
+@media (max-width: 420px) {
+  .hero-owl, .hero-owl .owl-art { width: 72px; height: 72px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .owl-svg, .owl-think .owl-lens, .owl-think .owl-pupils, .hero-owl.hop .owl-art, .owl-bubble, .owl-say.pop .owl-line { animation: none !important; }
+}
+@media print { .owl-say, .thinking, .quiz, .hero-owl { display: none !important; } }
+
+/* Install offer */
+.install-card { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 16px; margin: -8px 0 18px; padding: 12px 16px;
+                background: color-mix(in srgb, var(--teal) 10%, var(--paper)); border: 1px solid color-mix(in srgb, var(--teal) 35%, var(--line)); border-radius: 14px; }
+.install-card p { flex: 1 1 260px; line-height: 1.45; }
+.install-icon svg { width: 30px; height: 30px; fill: none; stroke: var(--teal-deep); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; display: block; }
+@media print { .install-card { display: none !important; } }

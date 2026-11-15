@@ -3,7 +3,7 @@
 These run alongside the LSTM model. The model gives a learned probability; these rules
 give human-readable reasons that anyone can check. Add or tweak rules in RULES below.
 Each rule: id, title (short), detail (why it matters), and a regex (case-insensitive).
-"severe" rules (asking for money or ID/bank details) weigh more in the combined risk score.
+"severe" rules (asking for money or ID/bank details, fake company websites) weigh more in the combined risk score.
 """
 import math
 import re
@@ -70,6 +70,99 @@ RULES = [
     },
 ]
 
+
+# ---------- Look-alike company websites ----------
+# Scammers copy big employers' names into their own web and email addresses
+# ("tcs-careers.in", "infosys-hiring.online", "wlpro.com"). Each brand below lists the
+# company's real domains; an address that borrows the name but isn't one of them is flagged.
+BRAND_DOMAINS = {
+    "tcs": ["tcs.com", "tcsion.com"], "infosys": ["infosys.com", "infosysbpm.com", "infosysapps.com"],
+    "wipro": ["wipro.com"], "hcltech": ["hcltech.com"], "hcl": ["hcltech.com", "hcl.com", "hclsoftware.com"],
+    "techmahindra": ["techmahindra.com"], "accenture": ["accenture.com"], "cognizant": ["cognizant.com"],
+    "capgemini": ["capgemini.com"], "deloitte": ["deloitte.com"], "kpmg": ["kpmg.com"], "pwc": ["pwc.com", "pwc.in"],
+    "amazon": ["amazon.com", "amazon.in", "amazon.jobs", "amazonaws.com", "amazon.science"],
+    "flipkart": ["flipkart.com", "flipkartcareers.com"], "google": ["google.com", "google.co.in", "googleapis.com"],
+    "microsoft": ["microsoft.com", "microsoftonline.com"], "ibm": ["ibm.com"], "oracle": ["oracle.com"],
+    "reliance": ["ril.com", "relianceretail.com", "reliancedigital.in", "jio.com"], "jio": ["jio.com"],
+    "airtel": ["airtel.in", "airtel.com"], "hdfc": ["hdfcbank.com", "hdfc.com", "hdfclife.com", "hdfcergo.com"],
+    "icici": ["icicibank.com", "icicidirect.com", "iciciprulife.com", "icicilombard.com"],
+    "sbi": ["sbi.co.in", "onlinesbi.sbi", "sbicard.com", "sbilife.co.in"], "zoho": ["zoho.com", "zoho.in", "zohocorp.com"],
+    "swiggy": ["swiggy.com", "swiggy.in"], "zomato": ["zomato.com"], "paytm": ["paytm.com"], "phonepe": ["phonepe.com"],
+    "naukri": ["naukri.com"], "linkedin": ["linkedin.com"], "indeed": ["indeed.com", "indeed.co.in"],
+    "genpact": ["genpact.com"], "ltimindtree": ["ltimindtree.com"], "mphasis": ["mphasis.com"],
+    "tatamotors": ["tatamotors.com"], "mahindra": ["mahindra.com"], "adani": ["adani.com"], "meesho": ["meesho.com"],
+    "bigbasket": ["bigbasket.com"], "byjus": ["byjus.com"], "emirates": ["emirates.com", "emiratesgroupcareers.com"],
+    "qatarairways": ["qatarairways.com"], "airindia": ["airindia.com"], "indigo": ["goindigo.in"],
+}
+_OFFICIAL = {d for ds in BRAND_DOMAINS.values() for d in ds}
+_JOB_WORDS = re.compile(r"career|job|hiring|hire|recruit|hr|placement|vacanc|offer|onboard|joining|work|talent|apply|staff")
+_ODD_TLDS = {"co", "net", "org", "info", "online", "site", "top", "xyz", "live", "work", "jobs", "careers", "club", "biz",
+             "app", "io", "in.net", "me", "cc", "tk", "ml", "ga", "cf", "gq", "icu", "buzz", "shop", "store", "today", "space"}
+_TWO_PART = ("co.in", "org.in", "net.in", "firm.in", "gen.in", "ind.in", "co.uk", "com.au", "co.ae")
+_HOST = re.compile(r"(?:(?<=@)|\bhttps?://|\bwww\.|\b)((?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+(?:[a-z]{2,10}))\b", re.IGNORECASE)
+_TLD_OK = re.compile(r"\.(com|in|co|net|org|info|online|site|top|xyz|live|work|jobs|careers|club|biz|app|io|me|cc|tk|ml|ga|cf|gq|icu|buzz|shop|store|today|space|uk|ae|au|sbi|science)$")
+_GLYPHS = str.maketrans({"0": "o", "1": "l", "3": "e", "5": "s", "@": "a"})
+
+
+def _edit1(a, b):
+    """True if a and b differ by at most one insert, delete or substitution."""
+    if abs(len(a) - len(b)) > 1:
+        return False
+    i = j = diff = 0
+    while i < len(a) and j < len(b):
+        if a[i] == b[j]:
+            i += 1; j += 1; continue
+        diff += 1
+        if diff > 1:
+            return False
+        if len(a) > len(b): i += 1
+        elif len(b) > len(a): j += 1
+        else: i += 1; j += 1
+    return diff + (len(a) - i) + (len(b) - j) <= 1
+
+
+def _registrable(host):
+    for two in _TWO_PART:
+        if host.endswith("." + two):
+            return ".".join(host.split(".")[-3:]), two
+    parts = host.split(".")
+    return ".".join(parts[-2:]), parts[-1]
+
+
+def find_lookalike_domains(text):
+    """[(host as written, real domain)] for addresses that imitate a known employer."""
+    out = []
+    for m in _HOST.finditer(text):
+        raw = m.group(1).rstrip(".")
+        host = raw.lower()
+        if host.startswith("www."):
+            host = host[4:]
+        if not _TLD_OK.search(host) or host.replace(".", "").isdigit():
+            continue
+        reg, tld = _registrable(host)
+        if reg in _OFFICIAL:
+            continue
+        label = reg[: -len(tld) - 1]
+        everything = host[: -len(tld) - 1]          # subdomains + label, e.g. "infosys.careers-portal"
+        tokens = [t for t in re.split(r"[.\-_]", everything) if t]
+        hit = None
+        for brand, real in BRAND_DOMAINS.items():
+            if label == brand and tld in _ODD_TLDS:                       # infosys.online, tcs.co
+                hit = real[0]
+            elif brand in tokens and (len(tokens) > 1 or _JOB_WORDS.search(everything)):   # tcs-hiring.in, infosys.careers-hub.com
+                hit = real[0]
+            elif len(brand) >= 5 and brand in label and label != brand and _JOB_WORDS.search(label):   # infosyscareers.com
+                hit = real[0]
+            elif (len(brand) >= 5 and label != brand and label[:1] == brand[:1]
+                  and (label.translate(_GLYPHS) == brand or _edit1(label.translate(_GLYPHS), brand))):
+                hit = real[0]                                              # infosyss.com, wlpro.com, inf0sys.com
+            if hit:
+                break
+        if hit and all(raw.lower() != h[0].lower() for h in out):
+            out.append((raw, hit))
+    return out[:3]
+
+
 _COMPILED = [(r, re.compile(r["pattern"], re.IGNORECASE)) for r in RULES]
 
 # Words that, when the AI highlights them, are explained by a rule above.
@@ -84,6 +177,7 @@ WORD_TO_RULE = {
     **dict.fromkeys(["experience", "fresher", "freshers", "anyone"], "no_experience"),
 }
 RULE_TITLES = {r["id"]: r["title"] for r in RULES}
+RULE_TITLES["lookalike"] = "Fake-looking company website"
 
 
 # A money / ID match is ignored when the same sentence says the employer will NOT ask for it,
@@ -115,6 +209,13 @@ def find_red_flags(text):
         if hits:
             found.append({"id": rule["id"], "title": rule["title"], "detail": rule["detail"],
                           "severe": bool(rule.get("severe")), "matches": hits[:3]})
+    fakes = find_lookalike_domains(text)
+    if fakes:
+        host, real = fakes[0]
+        found.append({"id": "lookalike", "title": "Fake-looking company website",
+                      "detail": f"\u201c{host}\u201d borrows a well-known company's name, but the real site is {real}. "
+                                "Scammers use look-alike addresses to seem official. Check the company's real careers page.",
+                      "severe": True, "matches": [h for h, _ in fakes]})
     return found
 
 

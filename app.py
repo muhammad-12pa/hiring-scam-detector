@@ -3,7 +3,7 @@ from collections import OrderedDict
 
 import numpy as np
 from ai_edge_litert.interpreter import Interpreter   # tiny TFLite runtime, no TensorFlow
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 from lime.lime_text import LimeTextExplainer
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 
@@ -12,7 +12,7 @@ from red_flags import combined_risk, find_red_flags, rule_for_word
 app = Flask(__name__)
 
 # Bump on every deploy; shown in the page footer and at /version so you can tell it's live.
-VERSION = "v2.6"
+VERSION = "v2.7"
 
 # Public address, used for link previews (og:image needs an absolute URL).
 SITE_URL = os.environ.get("SITE_URL", "https://hiring-scam-detector.onrender.com").rstrip("/")
@@ -170,6 +170,31 @@ except (OSError, ValueError):
 @app.route("/")
 def home():
     return render_template("index.html", demo_mode=False, version=VERSION, perf=PERF, site_url=SITE_URL)
+
+
+@app.route("/sw.js")
+def service_worker():
+    """Served from the root so it can handle the whole site (install + share target)."""
+    resp = send_from_directory("static", "sw.js", mimetype="text/javascript")
+    resp.headers["Cache-Control"] = "no-cache"
+    return resp
+
+
+@app.route("/manifest.webmanifest")
+def manifest():
+    return send_from_directory("static", "manifest.webmanifest", mimetype="application/manifest+json")
+
+
+@app.route("/share-target", methods=["POST"])
+def share_target():
+    """Fallback for "Share to ScamShield" if the service worker isn't running yet.
+
+    The shared text goes straight into the page (never into the URL). Shared images need
+    the service worker, so here the person is asked to upload the screenshot instead.
+    """
+    text = "\n".join(v.strip() for v in (request.form.get(k, "") for k in ("title", "text", "url")) if v.strip())
+    return render_template("index.html", demo_mode=False, version=VERSION, perf=PERF, site_url=SITE_URL,
+                           shared_text=text[:MAX_CHARS], shared_image="image" in request.files)
 
 
 @app.route("/play")
