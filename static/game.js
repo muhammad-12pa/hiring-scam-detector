@@ -35,7 +35,7 @@
     { id: "fair_judge", name: "Fair Judge", desc: "Trusted 5 genuine posts correctly", icon: I.scale },
     { id: "not_fooled", name: "Not Fooled", desc: "Got one of the trickiest posts right", icon: I.eye },
     { id: "beat_ai", name: "Beat the AI", desc: "Scored higher than ScamShield’s AI in a round", icon: I.chip },
-    { id: "perfect", name: "Scam Buster", desc: "A perfect practice round", icon: I.trophy },
+    { id: "perfect", name: "Hoodini Approved", desc: "A perfect practice round", icon: I.trophy },   // id kept, so old saves still count
     { id: "streak3", name: "On a Roll", desc: "A 3-day daily challenge streak", icon: I.flame },
   ];
   const svg = path => `<svg viewBox="0 0 24 24" aria-hidden="true">${path}</svg>`;
@@ -47,6 +47,49 @@
   }
   function save() { try { localStorage.setItem(STORE, JSON.stringify(state)); } catch { /* private mode: play without saving */ } }
   let state = load();
+  // Older saves have no rank counters: count anyone who already finished a round as a Trainee.
+  if (state.totalRight == null) state.totalRight = 0;
+  if (state.rounds == null) state.rounds = (state.best != null || state.daily) ? 1 : 0;
+
+  // ---------- Detective ranks (total correct answers, all rounds) ----------
+  const RANK_ICONS = {
+    trainee: '<circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5.5 5.5"/>',
+    constable: '<path d="M12 3 5 6v5.5c0 4.3 3 7.6 7 8.9 4-1.3 7-4.6 7-8.9V6z"/>',
+    inspector: '<path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8L3.5 9.7l5.9-.9z"/>',
+    detective: '<path d="M5 15c0-5 3.1-9 7-9s7 4 7 9z"/><path d="M2.5 15.5c3.5-1.6 15.5-1.6 19 0-3.5 2-15.5 2-19 0z"/><path d="M12 6V3.5"/>',
+    sherlock: '<path d="M4 9h7v3a3.5 3.5 0 0 1-7 0z"/><path d="M11 10.5c3 0 4.5-1 6-3.5l3 1.5c-1.7 3.4-4.5 5-9 5"/>',
+  };
+  const RANKS = [
+    { id: "trainee", name: "Trainee", need: 0 },        // reached by finishing a first round
+    { id: "constable", name: "Constable", need: 10 },
+    { id: "inspector", name: "Inspector", need: 25 },
+    { id: "detective", name: "Detective", need: 50 },
+    { id: "sherlock", name: "Sherlock", need: 100 },
+    { id: "hoodini", name: "Hoodini", need: 200 },
+  ];
+  function rankIndex() {
+    if (!state.rounds) return -1;
+    let r = 0;
+    RANKS.forEach((k, i) => { if (state.totalRight >= k.need) r = i; });
+    return r;
+  }
+  const rankIcon = id => id === "hoodini" && window.Owl ? Owl.svg("happy") : `<svg viewBox="0 0 24 24" aria-hidden="true">${RANK_ICONS[id]}</svg>`;
+  function renderRank() {
+    const i = rankIndex(), next = RANKS[i + 1];
+    $("rankIcon").innerHTML = i < 0 ? rankIcon("trainee") : rankIcon(RANKS[i].id);
+    $("rankCard").classList.toggle("unranked", i < 0);
+    $("rankName").textContent = i < 0 ? "Unranked" : RANKS[i].name;
+    let pct = 0;
+    if (i < 0) $("rankNext").textContent = "Finish a round to become a Trainee.";
+    else if (!next) { $("rankNext").textContent = "Top rank. No scam escapes you."; pct = 100; }
+    else {
+      const left = next.need - state.totalRight, from = RANKS[i].need;
+      $("rankNext").textContent = `${left} more correct ${left === 1 ? "answer" : "answers"} to ${next.name}`;
+      pct = Math.round(100 * (state.totalRight - from) / (next.need - from));
+    }
+    $("rankFill").style.width = pct + "%";
+    $("rankBar").setAttribute("aria-valuenow", String(pct));
+  }
 
   // ---------- Dates and seeded random ----------
   const ymd = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -96,7 +139,7 @@
       state.recent = state.recent.concat(round.posts.map(p => p.id)).slice(-40);
       save();
     }
-    Object.assign(round, { i: 0, answers: [], ai: [], earned: [] });
+    Object.assign(round, { i: 0, answers: [], ai: [], earned: [], rankStart: rankIndex() });
     show("gamePlay");
     renderProgress();
     renderQuestion();
@@ -164,6 +207,7 @@
     const right = saysScam === isScam;
     const aiRight = (p.ai >= 50) === isScam;
     round.answers.push(right);
+    if (right) state.totalRight += 1;
     round.ai.push(aiRight);
     [$("ansScam"), $("ansReal")].forEach(b => { b.disabled = true; });
 
@@ -232,13 +276,15 @@
 
   // ---------- End of round ----------
   function titleFor(ratio) {
-    if (ratio === 1) return ["Scam Buster", "Perfect. Nobody’s getting your registration fee."];
+    if (ratio === 1) return ["Hoodini Approved", "Perfect. Nobody’s getting your registration fee."];
     if (ratio >= 0.8) return ["Scam Spotter", "Very hard to fool. Only a couple slipped through."];
     if (ratio >= 0.6) return ["Sharp-eyed", "Good instincts. Read the giveaways and go again."];
     return ["Rookie", "Scammers are good at this. Every round makes you harder to fool."];
   }
 
   function finish() {
+    state.rounds += 1;
+    round.promoted = rankIndex() > round.rankStart ? RANKS[rankIndex()] : null;
     const you = round.answers.filter(Boolean).length, ai = round.ai.filter(Boolean).length, n = round.posts.length;
     if (you > ai) award("beat_ai");
     if (round.mode === "practice") {
@@ -251,10 +297,20 @@
       state.daily = { day: today(), num: dayNumber(), answers: round.answers, ai: round.ai };
     }
     save();
-    renderEnd(round.mode, round.answers, round.ai, round.earned);
+    renderEnd(round.mode, round.answers, round.ai, round.earned, round.promoted);
   }
 
-  function renderEnd(mode, answers, ai, earned) {
+  function renderEnd(mode, answers, ai, earned, promoted) {
+    const er = $("endRank");
+    er.classList.toggle("hidden", !promoted);
+    if (promoted) {
+      er.innerHTML = `<span class="rank-icon">${rankIcon(promoted.id)}</span>`;
+      const t = document.createElement("span");
+      t.innerHTML = "<b>Promoted!</b> ";
+      t.append(`You’re now ${/^[AEIOU]/.test(promoted.name) ? "an" : "a"} ${promoted.name}.`);
+      if (promoted.id === "hoodini") t.textContent = "Promoted! You’ve reached Hoodini rank. No scam escapes you.";
+      er.appendChild(t);
+    }
     const you = answers.filter(Boolean).length, aiN = ai.filter(Boolean).length, n = answers.length;
     const [title, msg] = titleFor(you / n);
     if (window.Owl) $("endOwl").innerHTML = Owl.svg(you / n >= 0.8 ? "happy" : you / n >= 0.6 ? "think" : "oops");
@@ -312,6 +368,7 @@
     grid.innerHTML = "";
     BADGES.forEach(b => grid.appendChild(badgeTile(b, !!state.badges[b.id])));
     const have = BADGES.filter(b => state.badges[b.id]).length;
+    renderRank();
     $("badgeCount").textContent = `${have} of ${BADGES.length} earned`;
     $("bestScore").textContent = state.best != null ? `Best score: ${state.best}/${PRACTICE_LEN}` : "No best score yet";
 
@@ -352,7 +409,7 @@
     .then(r => r.json())
     .then(d => { POSTS = d.posts; renderHome(); })
     .catch(() => {
-      $("dailyDesc").textContent = "Couldn’t load the posts. Check your connection and reload the page.";
+      $("dailyDesc").textContent = "Hoodini lost the trail: couldn’t load the case file. Check your connection and reload the page.";
       [$("dailyBtn"), $("practiceBtn")].forEach(b => { b.disabled = true; });
     });
   renderHome();

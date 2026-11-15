@@ -548,3 +548,15 @@ footer { background: var(--nav-bg); color: var(--nav-ink); padding: 18px 0; font
   .nav nav a:not(.nav-play) { display: none; }
   .nav-inner { gap: 10px; }
 }
+
+/* Dark theme: a lighter Hoodini and a visible speech bubble */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .owl-body { fill: #3CC2B9; }
+  :root:not([data-theme="light"]) .owl-accent { fill: #1F9C93; }
+  :root:not([data-theme="light"]) .owl-line,
+  :root:not([data-theme="light"]) .owl-line::before { background: color-mix(in srgb, var(--ink) 16%, var(--paper)); }
+}
+:root[data-theme="dark"] .owl-body { fill: #3CC2B9; }
+:root[data-theme="dark"] .owl-accent { fill: #1F9C93; }
+:root[data-theme="dark"] .owl-line,
+:root[data-theme="dark"] .owl-line::before { background: color-mix(in srgb, var(--ink) 16%, var(--paper)); }

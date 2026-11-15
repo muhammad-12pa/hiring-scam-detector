@@ -86,16 +86,17 @@ async function postJSON(url, body, onRetry) {
       raw = await res.text();
     } catch (netErr) {
       if (attempt < RETRIES) { onRetry && onRetry(); await sleep(4000); continue; }
-      throw new Error("Couldn't reach the server. Check your connection and try again.");
+      throw new Error("Hoodini lost the trail. Check your connection and try again.");
     }
     let data = {};
     try { data = raw ? JSON.parse(raw) : {}; } catch { /* non-JSON error page */ }
     if (res.ok) return data;
     if ([502, 503, 504].includes(res.status)) {
       if (attempt < RETRIES) { onRetry && onRetry(); await sleep(4000); continue; }
-      throw new Error("The server is waking up or busy. Wait a minute, then try again.");
+      throw new Error("Hoodini lost the trail: the server is waking up or busy. Wait a minute, then try again.");
     }
-    throw new Error(data.error || `Server error (${res.status}). Try again.`);
+    if (res.status >= 500 || !data.error) throw new Error("Hoodini lost the trail: something went wrong on the server. Try again.");
+    throw new Error(data.error);   // e.g. "too short / too long": shown as it is
   }
 }
 
@@ -555,11 +556,22 @@ async function drawResultCard(d) {
   });
   if (flags.length > 4) { x.fillStyle = soft; x.fillText(`and ${flags.length - 4} more`, 175, y); }
 
-  // Footer
-  x.textAlign = "center"; x.fillStyle = ink; x.font = `700 38px ${BODY}`;
-  x.fillText("Check a job post yourself", W / 2, 1262);
+  // Footer: Detective Hoodini + where to check a post yourself
+  x.font = `700 38px ${BODY}`;
+  const line1 = "Check a job post yourself";
+  const owlSize = 104, gap = 22;
+  const textW = Math.max(x.measureText(line1).width, (x.font = `700 34px ${BODY}`, x.measureText(location.host).width));
+  const startX = (W - (owlSize + gap + textW)) / 2;
+  try {
+    const owl = new Image();
+    owl.src = "/static/logo-owl.svg";
+    await owl.decode();
+    x.drawImage(owl, startX, 1218, owlSize, owlSize);
+  } catch { /* footer without the owl */ }
+  x.textAlign = "left"; x.fillStyle = ink; x.font = `700 38px ${BODY}`;
+  x.fillText(line1, startX + owlSize + gap, 1262);
   x.fillStyle = "#0B7A75"; x.font = `700 34px ${BODY}`;
-  x.fillText(location.host, W / 2, 1310);
+  x.fillText(location.host, startX + owlSize + gap, 1310);
   return new Promise(r => c.toBlob(r, "image/png"));
 }
 

@@ -56,6 +56,16 @@
         </div>
         <p class="lede"><b>Hoodini’s case file: real-looking job posts.</b> Scam or genuine? After each one you’ll see the giveaway, and whether you beat ScamShield’s AI.</p>
 
+        <div id="rankCard" class="rank-card">
+          <span id="rankIcon" class="rank-icon"></span>
+          <div class="rank-text">
+            <p class="rank-label">Detective rank: <b id="rankName">Unranked</b></p>
+            <p id="rankNext" class="rank-next"></p>
+            <div id="rankBar" class="rank-bar" role="progressbar" aria-label="Progress to next rank" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="rankFill"></span></div>
+          </div>
+          <p class="rank-ladder">Trainee → Constable → Inspector → Detective → Sherlock → Hoodini</p>
+        </div>
+
         <div class="modes">
           <button id="dailyBtn" class="mode-card mode-daily" type="button">
             <span class="mode-kicker" id="dailyKicker">Daily challenge</span>
@@ -126,6 +136,7 @@
           <div><span>ScamShield AI</span><b id="vsAi"></b></div>
         </div>
         <p id="vsMsg" class="vs-msg"></p>
+        <p id="endRank" class="end-rank hidden" role="status"></p>
         <div id="endBadges" class="end-badges hidden">
           <h3>New badges</h3>
           <ul id="endBadgeList" class="badge-grid small"></ul>

@@ -3,11 +3,11 @@
 (() => {
   const INK = "#16202A", AMBER = "#E8A33D";
   const body = `
-    <path d="M32 42 L29 18 L49 32 Z" fill="#075E5A"/>
-    <path d="M88 42 L91 18 L71 32 Z" fill="#075E5A"/>
-    <ellipse cx="60" cy="66" rx="34" ry="38" fill="#0B7A75"/>
-    <path class="owl-wing-l" d="M27 60 C17 77 23 96 38 102 C34 88 34 74 27 60 Z" fill="#075E5A"/>
-    <path class="owl-wing-r" d="M93 60 C103 77 97 96 82 102 C86 88 86 74 93 60 Z" fill="#075E5A"/>
+    <path class="owl-accent" d="M32 42 L29 18 L49 32 Z" fill="#075E5A"/>
+    <path class="owl-accent" d="M88 42 L91 18 L71 32 Z" fill="#075E5A"/>
+    <ellipse class="owl-body" cx="60" cy="66" rx="34" ry="38" fill="#0B7A75"/>
+    <path class="owl-wing-l owl-accent" d="M27 60 C17 77 23 96 38 102 C34 88 34 74 27 60 Z" fill="#075E5A"/>
+    <path class="owl-wing-r owl-accent" d="M93 60 C103 77 97 96 82 102 C86 88 86 74 93 60 Z" fill="#075E5A"/>
     <ellipse cx="60" cy="86" rx="20" ry="16" fill="#E9EEF2"/>
     <path d="M51 82 l3 3 l3 -3 M63 82 l3 3 l3 -3 M57 90 l3 3 l3 -3" stroke="#9FB0BD" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M49 103 v6 M53 103 v6 M67 103 v6 M71 103 v6" stroke="${AMBER}" stroke-width="3" stroke-linecap="round"/>`;

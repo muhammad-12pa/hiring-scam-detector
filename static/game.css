@@ -123,3 +123,32 @@
 .fb-head .owl-art { width: 58px; height: 58px; flex: none; }
 .end-owl { width: 120px; height: 120px; margin: 0 auto 4px; display: block; }
 @media (max-width: 560px) { .game-hero .owl-art { width: 64px; height: 64px; } .end-owl { width: 96px; height: 96px; } }
+
+/* Detective rank */
+.rank-card { display: grid; grid-template-columns: 52px 1fr; align-items: center; gap: 4px 14px; margin: 0 0 16px; padding: 14px 18px;
+             background: var(--paper); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); }
+.rank-icon { width: 52px; height: 52px; display: grid; place-items: center; border-radius: 50%; color: var(--teal-deep);
+             background: color-mix(in srgb, var(--teal) 16%, var(--paper)); }
+.rank-icon svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.rank-icon .owl-svg { width: 44px; height: 44px; stroke: none; animation: none; }
+.rank-card.unranked .rank-icon { color: var(--ink-faint); background: var(--mist); }
+.rank-label { font-size: 1.05rem; }
+.rank-label b { font-family: var(--display); font-size: 1.2rem; }
+.rank-next { color: var(--ink-soft); font-size: .92rem; }
+.rank-bar { height: 8px; margin-top: 6px; border-radius: 999px; background: var(--mist); overflow: hidden; }
+.rank-bar span { display: block; height: 100%; width: 0; border-radius: inherit; background: var(--teal); transition: width .5s; }
+.rank-ladder { grid-column: 1 / -1; margin-top: 6px; font-size: .8rem; color: var(--ink-faint); letter-spacing: .01em; }
+.end-rank { display: inline-flex; align-items: center; gap: 12px; margin: 20px auto 0; padding: 10px 18px 10px 10px; border-radius: 999px;
+            background: color-mix(in srgb, var(--teal) 14%, var(--paper)); color: var(--ink); font-size: 1.05rem;
+            animation: pop .4s cubic-bezier(.3, 1.6, .5, 1) both; }
+.end-rank.hidden { display: none; }
+.end-rank .rank-icon { width: 40px; height: 40px; }
+.end-rank .rank-icon svg { width: 22px; height: 22px; }
+.end-rank .rank-icon .owl-svg { width: 34px; height: 34px; }
+@media (prefers-reduced-motion: reduce) { .rank-bar span { transition: none; } .end-rank { animation: none; } }
+
+/* Dark theme: locked badges a little easier to read (still clearly locked) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .badge:not(.earned) { color: color-mix(in srgb, var(--ink) 62%, var(--paper)); }
+}
+:root[data-theme="dark"] .badge:not(.earned) { color: color-mix(in srgb, var(--ink) 62%, var(--paper)); }
