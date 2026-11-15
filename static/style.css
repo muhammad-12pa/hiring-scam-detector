@@ -62,9 +62,7 @@ h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 12px; }
 .nav-inner { display: flex; justify-content: space-between; align-items: center; height: 56px; gap: 16px; }
 .brand { display: inline-flex; align-items: center; gap: 8px; color: var(--nav-ink); font-family: var(--display);
          font-weight: 800; font-size: 1.2rem; text-decoration: none; white-space: nowrap; }
-.brand-mark { width: 24px; height: 24px; }
-.brand-mark path { fill: var(--teal); }
-.brand-mark .tick { fill: none; stroke: var(--nav-bg); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.brand-mark { width: 30px; height: 30px; flex: none; }
 .nav nav { display: flex; gap: 22px; }
 .nav nav a { color: var(--nav-ink); opacity: .75; text-decoration: none; white-space: nowrap; font-weight: 600; font-size: .98rem; }
 .nav nav a:hover { opacity: 1; }

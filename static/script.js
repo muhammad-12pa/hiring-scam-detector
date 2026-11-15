@@ -494,12 +494,14 @@ async function drawResultCard(d) {
 
   x.fillStyle = "#E9EEF2"; x.fillRect(0, 0, W, H);
   x.fillStyle = "#16202A"; x.fillRect(0, 0, W, 130);
-  // Brand: shield + name
-  x.save(); x.translate(70, 33); x.scale(2.6, 2.6);
-  x.fillStyle = "#3CC2B9"; x.fill(new Path2D("M12 2.5 4 5.6v6.1c0 4.9 3.4 8.6 8 9.8 4.6-1.2 8-4.9 8-9.8V5.6L12 2.5Z"));
-  x.strokeStyle = "#16202A"; x.lineWidth = 2; x.lineCap = x.lineJoin = "round"; x.stroke(new Path2D("m8.4 12.2 2.5 2.5 4.8-5"));
-  x.restore();
-  x.fillStyle = "#E9EEF2"; x.font = `800 46px ${DISPLAY}`; x.textBaseline = "middle"; x.fillText("ScamShield", 150, 66);
+  // Brand: owl logo + name
+  try {
+    const logo = new Image();
+    logo.src = "/static/logo-mark-light.svg";
+    await logo.decode();
+    x.drawImage(logo, 74, 21, 88, 88);
+  } catch { /* draw the card without the logo */ }
+  x.fillStyle = "#E9EEF2"; x.font = `800 46px ${DISPLAY}`; x.textBaseline = "middle"; x.fillText("ScamShield", 176, 66);
 
   // Card
   x.fillStyle = "#FBFCFD"; x.beginPath(); x.roundRect(60, 190, W - 120, 1000, 36); x.fill();
