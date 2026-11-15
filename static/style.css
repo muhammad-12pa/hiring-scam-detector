@@ -560,3 +560,7 @@ footer { background: var(--nav-bg); color: var(--nav-ink); padding: 18px 0; font
 :root[data-theme="dark"] .owl-accent { fill: #1F9C93; }
 :root[data-theme="dark"] .owl-line,
 :root[data-theme="dark"] .owl-line::before { background: color-mix(in srgb, var(--ink) 16%, var(--paper)); }
+@media (max-width: 360px) {
+  .nav .brand { font-size: 0; gap: 0; }          /* just the owl on the narrowest phones */
+  .nav nav a.nav-play { padding: 5px 12px; }
+}
