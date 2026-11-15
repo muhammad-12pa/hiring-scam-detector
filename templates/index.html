@@ -57,11 +57,12 @@
           </button>
         </div>
 
-        <div id="installCard" class="install-card hidden">
-          <span class="install-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M12 7v7m-3-3 3 3 3-3"/></svg></span>
-          <p><b>Get the ScamShield app.</b> Then check a suspicious WhatsApp or Telegram message straight from its Share menu.</p>
-          <button id="installBtn" class="btn btn-primary" type="button">Install</button>
-          <button id="installClose" class="link-btn" type="button" aria-label="Not now">Not now</button>
+        <div id="installRow" class="install-row">
+          <button id="installBtn" class="install-pill" type="button" aria-expanded="false" aria-controls="installHelp">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M12 7v7m-3-3 3 3 3-3"/></svg>
+            Install app
+          </button>
+          <p id="installHelp" class="install-help hidden" role="status"></p>
         </div>
 
         <div class="input-card" id="inputCard">

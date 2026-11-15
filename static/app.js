@@ -4,27 +4,33 @@
   const $ = id => document.getElementById(id);
   if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => {});
 
-  // ----- Install offer (Android / desktop Chrome and Edge fire beforeinstallprompt) -----
-  const KEY = "scamshield-install-dismissed";
+  // ----- Install app (small button; hidden once running as the installed app) -----
   let deferred = null;
-  const dismissed = () => { try { return localStorage.getItem(KEY) === "1"; } catch { return false; } };
-  window.addEventListener("beforeinstallprompt", e => {
-    e.preventDefault();
-    deferred = e;
-    if (!dismissed() && $("installCard")) $("installCard").classList.remove("hidden");
-  });
+  const installed = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+  if (installed) $("installRow")?.classList.add("hidden");
+  window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; });
+  window.addEventListener("appinstalled", () => $("installRow")?.classList.add("hidden"));
+
+  function howTo() {
+    const ua = navigator.userAgent;
+    if (/iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1))
+      return "On iPhone: open this site in Safari, tap the Share button (square with an arrow), then “Add to Home Screen”.";
+    if (/Android/.test(ua))
+      return "In Chrome, tap the ⋮ menu (top right), then “Install app” or “Add to Home screen”. Once installed, ScamShield appears in WhatsApp’s Share menu.";
+    return "In Chrome or Edge, click the install icon at the right end of the address bar, or open the browser menu and choose “Install ScamShield”.";
+  }
   $("installBtn")?.addEventListener("click", async () => {
-    if (!deferred) return;
-    deferred.prompt();
-    await deferred.userChoice.catch(() => {});
-    deferred = null;
-    $("installCard").classList.add("hidden");
+    const help = $("installHelp");
+    if (deferred) {
+      deferred.prompt();
+      await deferred.userChoice.catch(() => {});
+      deferred = null;
+      return;
+    }
+    const open = help.classList.toggle("hidden") === false;
+    help.textContent = open ? howTo() : "";
+    $("installBtn").setAttribute("aria-expanded", String(open));
   });
-  $("installClose")?.addEventListener("click", () => {
-    $("installCard").classList.add("hidden");
-    try { localStorage.setItem(KEY, "1"); } catch { /* fine */ }
-  });
-  window.addEventListener("appinstalled", () => $("installCard")?.classList.add("hidden"));
 
   // ----- Something was shared to ScamShield -----
   async function takeShared() {
