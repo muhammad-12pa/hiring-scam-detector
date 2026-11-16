@@ -35,7 +35,7 @@
     { id: "fair_judge", name: "Fair Judge", desc: "Trusted 5 genuine posts correctly", icon: I.scale },
     { id: "not_fooled", name: "Not Fooled", desc: "Got one of the trickiest posts right", icon: I.eye },
     { id: "beat_ai", name: "Beat the AI", desc: "Scored higher than ScamShield’s AI in a round", icon: I.chip },
-    { id: "perfect", name: "Hoodini Approved", desc: "A perfect practice round", icon: I.trophy },   // id kept, so old saves still count
+    { id: "perfect", name: "Owlbert Approved", desc: "A perfect practice round", icon: I.trophy },   // id kept, so old saves still count
     { id: "streak3", name: "On a Roll", desc: "A 3-day daily challenge streak", icon: I.flame },
   ];
   const svg = path => `<svg viewBox="0 0 24 24" aria-hidden="true">${path}</svg>`;
@@ -65,7 +65,7 @@
     { id: "inspector", name: "Inspector", need: 25 },
     { id: "detective", name: "Detective", need: 50 },
     { id: "sherlock", name: "Sherlock", need: 100 },
-    { id: "hoodini", name: "Hoodini", need: 200 },
+    { id: "owlbert", name: "Owlbert", need: 200 },
   ];
   function rankIndex() {
     if (!state.rounds) return -1;
@@ -73,7 +73,7 @@
     RANKS.forEach((k, i) => { if (state.totalRight >= k.need) r = i; });
     return r;
   }
-  const rankIcon = id => id === "hoodini" && window.Owl ? Owl.svg("happy") : `<svg viewBox="0 0 24 24" aria-hidden="true">${RANK_ICONS[id]}</svg>`;
+  const rankIcon = id => id === "owlbert" && window.Owl ? Owl.svg("happy") : `<svg viewBox="0 0 24 24" aria-hidden="true">${RANK_ICONS[id]}</svg>`;
   function renderRank() {
     const i = rankIndex(), next = RANKS[i + 1];
     $("rankIcon").innerHTML = i < 0 ? rankIcon("trainee") : rankIcon(RANKS[i].id);
@@ -276,7 +276,7 @@
 
   // ---------- End of round ----------
   function titleFor(ratio) {
-    if (ratio === 1) return ["Hoodini Approved", "Perfect. Nobody’s getting your registration fee."];
+    if (ratio === 1) return ["Owlbert Approved", "Perfect. Nobody’s getting your registration fee."];
     if (ratio >= 0.8) return ["Scam Spotter", "Very hard to fool. Only a couple slipped through."];
     if (ratio >= 0.6) return ["Sharp-eyed", "Good instincts. Read the giveaways and go again."];
     return ["Rookie", "Scammers are good at this. Every round makes you harder to fool."];
@@ -308,7 +308,7 @@
       const t = document.createElement("span");
       t.innerHTML = "<b>Promoted!</b> ";
       t.append(`You’re now ${/^[AEIOU]/.test(promoted.name) ? "an" : "a"} ${promoted.name}.`);
-      if (promoted.id === "hoodini") t.textContent = "Promoted! You’ve reached Hoodini rank. No scam escapes you.";
+      if (promoted.id === "owlbert") t.textContent = "Promoted! You’ve reached Owlbert rank. No scam escapes you.";
       er.appendChild(t);
     }
     const you = answers.filter(Boolean).length, aiN = ai.filter(Boolean).length, n = answers.length;
@@ -363,7 +363,7 @@
   }
 
   function renderHome() {
-    if (window.Owl) $("homeOwl").innerHTML = Owl.svg("idle", "Detective Hoodini, the ScamShield owl");
+    if (window.Owl) $("homeOwl").innerHTML = Owl.svg("idle", "Detective Owlbert, the ScamShield owl");
     const grid = $("badgeGrid");
     grid.innerHTML = "";
     BADGES.forEach(b => grid.appendChild(badgeTile(b, !!state.badges[b.id])));
@@ -409,7 +409,7 @@
     .then(r => r.json())
     .then(d => { POSTS = d.posts; renderHome(); })
     .catch(() => {
-      $("dailyDesc").textContent = "Hoodini lost the trail: couldn’t load the case file. Check your connection and reload the page.";
+      $("dailyDesc").textContent = "Owlbert lost the trail: couldn’t load the case file. Check your connection and reload the page.";
       [$("dailyBtn"), $("practiceBtn")].forEach(b => { b.disabled = true; });
     });
   renderHome();

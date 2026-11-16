@@ -26,7 +26,7 @@ self.addEventListener("fetch", event => {
     event.respondWith(fetch(req).catch(() => new Response(
       `<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>ScamShield</title>
        <body style="font-family:system-ui,sans-serif;background:#E9EEF2;color:#16202A;display:grid;place-items:center;min-height:90vh;text-align:center;padding:24px">
-       <div><h1 style="margin:0 0 8px">Hoodini lost the trail</h1><p>You’re offline. ScamShield needs the internet to check a posting. Connect and try again.</p>
+       <div><h1 style="margin:0 0 8px">Owlbert lost the trail</h1><p>You’re offline. ScamShield needs the internet to check a posting. Connect and try again.</p>
        <button onclick="location.reload()" style="font:inherit;font-weight:700;padding:10px 18px;border:0;border-radius:10px;background:#0B7A75;color:#fff">Try again</button></div>`,
       { headers: { "content-type": "text/html; charset=utf-8" } })));
   }

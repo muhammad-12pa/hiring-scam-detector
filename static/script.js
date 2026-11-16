@@ -86,16 +86,16 @@ async function postJSON(url, body, onRetry) {
       raw = await res.text();
     } catch (netErr) {
       if (attempt < RETRIES) { onRetry && onRetry(); await sleep(4000); continue; }
-      throw new Error("Hoodini lost the trail. Check your connection and try again.");
+      throw new Error("Owlbert lost the trail. Check your connection and try again.");
     }
     let data = {};
     try { data = raw ? JSON.parse(raw) : {}; } catch { /* non-JSON error page */ }
     if (res.ok) return data;
     if ([502, 503, 504].includes(res.status)) {
       if (attempt < RETRIES) { onRetry && onRetry(); await sleep(4000); continue; }
-      throw new Error("Hoodini lost the trail: the server is waking up or busy. Wait a minute, then try again.");
+      throw new Error("Owlbert lost the trail: the server is waking up or busy. Wait a minute, then try again.");
     }
-    if (res.status >= 500 || !data.error) throw new Error("Hoodini lost the trail: something went wrong on the server. Try again.");
+    if (res.status >= 500 || !data.error) throw new Error("Owlbert lost the trail: something went wrong on the server. Try again.");
     throw new Error(data.error);   // e.g. "too short / too long": shown as it is
   }
 }
@@ -556,7 +556,7 @@ async function drawResultCard(d) {
   });
   if (flags.length > 4) { x.fillStyle = soft; x.fillText(`and ${flags.length - 4} more`, 175, y); }
 
-  // Footer: Detective Hoodini + where to check a post yourself
+  // Footer: Detective Owlbert + where to check a post yourself
   x.font = `700 38px ${BODY}`;
   const line1 = "Check a job post yourself";
   const owlSize = 104, gap = 22;
