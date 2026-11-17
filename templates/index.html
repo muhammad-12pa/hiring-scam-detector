@@ -153,6 +153,19 @@
               <li><strong>Check the company yourself.</strong> Find its official website or LinkedIn page and contact it from there, not through the number or email in the post.</li>
               <li><strong>Already paid or shared details?</strong> Call <a href="tel:1930">1930</a> (National Cyber Crime Helpline) straight away and report it at <a href="https://cybercrime.gov.in" target="_blank" rel="noopener">cybercrime.gov.in</a>.</li>
             </ul>
+            <div class="report-help">
+              <button id="reportBtn" class="btn btn-ghost" type="button" aria-expanded="false" aria-controls="reportBox">Help me report it</button>
+              <div id="reportBox" class="report-box hidden">
+                <p class="report-hint">A ready-to-paste summary for a complaint. Fill in the lines in [brackets], then copy it. It’s made on your device and isn’t sent anywhere.</p>
+                <label for="reportText" class="sr-only">Complaint summary</label>
+                <textarea id="reportText" rows="12" spellcheck="false"></textarea>
+                <div class="report-box-actions">
+                  <button id="reportCopy" class="btn btn-primary" type="button">Copy text</button>
+                  <a class="btn btn-ghost" href="https://cybercrime.gov.in" target="_blank" rel="noopener">Open cybercrime.gov.in</a>
+                  <a class="btn btn-ghost" href="tel:1930">Call 1930</a>
+                </div>
+              </div>
+            </div>
           </section>
           <div class="report-actions">
             <button id="pdfBtn" class="btn btn-ghost" type="button">Save as PDF</button>

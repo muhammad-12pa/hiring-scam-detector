@@ -238,6 +238,8 @@ function showVerdict(d) {
   // Practical next steps whenever the posting isn't clearly genuine.
   $("nextSteps").classList.toggle("hidden", level === "low");
   $("nextTitle").textContent = level === "high" ? "What to do next" : "Before you go any further";
+  $("reportBox").classList.add("hidden");
+  $("reportBtn").setAttribute("aria-expanded", "false");
 
   const note = $("flagNote");
   if (level !== "high" && n >= 2) {
@@ -598,6 +600,60 @@ $("imageBtn").addEventListener("click", async () => {
     btn.textContent = "Couldn't make image";
     setTimeout(() => { btn.textContent = "Share as image"; }, 2500);
   } finally { btn.disabled = false; }
+});
+
+// ---------- Help me report it: a complaint summary built in the browser ----------
+function findContacts(text) {
+  const uniq = arr => [...new Map(arr.map(v => [v.toLowerCase().replace(/[\s-]/g, ""), v.trim()])).values()];
+  const upiHandles = "ybl|okaxis|okhdfcbank|oksbi|okicici|paytm|upi|apl|ibl|axl|sbi|icici|hdfcbank|axisbank|kotak|yesbank|freecharge|airtel|jio";
+  const upi = text.match(new RegExp(`\\b[a-z0-9._-]{2,}@(?:${upiHandles})\\b(?!\\.)`, "gi")) || [];
+  const emails = (text.match(/\b[A-Z0-9._%+-]+@[A-Z0-9-]+(?:\.[A-Z0-9-]+)*\.[A-Z]{2,}\b/gi) || []);
+  const noEmails = text.replace(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\b/gi, " ");
+  const links = noEmails.match(/\b(?:https?:\/\/|www\.)[^\s<>"')\]]+|\b(?:t\.me|wa\.me)\/[A-Za-z0-9_+]+|\b[a-z0-9][a-z0-9-]*(?:\.[a-z0-9-]+)*\.(?:com|in|co|net|org|info|online|site|top|xyz|live|work|jobs|me|io|app|shop|store|link|ly)(?:\/[^\s<>"')\]]*)?\b/gi) || [];
+  const phones = (text.match(/(?:\+?91[\s-]?)?\b[6-9]\d{4}[\s-]?\d{5}\b|\+\d{1,3}[\s-]?\d[\d\s-]{7,12}\d/g) || []);
+  const handles = (noEmails.match(/(?<![\w.\/])@[A-Za-z][A-Za-z0-9_]{3,}/g) || []);
+  return { phones: uniq(phones), emails: uniq(emails), links: uniq(links.map(l => l.replace(/[.,;:!?]+$/, ""))), upi: uniq(upi), handles: uniq(handles) };
+}
+
+function buildReport() {
+  const d = current.verdict, text = current.text || "";
+  const level = riskLevel(d.probability, d.threshold ?? 50);
+  const when = new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
+  const c = findContacts(text);
+  const lines = [
+    "Complaint summary: suspected fake job offer",
+    `Date checked: ${when}`,
+    `Checked with: ScamShield (${location.host})`,
+    `Result: ${TITLES[level]} (${d.probability}% overall scam risk)`,
+    "",
+    "Warning signs found in the job post:",
+    ...((d.red_flags || []).length ? d.red_flags.map(f => `- ${f.title}`) : ["- None of the common warning signs (the AI model flagged the wording)"]),
+    "",
+    "Contact details given in the post:",
+  ];
+  const add = (label, arr) => arr.forEach(v => lines.push(`- ${label}: ${v}`));
+  add("Phone", c.phones); add("Email", c.emails); add("Website or link", c.links); add("UPI ID", c.upi); add("Chat handle", c.handles);
+  if (!c.phones.length && !c.emails.length && !c.links.length && !c.upi.length && !c.handles.length) lines.push("- None found in the text");
+  lines.push("",
+    "Where I saw it: [e.g. WhatsApp, Telegram, a job website]",
+    "What happened: [Describe what happened, e.g. whether you paid or shared documents]",
+    "",
+    "Keep screenshots of the post, the chat and any payment receipts.");
+  return lines.join("\n");
+}
+
+$("reportBtn").addEventListener("click", () => {
+  const box = $("reportBox"), open = box.classList.contains("hidden");
+  if (open) $("reportText").value = buildReport();
+  box.classList.toggle("hidden", !open);
+  $("reportBtn").setAttribute("aria-expanded", String(open));
+  if (open) $("reportText").focus({ preventScroll: true });
+});
+$("reportCopy").addEventListener("click", async () => {
+  const btn = $("reportCopy");
+  try { await navigator.clipboard.writeText($("reportText").value); btn.textContent = "Copied"; }
+  catch { $("reportText").select(); btn.textContent = "Press Ctrl+C to copy"; }
+  setTimeout(() => { btn.textContent = "Copy text"; }, 2200);
 });
 
 updateCount();

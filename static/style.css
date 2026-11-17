@@ -564,3 +564,15 @@ footer { background: var(--nav-bg); color: var(--nav-ink); padding: 18px 0; font
   .nav .brand { font-size: 0; gap: 0; }          /* just the owl on the narrowest phones */
   .nav nav a.nav-play { padding: 5px 12px; }
 }
+
+/* Help me report it */
+.report-help { margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--line); }
+.report-box { margin-top: 12px; display: grid; gap: 10px; }
+.report-hint { color: var(--ink-soft); font-size: .95rem; }
+.report-box textarea { width: 100%; box-sizing: border-box; font: .92rem/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--ink);
+                       background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; resize: vertical; }
+.report-box textarea:focus-visible { outline: 3px solid var(--teal); outline-offset: 1px; }
+.report-box-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.report-box-actions a.btn { text-decoration: none; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+@media print { .report-help { display: none !important; } }
