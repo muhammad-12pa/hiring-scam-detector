@@ -32,6 +32,19 @@
     $("installBtn").setAttribute("aria-expanded", String(open));
   });
 
+  // ----- Intro video (loads only when opened) -----
+  const dlg = $("introDialog"), vid = $("introVideo");
+  if (dlg && vid) {
+    $("introBtn").addEventListener("click", () => {
+      if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
+      vid.play().catch(() => {});
+    });
+    const close = () => { vid.pause(); if (dlg.open) dlg.close?.(); dlg.removeAttribute("open"); };
+    $("introClose").addEventListener("click", close);
+    dlg.addEventListener("click", e => { if (e.target === dlg) close(); });   // click outside the video
+    dlg.addEventListener("close", () => vid.pause());
+  }
+
   // ----- Something was shared to ScamShield -----
   async function takeShared() {
     if (new URLSearchParams(location.search).get("shared") !== "1") return;

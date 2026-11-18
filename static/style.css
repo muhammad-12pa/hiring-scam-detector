@@ -576,3 +576,14 @@ footer { background: var(--nav-bg); color: var(--nav-ink); padding: 18px 0; font
 .report-box-actions a.btn { text-decoration: none; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 @media print { .report-help { display: none !important; } }
+
+/* Intro video */
+.pill-dim { font-weight: 600; opacity: .65; margin-left: 2px; }
+.intro-dialog { margin: auto; inset: 0; max-height: 92vh; width: min(960px, 94vw); padding: 0; border: 0; border-radius: 16px; background: #000; overflow: visible; box-shadow: 0 24px 80px rgba(0,0,0,.5); }
+.intro-dialog::backdrop { background: rgba(10, 16, 22, .78); }
+.intro-dialog video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 16px; background: #000; }
+.intro-close { position: absolute; top: -14px; right: -14px; z-index: 2; width: 40px; height: 40px; border-radius: 50%; border: 0; cursor: pointer;
+               background: var(--paper); color: var(--ink); font-size: 26px; line-height: 1; box-shadow: 0 4px 14px rgba(0,0,0,.3); }
+.intro-close:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+@media (max-width: 560px) { .intro-close { top: -48px; right: 0; } }
+@media print { .intro-dialog { display: none !important; } }

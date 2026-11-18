@@ -67,8 +67,19 @@
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M12 7v7m-3-3 3 3 3-3"/></svg>
             Install app
           </button>
+          <button id="introBtn" class="install-pill" type="button" aria-haspopup="dialog">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M10 8.5v7l5.5-3.5z" fill="currentColor"/></svg>
+            Watch the intro <span class="pill-dim">0:46</span>
+          </button>
           <p id="installHelp" class="install-help hidden" role="status"></p>
         </div>
+
+        <dialog id="introDialog" class="intro-dialog" aria-label="ScamShield intro video">
+          <button id="introClose" class="intro-close" type="button" aria-label="Close video">×</button>
+          <video id="introVideo" controls playsinline preload="none" poster="{{ url_for('static', filename='video/scamshield-intro-poster.jpg') }}">
+            <source src="{{ url_for('static', filename='video/scamshield-intro.mp4') }}" type="video/mp4">
+          </video>
+        </dialog>
 
         <div class="input-card" id="inputCard">
           <label for="jobText" class="sr-only">Job posting text</label>
