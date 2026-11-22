@@ -4,15 +4,37 @@ from collections import OrderedDict
 import numpy as np
 from ai_edge_litert.interpreter import Interpreter   # tiny TFLite runtime, no TensorFlow
 from flask import Flask, render_template, request, jsonify, send_from_directory
+from flask_compress import Compress
 from lime.lime_text import LimeTextExplainer
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 
+from guide_content import GUIDE
 from red_flags import combined_risk, find_red_flags, rule_for_word
 
 app = Flask(__name__)
 
+# ---------- Speed: compression + browser caching ----------
+# Text (HTML, CSS, JS, JSON, SVG) is sent gzip/brotli-compressed, about 70% smaller.
+# Images and the video are already compressed and are left alone (so video seeking still works).
+app.config["COMPRESS_MIMETYPES"] = ["text/html", "text/css", "text/javascript", "application/javascript",
+                                    "application/json", "image/svg+xml", "application/manifest+json"]
+Compress(app)
+YEAR = 365 * 24 * 3600
+
+
+@app.after_request
+def cache_headers(resp):
+    """Files with ?v=<version> never change, so browsers keep them for a year (a new deploy
+    changes the version and so the address). Other static files: a day. Pages and the API: never."""
+    if request.path.startswith("/static/"):
+        resp.headers["Cache-Control"] = (f"public, max-age={YEAR}, immutable" if request.args.get("v")
+                                         else "public, max-age=86400")
+    elif "Cache-Control" not in resp.headers:
+        resp.headers["Cache-Control"] = "no-cache"
+    return resp
+
 # Bump on every deploy; shown in the page footer and at /version so you can tell it's live.
-VERSION = "v3.6"
+VERSION = "v3.7"
 
 # Public address, used for link previews (og:image needs an absolute URL).
 SITE_URL = os.environ.get("SITE_URL", "https://hiring-scam-detector.onrender.com").rstrip("/")
@@ -175,9 +197,9 @@ def home():
 @app.route("/sw.js")
 def service_worker():
     """Served from the root so it can handle the whole site (install + share target)."""
-    resp = send_from_directory("static", "sw.js", mimetype="text/javascript")
-    resp.headers["Cache-Control"] = "no-cache"
-    return resp
+    with open("static/sw.js", encoding="utf-8") as f:
+        js = f.read().replace("__VERSION__", VERSION)   # new version -> new offline cache
+    return app.response_class(js, mimetype="text/javascript", headers={"Cache-Control": "no-cache"})
 
 
 @app.route("/manifest.webmanifest")
@@ -201,6 +223,12 @@ def share_target():
 def play():
     """Spot the Scam: a practice game. Runs fully in the browser (static/game/posts.json)."""
     return render_template("play.html", version=VERSION, site_url=SITE_URL)
+
+
+@app.route("/guide")
+def guide():
+    """Scam tactics guide: one card per red-flag rule. Static content, works offline once visited."""
+    return render_template("guide.html", version=VERSION, site_url=SITE_URL, guide=GUIDE)
 
 
 @app.route("/metrics")

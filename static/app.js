@@ -36,6 +36,7 @@
   const dlg = $("introDialog"), vid = $("introVideo");
   if (dlg && vid) {
     $("introBtn").addEventListener("click", () => {
+      try { localStorage.setItem("scamshield-intro-seen", "1"); } catch (e) {}
       if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
       vid.play().catch(() => {});
     });
@@ -43,6 +44,25 @@
     $("introClose").addEventListener("click", close);
     dlg.addEventListener("click", e => { if (e.target === dlg) close(); });   // click outside the video
     dlg.addEventListener("close", () => vid.pause());
+
+    // First visit on this device: a small card offers the intro (shown once, never again).
+    const nudge = $("introNudge"), SEEN = "scamshield-intro-seen";
+    let seen = true;
+    try { seen = !!localStorage.getItem(SEEN); } catch (e) {}   // storage blocked: don't nag
+    // Not when the person arrived with a post to check (shared, or from the guide).
+    const busy = new URLSearchParams(location.search).has("shared") || !!$("jobText")?.value.trim();
+    if (nudge && !seen && !busy && !installed) {
+      const hide = () => nudge.classList.add("hidden");
+      setTimeout(() => {
+        if ($("jobText")?.value.trim() || dlg.open) return;   // they've already started
+        try { localStorage.setItem(SEEN, "1"); } catch (e) {}
+        if (window.Owl) $("nudgeOwl").innerHTML = Owl.svg("happy");
+        nudge.classList.remove("hidden");
+      }, 1500);
+      $("nudgeWatch").addEventListener("click", () => { hide(); $("introBtn").click(); });
+      $("nudgeClose").addEventListener("click", hide);
+      $("analyzeBtn")?.addEventListener("click", hide);
+    }
   }
 
   // ----- Something was shared to ScamShield -----

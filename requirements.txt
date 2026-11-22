@@ -1,4 +1,5 @@
 flask
+flask-compress==1.26   # gzip/brotli for HTML, CSS and JS
 gunicorn
 pandas
 numpy

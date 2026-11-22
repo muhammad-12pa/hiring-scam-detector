@@ -125,6 +125,7 @@ analyzeBtn.addEventListener("click", async () => {
     current.text = text;
     current.explain = null;
     showVerdict(verdict);
+    saveRecent(text, verdict);
     showFlags(verdict.red_flags || []);
     $("compareTabs").classList.add("hidden");
     renderMarkup(text, {}, verdict.red_flags || [], false);
@@ -274,6 +275,13 @@ function showFlags(flags) {
       q.textContent = m;
       body.append(q, " ");
     });
+    if (f.id) {   // the scam tactics guide has a card for every rule
+      const more = document.createElement("a");
+      more.className = "flag-guide";
+      more.href = "/guide#" + encodeURIComponent(f.id);
+      more.textContent = "How to check this";
+      body.append(more);
+    }
     li.appendChild(body);
     list.appendChild(li);
   });
@@ -657,3 +665,73 @@ $("reportCopy").addEventListener("click", async () => {
 });
 
 updateCount();
+
+// ---------- Recent checks (kept only in this browser; never sent anywhere) ----------
+const RECENT_KEY = "scamshield-recent", RECENT_MAX = 5;
+function loadRecent() {
+  try { const a = JSON.parse(localStorage.getItem(RECENT_KEY) || "[]"); return Array.isArray(a) ? a : []; }
+  catch { return []; }
+}
+function saveRecent(text, d) {
+  const item = { text, p: d.probability, t: d.threshold ?? 50, n: (d.red_flags || []).length, at: Date.now() };
+  const list = [item, ...loadRecent().filter(r => r.text !== text)].slice(0, RECENT_MAX);
+  try { localStorage.setItem(RECENT_KEY, JSON.stringify(list)); } catch { /* private mode: just skip */ }
+  renderRecent();
+}
+function timeAgo(ms) {
+  const m = Math.round((Date.now() - ms) / 60000);
+  if (m < 1) return "just now";
+  if (m < 60) return `${m} min ago`;
+  const h = Math.round(m / 60);
+  if (h < 24) return `${h} h ago`;
+  const days = Math.round(h / 24);
+  return days === 1 ? "yesterday" : `${days} days ago`;
+}
+function renderRecent() {
+  const list = loadRecent(), box = $("recent"), ul = $("recentList");
+  box.classList.toggle("hidden", !list.length);
+  $("recentTitle").textContent = `Recent checks (${list.length})`;
+  ul.innerHTML = "";
+  list.forEach(r => {
+    const level = riskLevel(r.p, r.t);
+    const li = document.createElement("li");
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "recent-item";
+    const pill = document.createElement("span");
+    pill.className = "recent-pill " + level;
+    pill.textContent = STAMPS[level];
+    const snip = document.createElement("span");
+    snip.className = "recent-snip";
+    snip.textContent = r.text.replace(/\s+/g, " ").slice(0, 90);
+    const meta = document.createElement("span");
+    meta.className = "recent-meta";
+    meta.textContent = `${r.p}% risk · ${r.n} red flag${r.n === 1 ? "" : "s"} · ${timeAgo(r.at)}`;
+    btn.append(pill, snip, meta);
+    btn.setAttribute("aria-label", `Check again: ${TITLES[level]}, ${meta.textContent}. ${snip.textContent}`);
+    btn.addEventListener("click", () => {
+      jobText.value = r.text;
+      updateCount();
+      hideUndo();
+      analyzeBtn.click();
+    });
+    li.appendChild(btn);
+    ul.appendChild(li);
+  });
+}
+$("recentClear").addEventListener("click", () => {
+  try { localStorage.removeItem(RECENT_KEY); } catch {}
+  renderRecent();
+});
+renderRecent();
+
+// "Try this example" on the scam tactics guide: the example arrives via sessionStorage.
+try {
+  const tryText = sessionStorage.getItem("scamshield-try");
+  if (tryText) {
+    sessionStorage.removeItem("scamshield-try");
+    jobText.value = tryText.slice(0, MAX_CHARS);
+    updateCount();
+    analyzeBtn.click();
+  }
+} catch { /* storage blocked */ }
