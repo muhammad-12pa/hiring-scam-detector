@@ -1,3 +1,6 @@
-# For running the tests: python -m pytest
+# Not needed on the server.
+# Running the tests: python -m pytest
 -r requirements.txt
 pytest
+# Only needed to run convert_tflite.py after retraining
+tensorflow-cpu
