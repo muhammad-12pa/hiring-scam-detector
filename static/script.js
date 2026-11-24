@@ -527,7 +527,7 @@ async function drawResultCard(d) {
   const ink = "#16202A", soft = "#4A5865";
   const DISPLAY = '"Bricolage Grotesque", "Segoe UI", sans-serif', BODY = '"Source Sans 3", "Segoe UI", sans-serif';
 
-  x.fillStyle = "#E9EEF2"; x.fillRect(0, 0, W, H);
+  x.fillStyle = "#F4F1EA"; x.fillRect(0, 0, W, H);
   x.fillStyle = "#16202A"; x.fillRect(0, 0, W, 130);
   // Brand: owl logo + name
   try {
@@ -539,7 +539,7 @@ async function drawResultCard(d) {
   x.fillStyle = "#E9EEF2"; x.font = `800 46px ${DISPLAY}`; x.textBaseline = "middle"; x.fillText("ScamShield", 176, 66);
 
   // Card
-  x.fillStyle = "#FBFCFD"; x.beginPath(); x.roundRect(60, 190, W - 120, 1000, 36); x.fill();
+  x.fillStyle = "#FFFEFB"; x.beginPath(); x.roundRect(60, 190, W - 120, 1000, 36); x.fill();
   x.fillStyle = col; x.beginPath(); x.roundRect(60, 190, 18, 1000, [36, 0, 0, 36]); x.fill();
   x.textBaseline = "alphabetic";
   x.fillStyle = soft; x.font = `700 30px ${BODY}`; x.fillText("JOB POST CHECK", 130, 280);

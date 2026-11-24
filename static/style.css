@@ -14,11 +14,11 @@
   --ink: #16202A;
   --ink-soft: #4A5865;
   --ink-faint: #5E6A76;   /* 4.7:1 on --mist, passes WCAG AA */
-  --mist: #E9EEF2;
-  --paper: #FBFCFD;
-  --line: #D3DCE3;
-  --teal: #0B7A75;
-  --teal-deep: #075E5A;
+  --mist: #F4F1EA;       /* warm "case file" paper (v1.1) */
+  --paper: #FFFEFB;
+  --line: #E3DCCF;
+  --teal: #08665F;
+  --teal-deep: #054F4A;
   --on-teal: #FFFFFF;
   --scam: #FF6B5E;       /* marker red */
   --scam-ink: #B42318;
@@ -28,6 +28,11 @@
   --mid: #F2C14E;
   --nav-bg: #16202A;
   --nav-ink: #E9EEF2;
+  --band-bg: #16202A;    /* dark band behind the page headline */
+  --band-bg-2: #1E2C38;
+  --band-ink: #F4F1EA;
+  --band-soft: #B9C5CF;
+  --band-accent: #7FDCD4;
   --shadow: 0 1px 0 rgba(22, 32, 42, .06), 0 8px 24px -12px rgba(22, 32, 42, .18);
   --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
   --body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
@@ -53,6 +58,11 @@
     --flag: #F0B65A;
     --nav-bg: #0A1015;
     --nav-ink: #E6ECF1;
+    --band-bg: #0A1015;
+    --band-bg-2: #101A23;
+    --band-ink: #E6ECF1;
+    --band-soft: #AEBAC5;
+    --band-accent: #6FD8D0;
     --shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 10px 28px -14px rgba(0, 0, 0, .7);
     color-scheme: dark;
   }
@@ -74,6 +84,11 @@
   --flag: #F0B65A;
   --nav-bg: #0A1015;
   --nav-ink: #E6ECF1;
+  --band-bg: #0A1015;
+  --band-bg-2: #101A23;
+  --band-ink: #E6ECF1;
+  --band-soft: #AEBAC5;
+  --band-accent: #6FD8D0;
   --shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 10px 28px -14px rgba(0, 0, 0, .7);
   color-scheme: dark;
 }
@@ -689,3 +704,37 @@ footer { background: var(--nav-bg); color: var(--nav-ink); padding: 18px 0; font
 .flagged.flash { animation: flagFlash .65s ease-in-out 4; border-radius: 3px; }
 @keyframes flagFlash { 50% { background: color-mix(in srgb, var(--flag) 45%, transparent); } }
 @media (prefers-reduced-motion: reduce) { .flagged.flash { animation: none; background: color-mix(in srgb, var(--flag) 35%, transparent); } }
+
+/* ---------- Dark headline band (home and guide, v1.1) ----------
+   Full-width dark strip behind the headline; the input card overlaps its lower edge.
+   The box-shadow + clip-path trick makes it full-bleed without any sideways scrolling. */
+.detector { --hero-pad: 56px; --band-under: 110px; }
+.guide { --hero-pad: 36px; --band-under: 30px; }
+.hero-band { position: relative; }
+.hero-band::before { content: ""; position: absolute; z-index: -1; left: 0; right: 0;
+  top: calc(-1 * var(--hero-pad)); bottom: calc(-1 * var(--band-under));
+  background: var(--band-bg); box-shadow: 0 0 0 100vmax var(--band-bg); clip-path: inset(0 -100vmax); }
+.hero-band h1 { color: var(--band-ink); }
+.hero-band .lede { color: var(--band-soft); }
+.hero-band .install-pill { color: var(--band-accent); border-color: color-mix(in srgb, var(--band-accent) 45%, transparent); }
+.hero-band .install-pill:hover { background: color-mix(in srgb, var(--band-accent) 12%, transparent); }
+.hero-band .pill-dim { color: var(--band-soft); }
+.hero-band .install-help { color: var(--band-soft); }
+.hero-band .install-help a, .hero-band .install-help b { color: var(--band-ink); }
+.hero-band .owl-body { fill: #3CC2B9; }          /* brighter owl, like the logo, so he stands out on the dark band */
+.hero-band .owl-accent { fill: #1F9C93; }
+.hero-band .hero-owl:focus-visible { outline-color: var(--band-accent); }
+.guide-hero.hero-band { padding-bottom: 6px; }
+.btn-primary { background: linear-gradient(180deg, color-mix(in srgb, var(--teal) 82%, #fff 18%), var(--teal));
+  box-shadow: 0 6px 16px -8px color-mix(in srgb, var(--teal) 75%, transparent); }
+.btn-primary:hover { background: var(--teal-deep); }
+@media (max-width: 560px) { .detector { --hero-pad: 36px; --band-under: 96px; } }
+@media print { .hero-band::before { display: none; } .hero-band h1, .hero-band .lede { color: #000; } }
+
+/* ---------- Spot the Scam: gold accent for the game (v1.1) ---------- */
+.play-page { --teal: #C98A1B; --teal-deep: #7A4E00; --on-teal: #1E1400; }   /* dark text on gold: 6.2:1 */
+.play-page .btn-primary:hover, .play-page .nav nav a.nav-play:hover { background: #E0A63A; }   /* lighter on hover keeps the dark text readable */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .play-page { --teal: #F0B65A; --teal-deep: #F6CD85; --on-teal: #241600; }
+}
+:root[data-theme="dark"] .play-page { --teal: #F0B65A; --teal-deep: #F6CD85; --on-teal: #241600; }
