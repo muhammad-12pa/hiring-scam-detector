@@ -17,9 +17,10 @@
   --mist: #F4F1EA;       /* warm "case file" paper (v1.1) */
   --paper: #FFFEFB;
   --line: #E3DCCF;
-  --teal: #08665F;
-  --teal-deep: #054F4A;
-  --on-teal: #FFFFFF;
+  --teal: #C98A1B;       /* gold accent (v1.2; the token keeps its old name) */
+  --teal-deep: #7A4E00;  /* gold text/links: 6.4:1 on --mist */
+  --on-teal: #1E1400;    /* dark text on gold buttons: 6.2:1 */
+  --accent-hover: #E0A63A;
   --scam: #FF6B5E;       /* marker red */
   --scam-ink: #B42318;
   --safe: #3FBF7F;       /* marker green */
@@ -32,7 +33,7 @@
   --band-bg-2: #1E2C38;
   --band-ink: #F4F1EA;
   --band-soft: #B9C5CF;
-  --band-accent: #7FDCD4;
+  --band-accent: #F0B65A;
   --shadow: 0 1px 0 rgba(22, 32, 42, .06), 0 8px 24px -12px rgba(22, 32, 42, .18);
   --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
   --body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
@@ -48,9 +49,10 @@
     --mist: #10171E;
     --paper: #18222C;
     --line: #2B3844;
-    --teal: #3CC2B9;
-    --teal-deep: #6FD8D0;
-    --on-teal: #062A28;
+    --teal: #F0B65A;
+    --teal-deep: #F6CD85;
+    --on-teal: #241600;
+    --accent-hover: #F6CD85;
     --scam: #FF7A6E;
     --scam-ink: #FFB4AB;
     --safe: #4CCB8A;
@@ -62,7 +64,7 @@
     --band-bg-2: #101A23;
     --band-ink: #E6ECF1;
     --band-soft: #AEBAC5;
-    --band-accent: #6FD8D0;
+    --band-accent: #F0B65A;
     --shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 10px 28px -14px rgba(0, 0, 0, .7);
     color-scheme: dark;
   }
@@ -74,9 +76,10 @@
   --mist: #10171E;
   --paper: #18222C;
   --line: #2B3844;
-  --teal: #3CC2B9;
-  --teal-deep: #6FD8D0;
-  --on-teal: #062A28;
+  --teal: #F0B65A;
+  --teal-deep: #F6CD85;
+  --on-teal: #241600;
+  --accent-hover: #F6CD85;
   --scam: #FF7A6E;
   --scam-ink: #FFB4AB;
   --safe: #4CCB8A;
@@ -88,7 +91,7 @@
   --band-bg-2: #101A23;
   --band-ink: #E6ECF1;
   --band-soft: #AEBAC5;
-  --band-accent: #6FD8D0;
+  --band-accent: #F0B65A;
   --shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 10px 28px -14px rgba(0, 0, 0, .7);
   color-scheme: dark;
 }
@@ -114,7 +117,7 @@ h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 12px; }
 .nav nav a { color: var(--nav-ink); opacity: .75; text-decoration: none; white-space: nowrap; font-weight: 600; font-size: .98rem; }
 .nav nav a:hover { opacity: 1; }
 .nav nav a.nav-play { opacity: 1; color: var(--on-teal); background: var(--teal); padding: 5px 14px; border-radius: 999px; }
-.nav nav a.nav-play:hover { background: var(--teal-deep); }
+.nav nav a.nav-play:hover { background: var(--accent-hover); }
 .nav nav a[aria-current="page"] { opacity: 1; }
 
 /* ---------- Detector (hero) ---------- */
@@ -141,7 +144,7 @@ textarea::placeholder { color: var(--ink-faint); }
 
 .btn { font: inherit; font-weight: 700; font-size: 1rem; border-radius: 10px; padding: 10px 18px; cursor: pointer; border: 1px solid transparent; }
 .btn-primary { background: var(--teal); color: var(--on-teal); }
-.btn-primary:hover { background: var(--teal-deep); }
+.btn-primary:hover { background: var(--accent-hover); }
 .btn-primary:disabled { opacity: .7; cursor: progress; }
 .btn-ghost { background: transparent; color: var(--ink-soft); border-color: var(--line); font-weight: 600; }
 .btn-ghost:hover { color: var(--ink); border-color: var(--ink-faint); }
@@ -727,14 +730,6 @@ footer { background: var(--nav-bg); color: var(--nav-ink); padding: 18px 0; font
 .guide-hero.hero-band { padding-bottom: 6px; }
 .btn-primary { background: linear-gradient(180deg, color-mix(in srgb, var(--teal) 82%, #fff 18%), var(--teal));
   box-shadow: 0 6px 16px -8px color-mix(in srgb, var(--teal) 75%, transparent); }
-.btn-primary:hover { background: var(--teal-deep); }
+.btn-primary:hover { background: var(--accent-hover); }
 @media (max-width: 560px) { .detector { --hero-pad: 36px; --band-under: 96px; } }
 @media print { .hero-band::before { display: none; } .hero-band h1, .hero-band .lede { color: #000; } }
-
-/* ---------- Spot the Scam: gold accent for the game (v1.1) ---------- */
-.play-page { --teal: #C98A1B; --teal-deep: #7A4E00; --on-teal: #1E1400; }   /* dark text on gold: 6.2:1 */
-.play-page .btn-primary:hover, .play-page .nav nav a.nav-play:hover { background: #E0A63A; }   /* lighter on hover keeps the dark text readable */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .play-page { --teal: #F0B65A; --teal-deep: #F6CD85; --on-teal: #241600; }
-}
-:root[data-theme="dark"] .play-page { --teal: #F0B65A; --teal-deep: #F6CD85; --on-teal: #241600; }

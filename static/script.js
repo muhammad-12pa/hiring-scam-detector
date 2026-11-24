@@ -598,7 +598,7 @@ async function drawResultCard(d) {
   } catch { /* footer without the owl */ }
   x.textAlign = "left"; x.fillStyle = ink; x.font = `700 38px ${BODY}`;
   x.fillText(line1, startX + owlSize + gap, 1262);
-  x.fillStyle = "#0B7A75"; x.font = `700 34px ${BODY}`;
+  x.fillStyle = "#7A4E00"; x.font = `700 34px ${BODY}`;
   x.fillText(location.host, startX + owlSize + gap, 1310);
   return new Promise(r => c.toBlob(r, "image/png"));
 }
