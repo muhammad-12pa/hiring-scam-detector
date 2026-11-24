@@ -1,4 +1,4 @@
-"""Content for the "Scam tactics" guide page (/guide): one card per red-flag rule in red_flags.py.
+"""Content for the "Scam tactics" guide page (/guide): one card per red-flag rule in red_flags.py (13 in all).
 
 The ids match red_flags.py, so a red flag on a result can link straight to its card (/guide#fee).
 """
@@ -25,6 +25,34 @@ GUIDE = [
      "check": ["Type the company’s name into a search engine yourself and open its real careers page.",
                "Look at the part just before .com / .in: it should be exactly the company’s own domain.",
                "If the job isn’t listed on the real careers page, treat it as fake."]},
+    {"id": "remote_access", "severe": True, "title": "Asks you to install a remote-access app",
+     "example": "To complete onboarding, download the AnyDesk app and share the 9-digit code with our IT team.",
+     "why": "AnyDesk, TeamViewer and similar apps let the other person see and control your phone or laptop. "
+            "Scammers use them to open your banking and UPI apps while you watch.",
+     "check": ["No employer needs control of your device to hire you. Refuse and stop replying.",
+               "Never share an AnyDesk or TeamViewer code, even with someone who says they are from IT or your bank.",
+               "If you already shared one: uninstall the app, call your bank and block UPI, then call 1930."]},
+    {"id": "task_scam", "severe": True, "title": "Paid to like, rate or review",
+     "example": "Like YouTube videos and rate restaurants from your phone. ₹150 per task, paid daily. Join our VIP group for higher commission.",
+     "why": "The first few tasks really pay, to win your trust. Then you are moved to “prepaid” or “VIP” tasks where you must deposit money, "
+            "and the balance you see on the website can never be withdrawn.",
+     "check": ["No genuine company pays strangers to like videos or post reviews.",
+               "Never deposit money to “unlock” earnings or tasks.",
+               "Leave Telegram task groups that ask for deposits, and report the group."]},
+    {"id": "passport", "severe": True, "title": "Asks you to hand over your passport",
+     "example": "Selected candidates must submit their original passport at our Mumbai office for visa processing.",
+     "why": "An agent holding your original passport can stop you leaving a bad job or demand more money to give it back. "
+            "Keeping someone else’s passport is illegal in India and in Gulf countries.",
+     "check": ["Show your passport and give photocopies, but keep the original with you.",
+               "Check the agent is a registered recruiting agent on emigrate.gov.in.",
+               "Overseas jobs through registered agents have a legal fee limit and must give a receipt."]},
+    {"id": "gov_fee", "severe": True, "title": "Government job that asks for money",
+     "example": "Indian Railways recruitment 2026: 2,400 posts. Deposit ₹3,500 as security amount. Contact Mr. Verma, Section Officer.",
+     "why": "Fake government notices borrow names like RRB, SSC, PSC or India Post. Real ones are published on official .gov.in or .nic.in sites, "
+            "and fees (if any) are paid only on that official site.",
+     "check": ["Find the notification on the official site yourself (for example indianrailways.gov.in or keralapsc.gov.in).",
+               "No officer will call or WhatsApp you to collect a “security deposit”.",
+               "Government jobs are never given for money or through “contacts”."]},
     {"id": "chat_app", "severe": False, "title": "Contact through chat apps",
      "example": "For more details message HR on WhatsApp 98XXXXXX10 or join our Telegram group.",
      "why": "Real recruiters normally use a company email, phone line or official careers portal. "

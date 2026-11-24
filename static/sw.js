@@ -9,13 +9,14 @@ const OFFLINE_PAGES = ["/play", "/guide"];               // these work fully wit
 // Save the offline pages and every versioned file they use, plus the game's posts.
 async function saveShell() {
   const cache = await caches.open(SHELL);
-  const files = new Set(["/static/game/posts.json?v=" + encodeURIComponent("__VERSION__")]);
+  const files = new Set(["/static/game/posts.json?v=" + encodeURIComponent("__VERSION__"),
+    "/static/fonts/sourcesans-600-latin.woff2", "/static/fonts/sourcesans-700-latin.woff2"]);
   for (const page of OFFLINE_PAGES) {
     const res = await fetch(page);
     if (!res.ok) continue;
     const html = await res.clone().text();
     await cache.put(page, res);
-    for (const m of html.matchAll(/(?:src|href)="(\/static\/[^"]+\?v=[^"]+)"/g)) files.add(m[1].replace(/&amp;/g, "&"));
+    for (const m of html.matchAll(/(?:src|href)="(\/static\/(?:fonts\/[^"]+|[^"]+\?v=[^"]+))"/g)) files.add(m[1].replace(/&amp;/g, "&"));
   }
   await Promise.all([...files].map(f => cache.match(f).then(hit => hit || cache.add(f))));
 }
@@ -69,7 +70,7 @@ self.addEventListener("fetch", event => {
     return;
   }
   if (req.method !== "GET" || url.origin !== location.origin) return;
-  if (url.pathname.startsWith("/static/") && url.searchParams.has("v")) {
+  if (url.pathname.startsWith("/static/") && (url.searchParams.has("v") || url.pathname.startsWith("/static/fonts/"))) {
     event.respondWith(staticFirst(req));
     return;
   }

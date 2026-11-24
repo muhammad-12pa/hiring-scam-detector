@@ -12,7 +12,7 @@ Final-year mini project, Dept. of CSE, P.A. College of Engineering (2026-27).
 
 - **Verdict with an overall risk level.** A BiLSTM deep-learning model scores the posting, and red-flag rules can raise the risk: Low, Medium ("Be careful") or High ("Likely a scam").
 - **The posting, marked up.** Words that pushed the AI towards *scam* or *genuine* are highlighted, and phrases that match a red flag are underlined.
-- **Red flags in plain English.** Nine checks, e.g. *asks you to pay money*, *asks for ID or bank details*, *contact only through WhatsApp*, *personal Gmail address*, and *fake-looking company website* (look-alike addresses such as `tcs-careers.in` instead of tcs.com). Each one shows the exact phrase that triggered it.
+- **Red flags in plain English.** Thirteen checks, e.g. *asks you to pay money*, *asks for ID or bank details*, *asks you to install a remote-access app* (AnyDesk), *paid to like, rate or review* (task scams), *government job that asks for money*, *asks you to hand over your passport*, *personal Gmail address*, and *fake-looking company website* (look-alike addresses such as `tcs-careers.in` or `inf0sys-careers.com`). Common Hinglish and Manglish phrasings are covered too ("registration karna hoga", "fee adakkanam"). Each flag shows the exact phrase that triggered it and links to its card in the **scam tactics guide** (`/guide`).
 - **Compare explanations.** LIME on the deep model next to the exact word weights of a Logistic Regression baseline, plus the words both models agree on.
 - **Read from a screenshot.** OCR runs in the visitor's browser (Tesseract.js), so the image never leaves their device.
 - **Save as PDF / share** a summary of the result, or share it as an image. The posting text is never put into a link.
@@ -54,7 +54,7 @@ flowchart LR
 2. **Text to numbers:** each posting is lower-cased, stripped of punctuation and turned into up to 300 word IDs from a 20,000-word vocabulary.
 3. **BiLSTM classifier:** reads the words in both directions and outputs the probability that the posting is fraudulent.
 4. **Explanation:** LIME scores 500 copies of the posting with random words removed and fits a local model to see which words move the score. It explains the model's log-odds, which keeps the weights readable even when the model is 99.9% sure. Filler words are dropped.
-5. **Combined risk:** each red flag adds to the model's log-odds (+1.5 for asking for money or ID/bank details, +0.5 for the others, at most +4). A serious flag also lifts the result to at least 40% ("Be careful"). Rules can only raise the risk, never lower it, and they ignore reassurances like "we never ask for bank details". A posting is flagged as a scam at **50%** or more (chosen on the validation set).
+5. **Combined risk:** each red flag adds to the model's log-odds (+1.5 for the serious ones: money, ID/bank details, passports, remote-access apps, task scams, fake government jobs and look-alike websites; +0.5 for the others; at most +4). A serious flag also lifts the result to at least 40% ("Be careful"). Rules can only raise the risk, never lower it, and they ignore reassurances like "we never ask for bank details". A posting is flagged as a scam at **50%** or more (chosen on the validation set).
 
 ![Combined risk: AI model alone vs with red flags](docs/screenshots/combined-risk.png)
 
@@ -90,7 +90,9 @@ The server doesn't import TensorFlow at all: TensorFlow alone needs about 600 MB
 ## Project structure
 
 ```
-app.py                  Flask app: /predict (verdict + red flags), /explain (LIME + baseline), /play, /version, /share-target
+app.py                  Flask app: /predict (verdict + red flags), /explain (LIME + baseline), /play, /guide, /version, /share-target
+guide_content.py        Text of the scam tactics guide, one card per red-flag rule
+tests/                  Automated tests: python -m pytest
 red_flags.py            Rule-based scam checks with plain-English reasons, incl. look-alike company domains (add new rules here)
 static/owl.js, fun.js   The owl mascot, home-page quick round
 static/game.js          Spot the Scam game (posts in static/game/posts.json, built by training/build_game_posts.py)

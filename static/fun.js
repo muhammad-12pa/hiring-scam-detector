@@ -34,6 +34,9 @@
     const box = $("thinking");
     clearInterval(factTimer);
     if (!on) { box.classList.add("hidden"); return; }
+    $("thinkTitle").textContent = "Detective Owlbert is investigating…";
+    $("thinkFactRow").classList.remove("hidden");
+    $("thinkSlow").classList.add("hidden");
     setOwl($("thinkOwl"), "think");
     let tip = Owl.randomTip();
     $("thinkFact").textContent = tip;
@@ -64,7 +67,15 @@
     say.classList.remove("pop"); void say.offsetWidth; if (!reduceMotion) say.classList.add("pop");
   }
 
-  window.Fun = { thinking, react };
+  // The server is still waking up (Render's free plan sleeps when idle): say so, instead of tips.
+  function slow() {
+    clearInterval(factTimer);
+    $("thinkTitle").textContent = "Waking up the server…";
+    $("thinkFactRow").classList.add("hidden");
+    $("thinkSlow").classList.remove("hidden");
+  }
+
+  window.Fun = { thinking, react, slow };
 
   // ---------- Quick round: Scam or genuine? ----------
   let pool = null, current = null, recent = [], streak = 0;

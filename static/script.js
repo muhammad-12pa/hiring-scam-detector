@@ -61,6 +61,7 @@ function updateCount() {
   el.textContent = `${n.toLocaleString()} / ${MAX_CHARS.toLocaleString()}`;
   el.classList.toggle("near", n > MAX_CHARS * 0.9);
   $("clearBtn").classList.toggle("hidden", n === 0);
+  $("pasteBtn").classList.toggle("hidden", n > 0 || !navigator.clipboard?.readText);
 }
 jobText.addEventListener("input", () => { updateCount(); hideUndo(); });
 jobText.addEventListener("keydown", e => {
@@ -113,6 +114,11 @@ analyzeBtn.addEventListener("click", async () => {
   analyzeBtn.textContent = "Checking…";
   window.Fun?.thinking(true);
   const owlMoment = sleep(700);   // let the owl have a quick look, even when the server is instant
+  const slowTimer = setTimeout(() => {   // still waiting: the free server is probably waking up
+    if (id !== runId) return;
+    analyzeBtn.textContent = "Waking up server…";
+    window.Fun?.slow?.();
+  }, 5000);
 
   let verdict;
   try {
@@ -139,6 +145,7 @@ analyzeBtn.addEventListener("click", async () => {
     result.classList.add("hidden");
     return;
   } finally {
+    clearTimeout(slowTimer);
     if (id === runId) { analyzeBtn.disabled = false; analyzeBtn.textContent = "Check this posting"; }
   }
 
@@ -275,6 +282,14 @@ function showFlags(flags) {
       q.textContent = m;
       body.append(q, " ");
     });
+    if ((f.matches || []).length) {   // jump to the words in the marked-up posting
+      const show = document.createElement("button");
+      show.type = "button";
+      show.className = "link-btn flag-show";
+      show.textContent = "Show in the post";
+      show.addEventListener("click", () => showInPost(f.id));
+      body.append(show);
+    }
     if (f.id) {   // the scam tactics guide has a card for every rule
       const more = document.createElement("a");
       more.className = "flag-guide";
@@ -295,11 +310,13 @@ function renderMarkup(text, weights, flags, withWeights) {
   // Character ranges covered by red-flag matches
   const lower = text.toLowerCase();
   const flagged = new Uint8Array(text.length);
+  const flagAt = new Array(text.length);          // which red flag each character belongs to
   flags.forEach(f => (f.matches || []).forEach(m => {
     const needle = m.toLowerCase();
     let i = lower.indexOf(needle);
     while (i !== -1 && needle) {
       flagged.fill(1, i, i + needle.length);
+      for (let k = i; k < i + needle.length; k++) (flagAt[k] ||= new Set()).add(f.id);
       i = lower.indexOf(needle, i + needle.length);
     }
   }));
@@ -327,6 +344,7 @@ function renderMarkup(text, weights, flags, withWeights) {
     if (isFlagged) {
       const span = document.createElement("span");
       span.className = "flagged";
+      span.dataset.flags = [...(flagAt[start] || [])].join(" ");
       span.appendChild(node);
       node = span;
     }
@@ -735,3 +753,34 @@ try {
     analyzeBtn.click();
   }
 } catch { /* storage blocked */ }
+
+// "Show in the post": scroll to the words that triggered a red flag and make them flash.
+function showInPost(flagId) {
+  const spans = [...document.querySelectorAll("#markup .flagged")]
+    .filter(s => s.dataset.flags.split(" ").includes(flagId));
+  if (!spans.length) return;
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  spans[0].scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
+  document.querySelectorAll("#markup .flash").forEach(s => s.classList.remove("flash"));
+  void spans[0].offsetWidth;                      // restart the animation on a second tap
+  spans.forEach(s => s.classList.add("flash"));
+  setTimeout(() => spans.forEach(s => s.classList.remove("flash")), 2600);
+}
+
+// Paste button: one tap instead of long-press > Paste (handy on phones).
+$("pasteBtn").addEventListener("click", async () => {
+  try {
+    const t = (await navigator.clipboard.readText()).trim();
+    if (!t) { $("error").textContent = "Your clipboard is empty. Copy the job post first."; return; }
+    $("error").textContent = "";
+    setText(t.slice(0, MAX_CHARS));
+  } catch {
+    $("error").textContent = "Couldn't read the clipboard. Long-press the box and choose Paste instead.";
+    jobText.focus();
+  }
+});
+updateCount();
+
+// Wake the server while the person is still pasting, so their first check is quick.
+fetch("/version", { cache: "no-store" }).catch(() => {});
+

@@ -3,7 +3,7 @@
 These run alongside the LSTM model. The model gives a learned probability; these rules
 give human-readable reasons that anyone can check. Add or tweak rules in RULES below.
 Each rule: id, title (short), detail (why it matters), and a regex (case-insensitive).
-"severe" rules (asking for money or ID/bank details, fake company websites) weigh more in the combined risk score.
+"severe" rules (money, ID/bank details, passports, remote-access apps, task scams, fake websites) weigh more in the combined risk score.
 """
 import math
 import re
@@ -18,7 +18,10 @@ RULES = [
         "detail": "Genuine employers never charge applicants a registration, training or joining fee.",
         "pattern": r"\b(registration|joining|processing|training|security|application|interview|visa)\s+(fee|fees|charge|charges|deposit|amount)\b"
                    r"|\bpay\b[^.\n]{0,40}\b(fee|fees|deposit|charges?)\b"
-                   r"|\b(refundable|one[- ]time)\s+(fee|deposit|payment)\b",
+                   r"|\b(refundable|one[- ]time)\s+(fee|deposit|payment)\b"
+                   # Hinglish / Manglish: "registration karna hoga", "fees jama karo", "fee adakkanam"
+                   r"|\b(registration|joining|fees?|security)\b[^.\n]{0,25}\b(karna|karni|karo|karein|dena|dene|bharna|bharo|jama"
+                   r"|adakkanam|adakkuka|adaykkanam|kodukkanam|kodukkuka|cheyyanam)\b",
     },
     {
         "id": "personal_data",
@@ -46,7 +49,11 @@ RULES = [
         "detail": "High pay for little work or no experience is the hook most scams use.",
         "pattern": r"\bearn\b[^.\n]{0,30}?([$₹£€]|rs\.?|inr|usd|kwd|aed)?\s?\d[\d,]*(k)?\s*(per|a|/|every)\s*(day|daily|hour|week)\b"
                    r"|\b(earn|make)\s+(up\s+to|upto)\b|\bguaranteed\s+(income|earnings|job|placement|salary)\b"
-                   r"|\b(daily|weekly)\s+(payout|payment|income)\b",
+                   r"|\b(daily|weekly)\s+(payout|payment|income)\b"
+                   # Hinglish / Manglish: "ghar baithe kamao", "har din ₹1500", "veettil irunnu sambadikkam"
+                   r"|\bghar\s+(baithe|baith\s+kar|se)\s+(kamao|kamaye|kamaiye|kamai|paise|earning|income)\b"
+                   r"|\b(har\s+din|roz(ana)?|per\s+din|dinavum|divasavum)\b[^.\n]{0,15}([₹]|rs\.?)\s?\d"
+                   r"|\bveett?il\s+irunn?u\b[^.\n]{0,25}\b(sambadikk|sampadikk|joli|earn|work)",
     },
     {
         "id": "no_interview",
@@ -59,16 +66,60 @@ RULES = [
         "title": "Pressure to act fast",
         "detail": "Urgency (\"limited slots\", \"apply now\") is used to stop you from checking the offer.",
         "pattern": r"\b(urgent(ly)?\s+(hiring|requirement|opening)|limited\s+(slots|seats|vacancies|positions|openings)"
-                   r"|apply\s+(now|immediately|today)|hurry|immediate\s+joining|last\s+(date|chance)\s+today|only\s+today)\b",
+                   r"|apply\s+(now|immediately|today)|hurry|immediate\s+joining|last\s+(date|chance)\s+today|only\s+today"
+                   r"|jaldi\s+(karo|karein|apply|join)|seats?\s+limited|vegam\s+(apply|cheyyu|join))\b",
     },
     {
         "id": "no_experience",
         "title": "No skills or experience needed",
         "detail": "\"No experience required\" combined with high pay is unusual for real jobs.",
         "pattern": r"\b(no\s+(prior\s+)?(experience|qualification|skills?)\s+(needed|required|necessary)|anyone\s+can\s+(apply|do|join)"
-                   r"|freshers?\s+can\s+earn|simple\s+(copy[- ]?paste|typing)\s+work)\b",
+                   r"|freshers?\s+can\s+earn|simple\s+(copy[- ]?paste|typing)\s+work"
+                   # Hinglish / Manglish: "koi experience nahi chahiye", "experience venda"
+                   r"|(koi|kisi)\s+(experience|anubhav|qualification)\s+(nahi|nahin|ki\s+zaroorat\s+nahi)"
+                   r"|experience\s+(nahi|nahin|venda|aavashyamilla|avashyamilla|illatha)|anubhav\s+ki\s+zaroorat\s+nahi)\b",
+    },
+    {
+        "id": "remote_access",
+        "severe": True,
+        "title": "Asks you to install a remote-access app",
+        "detail": "Apps like AnyDesk or TeamViewer let someone else control your phone or laptop. "
+                  "Scammers use them to empty bank and UPI accounts. No employer needs this to hire you.",
+        "pattern": r"\b(download|install|open|use)\b[^.\n]{0,40}\b(any\s?desk|team\s?viewer|rust\s?desk|ultra\s?viewer|quick\s?support|airdroid)\b"
+                   r"|\b(any\s?desk|team\s?viewer|rust\s?desk|ultra\s?viewer|quick\s?support|airdroid)\b[^.\n]{0,40}\b(share|send|give|tell)\b"
+                   r"|\b(share|send|give|tell)\b[^.\n]{0,30}\b(any\s?desk|team\s?viewer|rust\s?desk|ultra\s?viewer)\b",
+    },
+    {
+        "id": "task_scam",
+        "severe": True,
+        "title": "Paid to like, rate or review",
+        "detail": "\u201cLike videos, rate hotels, get paid per task\u201d is a known scam. Small payments build trust, "
+                  "then you are asked to deposit money for \u201cVIP\u201d or \u201cprepaid\u201d tasks and lose it.",
+        "pattern": r"(?:[₹$]|\brs\.?|\binr)\s?\d[\d,]*\s*(?:/-)?\s*(?:per|each|every|for\s+each|for\s+every)\s+task\b"
+                   r"|\bpaid\s+(?:per|for\s+each|for\s+every)\s+task\b|\b(?:per|each|every)\s+task\b[^.\n]{0,25}(?:[₹$]|\brs\b|paid|earn|commission)"
+                   r"|\b(?:prepaid|vip|merchant|commission)\s+(?:tasks?|group|level|members?)\b"
+                   r"|\b(?:like|subscribe\s+to)\s+(?:youtube|instagram)\s+(?:videos?|channels?|reels|posts)\b"
+                   r"|\blike\s+(?:videos|reels|posts)\b[^.\n]{0,60}(?:paid|earn|[₹$]|\brs\b|commission|income)"
+                   r"|\brate\s+(?:restaurants|hotels|products|movies)\b|(?<!-)\btasks?\s+(?:based\s+)?(?:income|earning|earnings|job)\b",
+    },
+    {
+        "id": "passport",
+        "severe": True,
+        "title": "Asks you to hand over your passport",
+        "detail": "Employers and agents may see your passport but must not keep the original. Holding it lets them trap you, "
+                  "and it is illegal in India and in Gulf countries.",
+        "pattern": r"\b(submit|deposit|hand\s?over|surrender|keep|retain|collect)\b[^.\n]{0,30}\b(original\s+)?passports?\b"
+                   r"|\boriginal\s+passports?\b[^.\n]{0,40}\b(submit|submitted|deposit|deposited|kept|retained|collected)\b"
+                   r"|\bpassports?\b[^.\n]{0,20}\b(will\s+be\s+)?(kept|retained|held)\s+(by|with|at)\b",
     },
 ]
+
+# Government recruitment never asks for money through agents or phone numbers.
+# This flag fires only when a post names a government body AND the "pay money" flag fired.
+GOV_BODY = re.compile(r"\b(rrb|ssc|upsc|kpsc|tnpsc|psc|indian\s+railways?|railway\s+recruitment|sarkari|government\s+(job|jobs|vacanc\w*|recruitment)"
+                      r"|govt\.?\s+(job|jobs|vacanc\w*|recruitment)|indian\s+army|army\s+recruitment|agniveer|india\s+post|postal\s+department"
+                      r"|bsnl|isro|drdo|aiims|ministry\s+of\s+\w+|central\s+government|state\s+government)\b", re.IGNORECASE)
+GOV_TITLE = "Government job that asks for money"
 
 
 # ---------- Look-alike company websites ----------
@@ -145,12 +196,17 @@ def find_lookalike_domains(text):
         label = reg[: -len(tld) - 1]
         everything = host[: -len(tld) - 1]          # subdomains + label, e.g. "infosys.careers-portal"
         tokens = [t for t in re.split(r"[.\-_]", everything) if t]
+        glyph_tokens = [t.translate(_GLYPHS) for t in tokens]
         hit = None
         for brand, real in BRAND_DOMAINS.items():
             if label == brand and tld in _ODD_TLDS:                       # infosys.online, tcs.co
                 hit = real[0]
             elif brand in tokens and (len(tokens) > 1 or _JOB_WORDS.search(everything)):   # tcs-hiring.in, infosys.careers-hub.com
                 hit = real[0]
+            elif (len(brand) >= 5 and len(tokens) > 1 and _JOB_WORDS.search(everything)
+                  and any(t != brand and t[:1] == brand[:1] and (g == brand or _edit1(g, brand))
+                          for t, g in zip(tokens, glyph_tokens))):
+                hit = real[0]                                              # inf0sys-careers.com, wipr0-jobs.in
             elif len(brand) >= 5 and brand in label and label != brand and _JOB_WORDS.search(label):   # infosyscareers.com
                 hit = real[0]
             elif (len(brand) >= 5 and label != brand and label[:1] == brand[:1]
@@ -175,9 +231,12 @@ WORD_TO_RULE = {
     **dict.fromkeys(["direct", "interview", "instant"], "no_interview"),
     **dict.fromkeys(["urgent", "urgently", "hurry", "limited", "slots", "immediately", "immediate"], "urgency"),
     **dict.fromkeys(["experience", "fresher", "freshers", "anyone"], "no_experience"),
+    **dict.fromkeys(["anydesk", "teamviewer", "rustdesk", "ultraviewer", "quicksupport", "airdroid"], "remote_access"),
+    **dict.fromkeys(["task", "tasks", "vip", "prepaid", "commission"], "task_scam"),
 }
 RULE_TITLES = {r["id"]: r["title"] for r in RULES}
 RULE_TITLES["lookalike"] = "Fake-looking company website"
+RULE_TITLES["gov_fee"] = GOV_TITLE
 
 
 # A money / ID match is ignored when the same sentence says the employer will NOT ask for it,
@@ -189,10 +248,18 @@ _NEGATION = re.compile(r"\b(never|not|n't|no\s+one\s+will|beware\s+of)\b[^.!?\n]
                        r"[^.!?\n]{0,40}$", re.IGNORECASE)
 
 
-def _negated(text, start):
+# "No application fee", "without any charges", "free of registration fee".
+_NO_BEFORE = re.compile(r"\b(no|zero|nil|without(\s+any)?|free\s+of(\s+any)?)\s+$", re.IGNORECASE)
+# "Bring your passport copy to the interview": showing ID in person is normal, sending it is not.
+_IN_PERSON = re.compile(r"\b(bring|carry)\b", re.IGNORECASE)
+
+
+def _negated(text, start, rule_id=""):
     before = text[max(0, start - 70):start]
     before = re.split(r"[.!?\n]", before)[-1]          # same sentence only
-    return bool(_NEGATION.search(before))
+    if rule_id == "personal_data" and _IN_PERSON.search(before):
+        return True
+    return bool(_NEGATION.search(before) or _NO_BEFORE.search(before))
 
 
 def find_red_flags(text):
@@ -201,7 +268,7 @@ def find_red_flags(text):
     for rule, rx in _COMPILED:
         hits = []
         for m in rx.finditer(text):
-            if rule["id"] in ("fee", "personal_data") and _negated(text, m.start()):
+            if rule["id"] in ("fee", "personal_data") and _negated(text, m.start(), rule["id"]):
                 continue
             s = m.group(0).strip()
             if s and s.lower() not in (h.lower() for h in hits):
@@ -209,6 +276,12 @@ def find_red_flags(text):
         if hits:
             found.append({"id": rule["id"], "title": rule["title"], "detail": rule["detail"],
                           "severe": bool(rule.get("severe")), "matches": hits[:3]})
+    gov = GOV_BODY.search(text)
+    if gov and any(f["id"] == "fee" for f in found):
+        found.append({"id": "gov_fee", "title": GOV_TITLE,
+                      "detail": "This post uses a government body\u2019s name but asks for money. Government recruitment is announced "
+                                "on official .gov.in / .nic.in sites and never collects fees through agents, WhatsApp or phone numbers.",
+                      "severe": True, "matches": [gov.group(0)]})
     fakes = find_lookalike_domains(text)
     if fakes:
         host, real = fakes[0]

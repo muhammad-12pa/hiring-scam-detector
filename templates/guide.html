@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Scam tactics guide | ScamShield</title>
-  <meta name="description" content="The 9 warning signs ScamShield looks for in fake job offers, with real-style examples and how to check each one.">
+  <meta name="description" content="The {{ guide|length }} warning signs ScamShield looks for in fake job offers, with real-style examples and how to check each one.">
   <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
   <link rel="apple-touch-icon" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
   <meta name="theme-color" content="#16202A">
@@ -12,16 +12,17 @@
   <script>try{var t=localStorage.getItem("scamshield-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;}catch(e){}</script>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="ScamShield">
-  <meta property="og:title" content="Scam tactics: 9 signs a job offer is fake">
+  <meta property="og:title" content="Scam tactics: 13 signs a job offer is fake">
   <meta property="og:description" content="Registration fees, look-alike websites, WhatsApp-only HR… how each trick works and how to check.">
   <meta property="og:url" content="{{ site_url }}/guide">
   <meta property="og:image" content="{{ site_url }}/static/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" href="{{ url_for('static', filename='fonts/bricolage-latin.woff2') }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ url_for('static', filename='fonts/sourcesans-400-latin.woff2') }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ url_for('static', filename='fonts/sourcesans-600-latin.woff2') }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ url_for('static', filename='fonts/sourcesans-700-latin.woff2') }}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ version }}">
 </head>
 <body class="guide-page">
@@ -49,7 +50,7 @@
         <span id="guideOwl" class="owl-art" aria-hidden="true"></span>
         <div>
           <h1>Scam tactics guide</h1>
-          <p class="lede">The 9 warning signs ScamShield looks for, how each trick works, and how to check a job offer yourself.</p>
+          <p class="lede">The {{ guide|length }} warning signs ScamShield looks for, how each trick works, and how to check a job offer yourself.</p>
         </div>
       </div>
       <nav class="guide-index" aria-label="Warning signs">

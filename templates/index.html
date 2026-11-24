@@ -22,9 +22,10 @@
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="ScamShield: check a job offer for scam warning signs">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" href="{{ url_for('static', filename='fonts/bricolage-latin.woff2') }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ url_for('static', filename='fonts/sourcesans-400-latin.woff2') }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ url_for('static', filename='fonts/sourcesans-600-latin.woff2') }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ url_for('static', filename='fonts/sourcesans-700-latin.woff2') }}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ version }}">
 </head>
 <body>
@@ -86,6 +87,7 @@
           <label for="jobText" class="sr-only">Job posting text</label>
           <textarea id="jobText" rows="8" maxlength="5000"{% if shared_text %} data-autocheck="1"{% endif %}
             placeholder="Paste the job posting text, or drop a screenshot of it here…">{{ shared_text or '' }}</textarea>
+          <button id="pasteBtn" class="paste-chip hidden" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4.5V3h6v1.5"/><path d="M9 10h6M9 14h6"/></svg> Paste</button>
           <div class="drop-overlay" aria-hidden="true">Drop the screenshot to read its text</div>
 
           <div id="ocrStatus" class="ocr-status hidden" role="status" aria-live="polite">
@@ -126,8 +128,9 @@
         <div id="thinking" class="thinking hidden" role="status" aria-live="polite">
           <span id="thinkOwl" class="owl-art"></span>
           <div>
-            <p class="thinking-title">Detective Owlbert is investigating…</p>
-            <p class="thinking-fact"><b>Did you know?</b> <span id="thinkFact"></span></p>
+            <p id="thinkTitle" class="thinking-title">Detective Owlbert is investigating…</p>
+            <p id="thinkFactRow" class="thinking-fact"><b>Did you know?</b> <span id="thinkFact"></span></p>
+            <p id="thinkSlow" class="thinking-fact hidden">ScamShield runs on a free server that naps when nobody is using it. The first check can take up to a minute; after that it’s about a second.</p>
           </div>
         </div>
 
@@ -306,7 +309,7 @@
             <dt>Preprocessing</dt><dd>Lower-cased, punctuation removed, turned into up to 300 word IDs from a 20,000-word vocabulary.</dd>
             <dt>Model</dt><dd>Bidirectional LSTM (served with TensorFlow Lite); flags a scam at 50% or more. Baseline: TF-IDF + Logistic Regression.</dd>
             <dt>Explanation</dt><dd>LIME on the model's log-odds (500 samples); exact coefficient weights for the baseline.</dd>
-            <dt>Red flags</dt><dd>9 checks; each adds to the log-odds (+1.5 for money or ID requests and fake company websites, +0.5 for others, max +4).</dd>
+            <dt>Red flags</dt><dd>13 checks; each adds to the log-odds (+1.5 for the 7 serious ones: money, ID or bank details, passports, remote-access apps, task scams, fake government jobs and fake company websites; +0.5 for the others; max +4).</dd>
             <dt>Screenshots</dt><dd>Read in your browser with Tesseract.js OCR; the image is never uploaded.</dd>
           </dl>
         </details>

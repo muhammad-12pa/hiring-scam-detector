@@ -27,14 +27,15 @@ def cache_headers(resp):
     """Files with ?v=<version> never change, so browsers keep them for a year (a new deploy
     changes the version and so the address). Other static files: a day. Pages and the API: never."""
     if request.path.startswith("/static/"):
-        resp.headers["Cache-Control"] = (f"public, max-age={YEAR}, immutable" if request.args.get("v")
+        resp.headers["Cache-Control"] = (f"public, max-age={YEAR}, immutable"
+                                         if request.args.get("v") or request.path.startswith("/static/fonts/")
                                          else "public, max-age=86400")
     elif "Cache-Control" not in resp.headers:
         resp.headers["Cache-Control"] = "no-cache"
     return resp
 
 # Bump on every deploy; shown in the page footer and at /version so you can tell it's live.
-VERSION = "v3.7"
+VERSION = "v1.0"
 
 # Public address, used for link previews (og:image needs an absolute URL).
 SITE_URL = os.environ.get("SITE_URL", "https://hiring-scam-detector.onrender.com").rstrip("/")
