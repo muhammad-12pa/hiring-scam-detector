@@ -712,7 +712,7 @@ footer { background: var(--nav-bg); color: var(--nav-ink); padding: 18px 0; font
    Full-width dark strip behind the headline; the input card overlaps its lower edge.
    The box-shadow + clip-path trick makes it full-bleed without any sideways scrolling. */
 .detector { --hero-pad: 56px; --band-under: 110px; }
-.guide { --hero-pad: 36px; --band-under: 30px; }
+.guide { --hero-pad: 36px; --band-under: 36px; }
 .hero-band { position: relative; }
 .hero-band::before { content: ""; position: absolute; z-index: -1; left: 0; right: 0;
   top: calc(-1 * var(--hero-pad)); bottom: calc(-1 * var(--band-under));
@@ -727,9 +727,11 @@ footer { background: var(--nav-bg); color: var(--nav-ink); padding: 18px 0; font
 .hero-band .owl-body { fill: #3CC2B9; }          /* brighter owl, like the logo, so he stands out on the dark band */
 .hero-band .owl-accent { fill: #1F9C93; }
 .hero-band .hero-owl:focus-visible { outline-color: var(--band-accent); }
-.guide-hero.hero-band { padding-bottom: 6px; }
+.guide-hero.hero-band { padding-bottom: 0; }
+.guide-hero.hero-band + .guide-index { margin-top: 62px; }   /* chips start clearly below the dark band */
 .btn-primary { background: linear-gradient(180deg, color-mix(in srgb, var(--teal) 82%, #fff 18%), var(--teal));
   box-shadow: 0 6px 16px -8px color-mix(in srgb, var(--teal) 75%, transparent); }
 .btn-primary:hover { background: var(--accent-hover); }
 @media (max-width: 560px) { .detector { --hero-pad: 36px; --band-under: 96px; } }
 @media print { .hero-band::before { display: none; } .hero-band h1, .hero-band .lede { color: #000; } }
+.guide-hero .owl-art { margin-left: -14px; }   /* the owl drawing has empty space on its left; line it up with the cards */

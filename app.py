@@ -35,7 +35,7 @@ def cache_headers(resp):
     return resp
 
 # Bump on every deploy; shown in the page footer and at /version so you can tell it's live.
-VERSION = "v1.2"
+VERSION = "v1.3"
 
 # Public address, used for link previews (og:image needs an absolute URL).
 SITE_URL = os.environ.get("SITE_URL", "https://hiring-scam-detector.onrender.com").rstrip("/")
